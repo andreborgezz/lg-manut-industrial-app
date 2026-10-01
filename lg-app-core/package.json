@@ -1,0 +1,25 @@
+{
+  "name": "lg-app-core",
+  "version": "1.0.0",
+  "description": "Express + TypeScript template",
+  "main": "server.js",
+  "scripts": {
+    "dev": "tsx server.ts",
+    "test:r2": "tsx scripts/testar-r2.ts",
+    "build": "tsc",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1144.0",
+    "@types/pg": "^8.23.1",
+    "dotenv": "^18.0.5",
+    "express": "^4.21.0",
+    "pg": "^8.23.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.2"
+  }
+}
