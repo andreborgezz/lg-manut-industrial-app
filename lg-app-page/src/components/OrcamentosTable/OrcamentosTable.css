@@ -1,0 +1,10 @@
+.orc-table-filtros { display: flex; gap: 8px; margin-bottom: 12px; }
+.orc-table-filtros input { flex: 1; max-width: 360px; padding: 8px 10px; }
+.orc-table-filtros select { padding: 8px 10px; }
+.orc-table-scroll { overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
+.orc-table table { border-collapse: collapse; width: 100%; font-size: 14px; }
+.orc-table th { background: #f3f4f6; text-align: left; padding: 10px 12px; white-space: nowrap; }
+.orc-table td { padding: 10px 12px; border-top: 1px solid #e5e7eb; white-space: nowrap; }
+.orc-table tbody tr:hover { background: #f9fafb; }
+.orc-table-vazio { text-align: center; color: #6b7280; }
+.orc-table-erro { color: #b91c1c; }

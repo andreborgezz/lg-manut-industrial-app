@@ -2,11 +2,14 @@ import 'dotenv/config';
 import express from 'express';
 import pool, { connect } from './database';
 
+import cors from 'cors';
 import { routes } from './src/routes';
+import { errorHandler } from './src/utils/errorHandler';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 
 // Rotas da aplicação
@@ -33,10 +36,7 @@ app.get('/saude', async (req, res) => {
   }
 });
 // Middleware global para tratamento de erros
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error('Erro na requisição:', err);
-  res.status(err.status || 400).json({ error: err.message || 'Erro interno no servidor' });
-});
+app.use(errorHandler);
 
 async function bootstrap() {
   try {

@@ -69,6 +69,39 @@ export const buscarPorId = async (id: number): Promise<Orcamento | undefined> =>
 }
 
 export const criar = async (d: Partial<NovoOrcamento> & { empresaId: number }): Promise<Orcamento> => {
+  // 1. Valida se a empresa existe antes de tentar o insert (evita gastar sequence se falhar)
+  const checkEmpresa = await pool.query('select 1 from empresas where id = $1', [d.empresaId])
+  if (checkEmpresa.rowCount === 0) {
+    const error: any = new Error(`Empresa com id ${d.empresaId} não foi encontrada.`)
+    error.status = 400
+    throw error
+  }
+
+  // 2. Se informou solicitante, valida se pertence à empresa
+  if (d.solicitanteId) {
+    const checkSolicitante = await pool.query(
+      'select 1 from solicitantes where id = $1 and empresa_id = $2',
+      [d.solicitanteId, d.empresaId]
+    )
+    if (checkSolicitante.rowCount === 0) {
+      const error: any = new Error(
+        `Solicitante com id ${d.solicitanteId} não existe ou não pertence à empresa informada.`
+      )
+      error.status = 400
+      throw error
+    }
+  }
+
+  // 3. Se informou mecânico, valida se existe
+  if (d.mecanicoId) {
+    const checkMecanico = await pool.query('select 1 from mecanicos where id = $1', [d.mecanicoId])
+    if (checkMecanico.rowCount === 0) {
+      const error: any = new Error(`Mecânico com id ${d.mecanicoId} não foi encontrado.`)
+      error.status = 400
+      throw error
+    }
+  }
+
   const { rows } = await pool.query(
     `insert into orcamentos
        (empresa_id, solicitante_id, mecanico_id, maquina, titulo, escopo, valor,

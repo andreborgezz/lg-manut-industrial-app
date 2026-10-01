@@ -1,0 +1,2 @@
+.layout { display: flex; min-height: 100vh; }
+.layout-conteudo { flex: 1; padding: 24px; min-width: 0; }
