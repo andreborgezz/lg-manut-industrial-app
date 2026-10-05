@@ -1,4 +1,28 @@
-/* Reset básico para aplicação de tela cheia com Dashboard */
+/* tokens globais de cores e tipografia */
+:root {
+  --cor-preto: #0a0a0a;
+  --cor-preto-2: #1c1c1c;
+  --cor-ambar: #ee9c00;
+  --cor-ambar-escuro: #c47f00;
+  --cor-ambar-fundo: #fff4dc;
+  --cor-fundo: #f6f6f4;
+  --cor-superficie: #ffffff;
+  --cor-borda: #e5e5e0;
+  --cor-texto: #1a1a1a;
+  --cor-texto-suave: #6b6b66;
+
+  /* cores para os badges de status */
+  --cor-status-aberto-fundo: #e5e7eb;
+  --cor-status-aberto-texto: #374151;
+  --cor-status-aprovado-fundo: #dcfce7;
+  --cor-status-aprovado-texto: #166534;
+  --cor-status-recusado-fundo: #fee2e2;
+  --cor-status-recusado-texto: #991b1b;
+  --cor-status-entregue-fundo: #dbeafe;
+  --cor-status-entregue-texto: #1e40af;
+}
+
+/* reset básico */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -11,8 +35,59 @@ html, body, #root {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+
+/* botão principal padrão */
+.btn-primario {
+  background-color: var(--cor-ambar);
+  color: var(--cor-preto);
+  font-weight: 600;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-primario:hover {
+  background-color: var(--cor-ambar-escuro);
+}
+
+/* badges de status como pílulas */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+
+.badge-aberto {
+  background-color: var(--cor-status-aberto-fundo);
+  color: var(--cor-status-aberto-texto);
+}
+
+.badge-aprovado {
+  background-color: var(--cor-status-aprovado-fundo);
+  color: var(--cor-status-aprovado-texto);
+}
+
+.badge-recusado {
+  background-color: var(--cor-status-recusado-fundo);
+  color: var(--cor-status-recusado-texto);
+}
+
+.badge-entregue {
+  background-color: var(--cor-status-entregue-fundo);
+  color: var(--cor-status-entregue-texto);
 }

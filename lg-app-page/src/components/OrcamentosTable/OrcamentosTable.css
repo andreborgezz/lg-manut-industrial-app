@@ -1,10 +1,98 @@
-.orc-table-filtros { display: flex; gap: 8px; margin-bottom: 12px; }
-.orc-table-filtros input { flex: 1; max-width: 360px; padding: 8px 10px; }
-.orc-table-filtros select { padding: 8px 10px; }
-.orc-table-scroll { overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 8px; }
-.orc-table table { border-collapse: collapse; width: 100%; font-size: 14px; }
-.orc-table th { background: #f3f4f6; text-align: left; padding: 10px 12px; white-space: nowrap; }
-.orc-table td { padding: 10px 12px; border-top: 1px solid #e5e7eb; white-space: nowrap; }
-.orc-table tbody tr:hover { background: #f9fafb; }
-.orc-table-vazio { text-align: center; color: #6b7280; }
-.orc-table-erro { color: #b91c1c; }
+/* filtros de busca e selecao de status */
+.orc-table-filtros {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.orc-input {
+  flex: 1;
+  max-width: 360px;
+  padding: 10px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.orc-select {
+  padding: 10px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* estado de foco para input e select com borda ambar */
+.orc-input:focus,
+.orc-select:focus {
+  outline: none;
+  border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+}
+
+/* card da tabela com container branco e borda */
+.orc-table-card {
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* scroll horizontal para manter responsividade da tabela */
+.orc-table-scroll {
+  overflow-x: auto;
+}
+
+.orc-table-scroll table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* cabecalho da tabela em preto com texto branco em caixa alta */
+.orc-table-scroll th {
+  background-color: var(--cor-preto);
+  color: var(--cor-superficie);
+  text-align: left;
+  padding: 12px 16px;
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* celulas e bordas da tabela */
+.orc-table-scroll td {
+  padding: 12px 16px;
+  border-top: 1px solid var(--cor-borda);
+  white-space: nowrap;
+  color: var(--cor-texto);
+}
+
+/* hover da linha com ambar fundo */
+.orc-table-scroll tbody tr:hover {
+  background-color: var(--cor-ambar-fundo);
+}
+
+.orc-table-vazio {
+  text-align: center;
+  color: var(--cor-texto-suave);
+  padding: 24px;
+}
+
+.orc-table-erro {
+  color: var(--cor-status-recusado-texto);
+  background-color: var(--cor-status-recusado-fundo);
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
