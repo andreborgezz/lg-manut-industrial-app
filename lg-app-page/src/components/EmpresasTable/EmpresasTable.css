@@ -1,12 +1,12 @@
 /* filtros de busca e selecao de status */
-.orc-table-filtros {
+.emp-table-filtros {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
   flex-wrap: wrap;
 }
 
-.orc-input {
+.emp-input {
   flex: 1;
   max-width: 360px;
   padding: 10px 14px;
@@ -18,27 +18,15 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.orc-select {
-  padding: 10px 14px;
-  border: 1px solid var(--cor-borda);
-  border-radius: 6px;
-  background-color: var(--cor-superficie);
-  color: var(--cor-texto);
-  font-size: 14px;
-  cursor: pointer;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* estado de foco para input e select com borda ambar */
-.orc-input:focus,
-.orc-select:focus {
+/* estado de foco para input com borda ambar */
+.emp-input:focus {
   outline: none;
   border-color: var(--cor-ambar);
   box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }
 
 /* card da tabela com container branco e borda */
-.orc-table-card {
+.emp-table-card {
   background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
   border-radius: 8px;
@@ -46,18 +34,18 @@
 }
 
 /* scroll horizontal para manter responsividade da tabela */
-.orc-table-scroll {
+.emp-table-scroll {
   overflow-x: auto;
 }
 
-.orc-table-scroll table {
+.emp-table-scroll table {
   border-collapse: collapse;
   width: 100%;
   font-size: 14px;
 }
 
 /* cabecalho da tabela em preto com texto branco em caixa alta */
-.orc-table-scroll th {
+.emp-table-scroll th {
   background-color: var(--cor-preto);
   color: var(--cor-superficie);
   text-align: left;
@@ -70,7 +58,7 @@
 }
 
 /* celulas e bordas da tabela */
-.orc-table-scroll td {
+.emp-table-scroll td {
   padding: 12px 16px;
   border-top: 1px solid var(--cor-borda);
   white-space: nowrap;
@@ -78,17 +66,17 @@
 }
 
 /* hover da linha com ambar fundo */
-.orc-table-scroll tbody tr:hover {
+.emp-table-scroll tbody tr:hover {
   background-color: var(--cor-ambar-fundo);
 }
 
-.orc-table-vazio {
+.emp-table-vazio {
   text-align: center;
   color: var(--cor-texto-suave);
   padding: 24px;
 }
 
-.orc-table-erro {
+.emp-table-erro {
   color: var(--cor-status-recusado-texto);
   background-color: var(--cor-status-recusado-fundo);
   padding: 10px 14px;
@@ -98,7 +86,7 @@
 }
 
 /* aviso discreto de erro ao salvar uma célula */
-.orc-table-aviso {
+.emp-table-aviso {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -111,7 +99,7 @@
   font-size: 13px;
 }
 
-.orc-table-aviso button {
+.emp-table-aviso button {
   background: none;
   border: none;
   color: inherit;
@@ -120,13 +108,13 @@
   cursor: pointer;
 }
 
-/* botões de ação por linha (editar, duplicar) */
-.orc-acoes {
+/* botões de ação por linha */
+.emp-acoes {
   display: flex;
   gap: 6px;
 }
 
-.orc-acao-btn {
+.emp-acao-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -140,28 +128,47 @@
   transition: border-color 0.15s ease, color 0.15s ease;
 }
 
-.orc-acao-btn:hover:not(:disabled) {
+.emp-acao-btn:hover:not(:disabled) {
   border-color: var(--cor-ambar);
   color: var(--cor-ambar-escuro);
 }
 
-.orc-acao-btn:focus-visible {
+.emp-acao-btn:focus-visible {
   outline: none;
   border-color: var(--cor-ambar);
   box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }
 
-.orc-acao-btn:disabled {
+.emp-acao-btn:disabled {
   cursor: progress;
   opacity: 0.6;
 }
 
-.orc-spin {
-  animation: orc-giro 0.8s linear infinite;
+.emp-spin {
+  animation: emp-giro 0.8s linear infinite;
 }
 
-@keyframes orc-giro {
+@keyframes emp-giro {
   to {
     transform: rotate(360deg);
   }
+}
+
+.emp-select {
+  padding: 6px 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 250px;
+}
+
+.emp-select:focus {
+  outline: none;
+  border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }

@@ -10,6 +10,7 @@
   --cor-borda: #e5e5e0;
   --cor-texto: #1a1a1a;
   --cor-texto-suave: #6b6b66;
+  --cor-overlay: rgba(10, 10, 10, 0.55);
 
   /* cores para os badges de status */
   --cor-status-aberto-fundo: #e5e7eb;

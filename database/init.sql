@@ -6,6 +6,15 @@ create table empresas (
   created_at timestamptz not null default now()
 );
 
+create table ctt_empresas (
+  id serial primary key,
+  empresa_id int not null references empresas(id),
+  nome text not null,
+  email text,
+  cargo text,
+  telefone text
+);
+
 create table solicitantes (
   id serial primary key,
   empresa_id int not null references empresas(id),

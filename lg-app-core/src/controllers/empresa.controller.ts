@@ -19,6 +19,15 @@ export const criar = async (req: Request, res: Response): Promise<void> => {
   res.status(201).json(await service.criar(req.body))
 }
 
+export const atualizarParcial = async (req: Request, res: Response): Promise<void> => {
+  const item = await service.atualizarParcial(idParam(req), req.body)
+  if (!item) {
+    res.status(404).json({ message: 'Empresa não encontrada' })
+    return
+  }
+  res.json(item)
+}
+
 export const atualizar = async (req: Request, res: Response): Promise<void> => {
   const item = await service.atualizar(idParam(req), req.body)
   if (!item) {

@@ -3,11 +3,21 @@ import * as service from '../services/mecanico.service'
 import { idParam } from '../utils/params'
 
 export const listar = async (req: Request, res: Response): Promise<void> => {
-  res.json(await service.listar(req.query.inativos === 'true'))
+  // por padrão só ativos; ?inativos=true traz todos
+  res.json(await service.listar(req.query.inativos !== 'true'))
 }
 
 export const criar = async (req: Request, res: Response): Promise<void> => {
   res.status(201).json(await service.criar(req.body))
+}
+
+export const atualizarParcial = async (req: Request, res: Response): Promise<void> => {
+  const item = await service.atualizarParcial(idParam(req), req.body)
+  if (!item) {
+    res.status(404).json({ message: 'Mecânico não encontrado' })
+    return
+  }
+  res.json(item)
 }
 
 export const atualizar = async (req: Request, res: Response): Promise<void> => {

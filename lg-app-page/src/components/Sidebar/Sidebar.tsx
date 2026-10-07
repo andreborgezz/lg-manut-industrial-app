@@ -16,7 +16,6 @@ export function Sidebar() {
         <div className="sidebar-logo-circulo">L.G.</div>
         <div className="sidebar-empresa">
           <span className="sidebar-nome">L.G. MANUTENÇÃO INDUSTRIAL</span>
-          <span className="sidebar-cnpj">CNPJ 00.000.000/0001-00</span>
         </div>
       </div>
       <nav className="sidebar-nav">

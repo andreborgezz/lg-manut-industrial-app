@@ -4,12 +4,12 @@ import pool, { connect } from './database';
 
 import cors from 'cors';
 import { routes } from './src/routes';
-import { errorHandler } from './src/utils/errorHandler';
+import { errorHandler } from './src/middlewares/errorHandler';
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: process.env.FRONT_URL || 'http://localhost:5173' }));
 app.use(express.json());
 
 // Rotas da aplicação

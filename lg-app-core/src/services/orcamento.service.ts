@@ -1,5 +1,7 @@
 import pool from '../../database'
-import type { Orcamento, OrcamentoLinha, NovoOrcamento, Status } from '../models/orcamento'
+import { AppError } from '../utils/errors'
+import { criarSchema, patchSchema } from '../models/orcamento.schema'
+import type { Orcamento, OrcamentoLinha, Status } from '../models/orcamento'
 
 const cols = `
   id, numero,
@@ -35,10 +37,8 @@ const editaveis: Record<string, string> = {
   pdfPath: 'pdf_path',
 }
 
-export const listar = async (busca = '', status?: string): Promise<OrcamentoLinha[]> => {
-  const statusFiltrado = status ? (status as Status) : null
-  const { rows } = await pool.query(
-    `select
+// select da linha da tabela (com nomes já juntados)
+const selectLinha = `select
        o.id,
        e.nome as empresa,
        s.nome as solicitante,
@@ -47,6 +47,7 @@ export const listar = async (busca = '', status?: string): Promise<OrcamentoLinh
        o.numero_pedido as "numeroPedido",
        o.maquina,
        m.nome as mecanico,
+       o.mecanico_id as "mecanicoId",
        to_char(o.inicio_em, 'YYYY-MM-DD') as "inicioEm",
        to_char(o.entrega_em, 'YYYY-MM-DD') as "entregaEm",
        o.valor,
@@ -54,7 +55,12 @@ export const listar = async (busca = '', status?: string): Promise<OrcamentoLinh
      from orcamentos o
      join empresas e on e.id = o.empresa_id
      left join solicitantes s on s.id = o.solicitante_id
-     left join mecanicos m on m.id = o.mecanico_id
+     left join mecanicos m on m.id = o.mecanico_id`
+
+export const listar = async (busca = '', status?: string): Promise<OrcamentoLinha[]> => {
+  const statusFiltrado = status ? (status as Status) : null
+  const { rows } = await pool.query(
+    `${selectLinha}
      where (e.nome ilike $1 or o.numero::text ilike $1 or o.maquina ilike $1)
        and ($2::text is null or o.status = $2)
      order by o.numero desc`,
@@ -63,44 +69,39 @@ export const listar = async (busca = '', status?: string): Promise<OrcamentoLinh
   return rows
 }
 
+export const buscarLinha = async (id: number): Promise<OrcamentoLinha | undefined> => {
+  const { rows } = await pool.query(`${selectLinha} where o.id = $1`, [id])
+  return rows[0]
+}
+
 export const buscarPorId = async (id: number): Promise<Orcamento | undefined> => {
   const { rows } = await pool.query(`select ${cols} from orcamentos where id = $1`, [id])
   return rows[0]
 }
 
-export const criar = async (d: Partial<NovoOrcamento> & { empresaId: number }): Promise<Orcamento> => {
-  // 1. Valida se a empresa existe antes de tentar o insert (evita gastar sequence se falhar)
-  const checkEmpresa = await pool.query('select 1 from empresas where id = $1', [d.empresaId])
-  if (checkEmpresa.rowCount === 0) {
-    const error: any = new Error(`Empresa com id ${d.empresaId} não foi encontrada.`)
-    error.status = 400
-    throw error
-  }
+// confere vínculos antes de gravar (insert que falha também consome a sequence do número)
+const validarVinculos = async (empresaId: number, solicitanteId?: number | null, mecanicoId?: number | null) => {
+  const empresa = await pool.query('select 1 from empresas where id = $1', [empresaId])
+  if (empresa.rowCount === 0) throw new AppError('empresa não encontrada', 404)
 
-  // 2. Se informou solicitante, valida se pertence à empresa
-  if (d.solicitanteId) {
-    const checkSolicitante = await pool.query(
+  if (solicitanteId) {
+    const sol = await pool.query(
       'select 1 from solicitantes where id = $1 and empresa_id = $2',
-      [d.solicitanteId, d.empresaId]
+      [solicitanteId, empresaId]
     )
-    if (checkSolicitante.rowCount === 0) {
-      const error: any = new Error(
-        `Solicitante com id ${d.solicitanteId} não existe ou não pertence à empresa informada.`
-      )
-      error.status = 400
-      throw error
-    }
+    if (sol.rowCount === 0) throw new AppError('solicitante não pertence à empresa informada', 400)
   }
 
-  // 3. Se informou mecânico, valida se existe
-  if (d.mecanicoId) {
-    const checkMecanico = await pool.query('select 1 from mecanicos where id = $1', [d.mecanicoId])
-    if (checkMecanico.rowCount === 0) {
-      const error: any = new Error(`Mecânico com id ${d.mecanicoId} não foi encontrado.`)
-      error.status = 400
-      throw error
-    }
+  if (mecanicoId) {
+    const mec = await pool.query('select ativo from mecanicos where id = $1', [mecanicoId])
+    if (mec.rowCount === 0) throw new AppError('mecânico não encontrado', 404)
+    if (!mec.rows[0].ativo) throw new AppError('mecânico está inativo', 400)
   }
+}
+
+export const criar = async (body: unknown): Promise<Orcamento> => {
+  const d = criarSchema.parse(body)
+  await validarVinculos(d.empresaId, d.solicitanteId, d.mecanicoId)
 
   const { rows } = await pool.query(
     `insert into orcamentos
@@ -119,16 +120,36 @@ export const criar = async (d: Partial<NovoOrcamento> & { empresaId: number }): 
   return rows[0]
 }
 
-export const atualizar = async (id: number, campos: Partial<NovoOrcamento>): Promise<Orcamento | undefined> => {
-  const chaves = Object.keys(campos).filter(k => k in editaveis)
-  if (chaves.length === 0) return buscarPorId(id)
+// atualiza só os campos enviados e devolve a linha da tabela
+export const atualizar = async (id: number, body: unknown): Promise<OrcamentoLinha | undefined> => {
+  const patch = patchSchema.parse(body)
+  const atual = await buscarPorId(id)
+  if (!atual) return undefined
+
+  const chaves = Object.keys(patch).filter(
+    k => k in editaveis && (patch as Record<string, unknown>)[k] !== undefined
+  )
+  if (chaves.length === 0) return buscarLinha(id)
+
+  // datas conferidas contra o que já está gravado (o patch pode trazer só uma)
+  const inicio = patch.inicioEm !== undefined ? patch.inicioEm : atual.inicioEm
+  const entrega = patch.entregaEm !== undefined ? patch.entregaEm : atual.entregaEm
+  if (inicio && entrega && entrega < inicio) {
+    throw new AppError('a data de entrega não pode ser anterior ao início', 400)
+  }
+
+  const mexeuVinculo = ['empresaId', 'solicitanteId', 'mecanicoId'].some(k => chaves.includes(k))
+  if (mexeuVinculo) {
+    await validarVinculos(
+      patch.empresaId ?? atual.empresaId,
+      patch.solicitanteId !== undefined ? patch.solicitanteId : atual.solicitanteId,
+      patch.mecanicoId // mecânico só é checado quando enviado
+    )
+  }
 
   const sets = chaves.map((k, i) => `${editaveis[k]} = $${i + 2}`)
-  const valores = chaves.map(k => (campos as Record<string, unknown>)[k])
+  const valores = chaves.map(k => (patch as Record<string, unknown>)[k])
 
-  const { rows } = await pool.query(
-    `update orcamentos set ${sets.join(', ')} where id = $1 returning ${cols}`,
-    [id, ...valores]
-  )
-  return rows[0]
+  await pool.query(`update orcamentos set ${sets.join(', ')} where id = $1`, [id, ...valores])
+  return buscarLinha(id)
 }

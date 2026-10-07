@@ -1,0 +1,51 @@
+.emp-ctt-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.emp-ctt-lista li {
+  padding: 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-fundo);
+  font-size: 14px;
+}
+
+.emp-ctt-lista span {
+  display: inline-block;
+  margin-right: 16px;
+  margin-top: 4px;
+  color: var(--cor-texto-suave);
+}
+
+.emp-ctt-vazio {
+  color: var(--cor-texto-suave);
+  font-style: italic;
+  font-size: 14px;
+}
+
+.modal-aviso {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background-color: var(--cor-ambar-fundo);
+  color: var(--cor-ambar-escuro);
+  font-size: 13px;
+}
+
+.btn-texto {
+  background: none;
+  border: none;
+  color: var(--cor-ambar);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+.btn-texto:hover {
+  text-decoration: underline;
+}
+

@@ -1,0 +1,11 @@
+/* modal de mecânico é curto: largura menor que a do orçamento */
+.mec-modal {
+  width: min(480px, 100% - 32px);
+}
+
+/* mobile: tela cheia, como os outros modais */
+@media (max-width: 767px) {
+  .mec-modal {
+    width: 100%;
+  }
+}

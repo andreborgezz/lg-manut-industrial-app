@@ -1,0 +1,47 @@
+/* célula em modo leitura: parece texto, mostra borda ao passar o mouse */
+.celula {
+  min-width: 60px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.celula:hover {
+  border-color: var(--cor-borda);
+}
+
+.celula:focus-visible {
+  outline: none;
+  border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+}
+
+/* salvando: sutil, sem bloquear a leitura */
+.celula-salvando {
+  opacity: 0.55;
+  cursor: progress;
+}
+
+/* lembrete visual (ex: aprovado sem número de pedido) */
+.celula-lembrete {
+  border-color: var(--cor-ambar);
+  background-color: var(--cor-ambar-fundo);
+}
+
+.celula-campo {
+  width: 100%;
+  min-width: 120px;
+  padding: 4px 6px;
+  border: 1px solid var(--cor-ambar);
+  border-radius: 4px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font: inherit;
+}
+
+.celula-campo:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+}

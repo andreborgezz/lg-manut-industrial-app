@@ -31,6 +31,7 @@ export type OrcamentoLinha = {
   numeroPedido: string | null
   maquina: string | null
   mecanico: string | null
+  mecanicoId: number | null
   inicioEm: string | null
   entregaEm: string | null
   valor: string | null

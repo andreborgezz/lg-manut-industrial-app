@@ -1,0 +1,212 @@
+/* fundo escurecido */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--cor-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: min(720px, 100% - 32px);
+  max-height: 90vh;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.modal-header h2 {
+  font-size: 18px;
+}
+
+.modal-fechar {
+  background: none;
+  border: none;
+  font-size: 26px;
+  line-height: 1;
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+}
+
+/* form rola no corpo, rodapé fica fixo na base */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.modal-corpo {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* bloco com título pequeno e linha fina embaixo */
+.modal-bloco-titulo {
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--cor-borda);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+
+/* grade de 2 colunas */
+.modal-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-span-2 {
+  grid-column: 1 / -1;
+}
+
+.modal-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+}
+
+.modal-campo input,
+.modal-campo select,
+.modal-campo textarea {
+  padding: 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 400;
+}
+
+.modal-campo textarea {
+  resize: vertical;
+}
+
+.modal-campo input:focus,
+.modal-campo select:focus,
+.modal-campo textarea:focus {
+  outline: none;
+  border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+}
+
+.modal-campo select:disabled,
+.modal-campo input:disabled,
+.modal-campo textarea:disabled {
+  background-color: var(--cor-fundo);
+  cursor: not-allowed;
+}
+
+.modal-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* mini form (empresa/solicitante novo), ocupa as 2 colunas */
+.modal-mini-form {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 14px;
+  background-color: var(--cor-ambar-fundo);
+  border: 1px solid var(--cor-ambar);
+  border-radius: 6px;
+}
+
+.modal-mini-form .btn-primario {
+  justify-self: start;
+}
+
+.modal-erro-campo {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--cor-status-recusado-texto);
+}
+
+.modal-campo input[aria-invalid='true'],
+.modal-campo select[aria-invalid='true'] {
+  border-color: var(--cor-status-recusado-texto);
+}
+
+/* o modal-erro já é usado em vários pontos */
+.modal-erro {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background-color: var(--cor-status-recusado-fundo);
+  color: var(--cor-status-recusado-texto);
+  font-size: 13px;
+}
+
+.modal-rodape {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--cor-borda);
+}
+
+.modal-cancelar {
+  padding: 10px 18px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-primario:disabled,
+.modal-cancelar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* mobile: modal ocupa a tela toda */
+@media (max-width: 767px) {
+  .modal-overlay {
+    padding: 0;
+  }
+
+  .modal {
+    width: 100%;
+    height: 100%;
+    max-height: none;
+    border-radius: 0;
+  }
+
+  .modal-grade,
+  .modal-mini-form {
+    grid-template-columns: 1fr;
+  }
+}
