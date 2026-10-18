@@ -142,3 +142,9 @@ export const criarOrcamento = (body: NovoOrcamentoBody) =>
 // devolve a linha já no formato da tabela
 export const atualizarOrcamento = (id: number, patch: AtualizarOrcamentoBody) =>
   chamar<OrcamentoLinha>(`/orcamentos/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
+
+export const gerarPdfOrcamento = (id: number) =>
+  chamar<{ url: string }>(`/orcamentos/${id}/pdf`, { method: 'POST' })
+
+export const buscarUrlPdfOrcamento = (id: number) =>
+  chamar<{ url: string }>(`/orcamentos/${id}/pdf`)

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Copy, Loader2, Pencil } from 'lucide-react'
+import { Copy, FileText, Loader2, Pencil } from 'lucide-react'
 import {
   atualizarOrcamento,
   buscarOrcamento,
+  gerarPdfOrcamento,
   listarMecanicos,
   listarOrcamentos,
   type AtualizarOrcamentoBody,
@@ -29,7 +30,9 @@ function montarColunas(
   mecanicos: Mecanico[],
   salvar: (o: OrcamentoLinha, patch: AtualizarOrcamentoBody) => Promise<void>,
   abrir: (o: OrcamentoLinha, acao: Acao) => void,
-  carregando: { id: number; acao: Acao } | null
+  carregando: { id: number; acao: Acao } | null,
+  gerandoPdf: number | null,
+  gerarPdf: (o: OrcamentoLinha) => void
 ): Coluna[] {
   // mecânicos ativos + o atual da linha (caso tenha sido inativado)
   const opcoesMecanico = (o: OrcamentoLinha): Opcao[] => {
@@ -113,6 +116,8 @@ function montarColunas(
       titulo: 'AÇÕES',
       render: (o) => {
         const girando = (acao: Acao) => carregando?.id === o.id && carregando.acao === acao
+        const carregandoPdf = gerandoPdf === o.id
+        const qualquerCarregando = carregando !== null || gerandoPdf !== null
         return (
           <div className="orc-acoes">
             <button
@@ -120,7 +125,7 @@ function montarColunas(
               className="orc-acao-btn"
               title="Editar"
               aria-label={`Editar orçamento ${o.numero}`}
-              disabled={carregando !== null}
+              disabled={qualquerCarregando}
               onClick={() => abrir(o, 'editar')}
             >
               {girando('editar') ? <Loader2 size={16} className="orc-spin" /> : <Pencil size={16} />}
@@ -130,10 +135,20 @@ function montarColunas(
               className="orc-acao-btn"
               title="Duplicar"
               aria-label={`Duplicar orçamento ${o.numero}`}
-              disabled={carregando !== null}
+              disabled={qualquerCarregando}
               onClick={() => abrir(o, 'duplicar')}
             >
               {girando('duplicar') ? <Loader2 size={16} className="orc-spin" /> : <Copy size={16} />}
+            </button>
+            <button
+              type="button"
+              className="orc-acao-btn"
+              title="Gerar PDF"
+              aria-label={`Gerar PDF do orçamento ${o.numero}`}
+              disabled={qualquerCarregando}
+              onClick={() => gerarPdf(o)}
+            >
+              {carregandoPdf ? <Loader2 size={16} className="orc-spin" /> : <FileText size={16} />}
             </button>
           </div>
         )
@@ -213,7 +228,28 @@ export function OrcamentosTable({
     }
   }
 
-  const colunas = montarColunas(mecanicos, salvar, abrir, carregando)
+  const [gerandoPdf, setGerandoPdf] = useState<number | null>(null)
+  // url do pdf quando popup é bloqueado — exibida como link clicável
+  const [urlPdfBloqueado, setUrlPdfBloqueado] = useState<string | null>(null)
+  async function gerarPdf(o: OrcamentoLinha) {
+    setGerandoPdf(o.id)
+    setUrlPdfBloqueado(null)
+    try {
+      const { url } = await gerarPdfOrcamento(o.id)
+      const janela = window.open(url, '_blank')
+      if (!janela) {
+        // popup bloqueado: mostra link clicável
+        setUrlPdfBloqueado(url)
+        setAviso('PDF gerado! Seu navegador bloqueou a abertura automática.')
+      }
+    } catch (e) {
+      setAviso(`Orçamento ${o.numero}: ${e instanceof Error ? e.message : 'erro ao gerar PDF'}`)
+    } finally {
+      setGerandoPdf(null)
+    }
+  }
+
+  const colunas = montarColunas(mecanicos, salvar, abrir, carregando, gerandoPdf, gerarPdf)
 
   // busca os orçamentos com debounce de 300ms
   useEffect(() => {
@@ -254,8 +290,13 @@ export function OrcamentosTable({
       {erro && <p className="orc-table-erro">{erro}</p>}
       {aviso && (
         <div className="orc-table-aviso" role="alert">
-          <span>{aviso}</span>
-          <button type="button" onClick={() => setAviso('')} aria-label="Fechar aviso">×</button>
+          <span>
+            {aviso}
+            {urlPdfBloqueado && (
+              <> — <a href={urlPdfBloqueado} target="_blank" rel="noreferrer">Abrir PDF</a></>
+            )}
+          </span>
+          <button type="button" onClick={() => { setAviso(''); setUrlPdfBloqueado(null) }} aria-label="Fechar aviso">×</button>
         </div>
       )}
 
