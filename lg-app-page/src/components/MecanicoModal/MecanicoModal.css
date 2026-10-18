@@ -9,3 +9,40 @@
     width: 100%;
   }
 }
+
+/* toggle ativo/inativo */
+.mec-modal-toggle {
+  display: flex;
+  gap: 0;
+  border: 1px solid var(--border-color, #ddd);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.mec-status-btn {
+  flex: 1;
+  padding: 8px 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text-muted, #888);
+  transition: background 0.15s, color 0.15s;
+}
+
+.mec-status-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.mec-status-ativo {
+  background: #d1fae5;
+  color: #065f46;
+  font-weight: 600;
+}
+
+.mec-status-inativo {
+  background: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+}

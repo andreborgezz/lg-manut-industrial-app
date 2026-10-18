@@ -26,11 +26,11 @@ export const solicitanteCriarSchema = z.object({
 
 export const solicitanteAtualizarSchema = solicitanteCriarSchema.omit({ empresaId: true })
 
-export const mecanicoCriarSchema = z.object({ nome })
+export const mecanicoCriarSchema = z.object({ nome, telefone: textoOpcional })
 
-export const mecanicoAtualizarSchema = z.object({ nome, ativo: z.boolean() })
+export const mecanicoAtualizarSchema = z.object({ nome, telefone: textoOpcional, ativo: z.boolean() })
 
-// patch: nome e/ou ativo
+// patch: nome, telefone e/ou ativo
 export const mecanicoPatchSchema = mecanicoAtualizarSchema.partial()
 
 export const cttEmpresaCriarSchema = z.object({

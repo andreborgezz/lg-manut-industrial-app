@@ -57,6 +57,17 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
     }
   }
 
+  async function salvarTelefone(m: Mecanico, telefone: string) {
+    try {
+      const novo = await atualizarMecanico(m.id, { telefone: telefone.trim() || null })
+      setMecanicos((ls) => ls.map((l) => (l.id === novo.id ? novo : l)))
+      setAviso('')
+    } catch (e) {
+      setAviso(`${m.nome}: ${e instanceof Error ? e.message : 'erro ao salvar'}`)
+      throw e
+    }
+  }
+
   async function alternarAtivo(m: Mecanico) {
     if (m.ativo && !window.confirm(`Desativar ${m.nome}? Ele deixa de aparecer na escolha de mecânico dos orçamentos.`)) {
       return
@@ -111,6 +122,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
             <thead>
               <tr>
                 <th>NOME</th>
+                <th>TELEFONE</th>
                 <th>STATUS</th>
                 <th>AÇÕES</th>
               </tr>
@@ -124,6 +136,14 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                       rotulo={`Nome do mecânico ${m.nome}`}
                       valor={m.nome}
                       onSalvar={(v) => salvarNome(m, v)}
+                    />
+                  </td>
+                  <td>
+                    <CelulaEditavel
+                      tipo="texto"
+                      rotulo={`Telefone de ${m.nome}`}
+                      valor={m.telefone ?? ''}
+                      onSalvar={(v) => salvarTelefone(m, v)}
                     />
                   </td>
                   <td>
@@ -165,7 +185,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
               ))}
               {linhas.length === 0 && !erro && (
                 <tr>
-                  <td colSpan={3} className="tabela-vazio">
+                  <td colSpan={4} className="tabela-vazio">
                     Nenhum mecânico encontrado.
                   </td>
                 </tr>

@@ -1,30 +1,28 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { atualizarMecanico, criarMecanico, type Mecanico } from '../../services/api'
-// reaproveita o estilo base dos modais (.modal, .modal-campo, ...)
 import '../NovoOrcamentoModal/NovoOrcamentoModal.css'
 import './MecanicoModal.css'
 
 type Props = {
   onFechar: () => void
   onSalvo: () => void
-  // com mecânico é edição; sem, é cadastro
   editando?: Mecanico
 }
 
 export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
   const [nome, setNome] = useState(editando?.nome ?? '')
+  const [telefone, setTelefone] = useState(editando?.telefone ?? '')
+  const [ativo, setAtivo] = useState(editando?.ativo ?? true)
   const [erroNome, setErroNome] = useState('')
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
 
   const nomeRef = useRef<HTMLInputElement>(null)
 
-  // foco no primeiro campo ao abrir
   useEffect(() => {
     nomeRef.current?.focus()
   }, [])
 
-  // fecha com esc
   useEffect(() => {
     const onKey = (e: globalThis.KeyboardEvent) => e.key === 'Escape' && !salvando && onFechar()
     window.addEventListener('keydown', onKey)
@@ -38,8 +36,12 @@ export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
     setSalvando(true)
     setErro('')
     try {
-      if (editando) await atualizarMecanico(editando.id, { nome: nome.trim() })
-      else await criarMecanico({ nome: nome.trim() })
+      const tel = telefone.trim() || null
+      if (editando) {
+        await atualizarMecanico(editando.id, { nome: nome.trim(), telefone: tel, ativo })
+      } else {
+        await criarMecanico({ nome: nome.trim(), telefone: tel })
+      }
       onSalvo()
     } catch (e) {
       setErro(e instanceof Error ? e.message : 'erro ao salvar')
@@ -73,6 +75,41 @@ export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
               />
               {erroNome && <span className="modal-erro-campo" role="alert">{erroNome}</span>}
             </label>
+
+            <label className="modal-campo">
+              <span>Telefone</span>
+              <input
+                type="tel"
+                placeholder="(00) 00000-0000"
+                value={telefone}
+                onChange={(e) => setTelefone(e.target.value)}
+                disabled={salvando}
+              />
+            </label>
+
+            {editando && (
+              <label className="modal-campo mec-modal-status">
+                <span>Status</span>
+                <div className="mec-modal-toggle">
+                  <button
+                    type="button"
+                    className={`mec-status-btn ${ativo ? 'mec-status-ativo' : ''}`}
+                    onClick={() => setAtivo(true)}
+                    disabled={salvando}
+                  >
+                    Ativo
+                  </button>
+                  <button
+                    type="button"
+                    className={`mec-status-btn ${!ativo ? 'mec-status-inativo' : ''}`}
+                    onClick={() => setAtivo(false)}
+                    disabled={salvando}
+                  >
+                    Inativo
+                  </button>
+                </div>
+              </label>
+            )}
 
             {erro && <p className="modal-erro">{erro}</p>}
           </div>
