@@ -4,9 +4,14 @@ node_modules/
 # Environment files
 .env
 .env*.local
+.env.prod
+lg-app-core/.env.prod
 
 # Builds
 dist/
 
 # Logs
 *.log
+
+# PDFs gerados localmente
+tmp/

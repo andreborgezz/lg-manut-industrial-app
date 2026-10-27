@@ -1,3 +1,12 @@
+create table usuarios (
+  id         serial primary key,
+  nome       text not null,
+  email      text not null unique,
+  senha_hash text not null,
+  ativo      boolean not null default true,
+  criado_em  timestamptz not null default now()
+);
+
 create table empresas (
   id serial primary key,
   nome text not null,

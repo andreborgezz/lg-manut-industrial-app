@@ -1,0 +1,141 @@
+/* wrapper relativo para o dropdown absoluto */
+.combo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.combo-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+}
+
+/* borda e fundo compartilhados entre botão e input */
+.combo-controle {
+  position: relative;
+}
+
+.combo-btn-valor,
+.combo-input {
+  width: 100%;
+  padding: 10px 32px 10px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.combo-btn-valor:focus,
+.combo-input:focus {
+  outline: none;
+  border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+}
+
+.combo-invalido .combo-btn-valor,
+.combo-invalido .combo-input {
+  border-color: var(--cor-status-recusado-texto);
+}
+
+.combo-desabilitado .combo-btn-valor {
+  background-color: var(--cor-fundo);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.combo-placeholder {
+  color: var(--cor-texto-suave);
+}
+
+.combo-seta {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+  pointer-events: none;
+}
+
+/* dropdown */
+.combo-lista {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 500;
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  max-height: 220px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+
+.combo-opcao {
+  padding: 9px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.1s ease;
+}
+
+.combo-opcao:hover,
+.combo-opcao-cursor {
+  background-color: var(--cor-ambar-fundo);
+}
+
+.combo-opcao-selecionada {
+  font-weight: 600;
+  color: var(--cor-ambar-escuro);
+}
+
+/* opção "+ Cadastrar" sempre âmbar */
+.combo-opcao-adicionar {
+  color: var(--cor-ambar-escuro);
+  font-weight: 600;
+  border-top: 1px solid var(--cor-borda);
+  margin-top: 4px;
+  padding-top: 10px;
+}
+
+/* "Criar 'X'" — distinto do adicionar fixo */
+.combo-opcao-criar {
+  color: var(--cor-ambar-escuro);
+  font-weight: 500;
+  border-top: 1px solid var(--cor-borda);
+  margin-top: 4px;
+  padding-top: 10px;
+  font-style: italic;
+}
+
+.combo-opcao-criar strong {
+  font-style: normal;
+  font-weight: 700;
+}
+
+.combo-vazio {
+  padding: 9px 14px;
+  font-size: 14px;
+  color: var(--cor-texto-suave);
+  font-style: italic;
+}
+
+.combo-erro {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--cor-status-recusado-texto);
+}

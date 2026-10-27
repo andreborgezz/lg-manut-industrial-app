@@ -1,8 +1,8 @@
-import { NavLink } from 'react-router-dom'
-import { FileText, Building2, Wrench } from 'lucide-react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { FileText, Building2, Wrench, LogOut } from 'lucide-react'
+import { useAuth } from '../../contexts/AuthContext'
 import './Sidebar.css'
 
-// itens do menu de navegação da sidebar
 const itens = [
   { to: '/orcamentos', label: 'Orçamentos', icon: FileText },
   { to: '/empresas', label: 'Empresas', icon: Building2 },
@@ -10,6 +10,14 @@ const itens = [
 ]
 
 export function Sidebar() {
+  const { usuario, logout } = useAuth()
+  const navigate = useNavigate()
+
+  async function aoSair() {
+    await logout()
+    navigate('/login', { replace: true })
+  }
+
   return (
     <aside className="sidebar">
       <div className="sidebar-topo">
@@ -26,6 +34,15 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
+      {usuario && (
+        <div className="sidebar-rodape">
+          <span className="sidebar-usuario">{usuario.nome}</span>
+          <button className="sidebar-sair" onClick={aoSair} title="Sair">
+            <LogOut size={16} />
+            <span>Sair</span>
+          </button>
+        </div>
+      )}
     </aside>
   )
 }

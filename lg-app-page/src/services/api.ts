@@ -6,6 +6,7 @@ export type OrcamentoLinha = {
   id: number
   empresa: string
   solicitante: string | null
+  solicitanteTelefone: string | null
   entradaEm: string
   numero: number
   numeroPedido: string | null
@@ -18,16 +19,25 @@ export type OrcamentoLinha = {
   status: Status
 }
 
-export async function listarOrcamentos(busca: string, status: string): Promise<OrcamentoLinha[]> {
+export type FiltroPeriodo = {
+  busca?: string
+  status?: string
+  dataInicio?: string
+  dataFim?: string
+}
+
+export async function listarOrcamentos(filtro: FiltroPeriodo): Promise<OrcamentoLinha[]> {
   const params = new URLSearchParams()
-  if (busca) params.set('busca', busca)
-  if (status) params.set('status', status)
-  const res = await fetch(`${API}/orcamentos?${params}`)
+  if (filtro.busca) params.set('busca', filtro.busca)
+  if (filtro.status) params.set('status', filtro.status)
+  if (filtro.dataInicio) params.set('dataInicio', filtro.dataInicio)
+  if (filtro.dataFim) params.set('dataFim', filtro.dataFim)
+  const res = await fetch(`${API}/orcamentos?${params}`, { credentials: 'include' })
   if (!res.ok) throw new Error('erro ao listar orçamentos')
   return res.json()
 }
 
-export type Empresa = { id: number; nome: string; cnpj: string | null; email: string | null }
+export type Empresa = { id: number; nome: string; cnpj: string | null; email: string | null; telefone: string | null }
 export type Solicitante = { id: number; empresaId: number; nome: string; email: string | null; telefone: string | null }
 export type Mecanico = { id: number; nome: string; telefone: string | null; ativo: boolean }
 
@@ -61,6 +71,7 @@ export type NovoOrcamentoBody = {
   valor?: number | null
   prazoDias?: number | null
   fimDeSemana?: boolean
+  entradaEm?: string
 }
 
 export type AtualizarOrcamentoBody = Partial<NovoOrcamentoBody> & {
@@ -71,16 +82,38 @@ export type AtualizarOrcamentoBody = Partial<NovoOrcamentoBody> & {
   entregaEm?: string | null
 }
 
+export type UsuarioAutenticado = { nome: string; email: string }
+
+export const loginApi = (email: string, senha: string) =>
+  chamar<UsuarioAutenticado>('/auth/login', { method: 'POST', body: JSON.stringify({ email, senha }) })
+
+export const logoutApi = () =>
+  chamar<{ ok: boolean }>('/auth/logout', { method: 'POST' })
+
+export const meApi = () => chamar<UsuarioAutenticado>('/auth/me')
+
+let _redirecionarParaLogin: (() => void) | null = null
+
+export function registrarRedirecionamentoLogin(fn: () => void) {
+  _redirecionarParaLogin = fn
+}
+
 // faz o fetch e transforma qualquer erro em Error com mensagem legível
 async function chamar<T>(caminho: string, init?: RequestInit): Promise<T> {
   let res: Response
   try {
     res = await fetch(`${API}${caminho}`, {
       ...init,
+      credentials: 'include',
       headers: init?.body ? { 'Content-Type': 'application/json' } : undefined,
     })
   } catch {
     throw new Error('não foi possível conectar ao servidor')
+  }
+
+  if (res.status === 401 && caminho !== '/auth/login' && caminho !== '/auth/me') {
+    _redirecionarParaLogin?.()
+    throw new Error('Sua sessão expirou. Faça login novamente.')
   }
 
   const dados = await res.json().catch(() => null)
@@ -97,10 +130,10 @@ function mensagemErro(dados: unknown, status: number): string {
 
 export const listarEmpresas = () => chamar<Empresa[]>('/empresas')
 
-export const criarEmpresa = (body: { nome: string; email?: string | null; cnpj?: string | null }) =>
+export const criarEmpresa = (body: { nome: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) =>
   chamar<Empresa>('/empresas', { method: 'POST', body: JSON.stringify(body) })
 
-export const atualizarEmpresa = (id: number, patch: { nome?: string; email?: string | null; cnpj?: string | null }) =>
+export const atualizarEmpresa = (id: number, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) =>
   chamar<Empresa>(`/empresas/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
 
 export const listarSolicitantes = (empresaId: number) =>
@@ -114,6 +147,16 @@ export const criarSolicitante = (body: {
 }) => chamar<Solicitante>('/solicitantes', { method: 'POST', body: JSON.stringify(body) })
 
 export type CttEmpresa = { id: number; empresaId: number; nome: string; email: string | null; cargo: string | null; telefone: string | null }
+
+export type EmpresaDetalhe = {
+  empresa: Empresa
+  solicitantes: Solicitante[]
+  orcamentos: { id: number; numero: number; titulo: string | null; status: Status; valor: string | null; entradaEm: string }[]
+  totalAcumulado: string
+}
+
+export const buscarEmpresaDetalhe = (id: number) =>
+  chamar<EmpresaDetalhe>(`/empresas/${id}?detalhe=1`)
 
 export const listarCttEmpresas = (empresaId: number) =>
   chamar<CttEmpresa[]>(`/ctt-empresas?empresaId=${empresaId}`)
@@ -148,3 +191,8 @@ export const gerarPdfOrcamento = (id: number) =>
 
 export const buscarUrlPdfOrcamento = (id: number) =>
   chamar<{ url: string }>(`/orcamentos/${id}/pdf`)
+
+export type OrcamentoRecente = { id: number; numero: number; titulo: string | null; escopo: string | null; valor: string | null }
+
+export const listarOrcamentosRecentes = (empresaId: number) =>
+  chamar<OrcamentoRecente[]>(`/orcamentos?empresaId=${empresaId}&recentes=5`)

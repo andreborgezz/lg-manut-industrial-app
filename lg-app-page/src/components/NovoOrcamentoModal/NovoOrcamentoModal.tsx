@@ -1,430 +1,384 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type KeyboardEvent,
+} from 'react'
 import {
   criarEmpresa,
   criarOrcamento,
   atualizarOrcamento,
   criarSolicitante,
   listarEmpresas,
+  listarMecanicos,
+  listarOrcamentosRecentes,
   listarSolicitantes,
   type Empresa,
+  type Mecanico,
   type NovoOrcamentoBody,
   type Orcamento,
+  type OrcamentoRecente,
   type Solicitante,
 } from '../../services/api'
+import { Minus, Plus } from 'lucide-react'
+import { Combobox, type OpcaoCombo } from '../Combobox/Combobox'
 import './NovoOrcamentoModal.css'
 
-// dados que podem vir pré-preenchidos (ex: duplicar um orçamento)
 export type InicialOrcamento = Partial<
-  Pick<Orcamento, 'empresaId' | 'solicitanteId' | 'maquina' | 'titulo' | 'escopo' | 'valor' | 'prazoDias' | 'fimDeSemana'>
+  Pick<Orcamento, 'empresaId' | 'solicitanteId' | 'mecanicoId' | 'maquina' | 'titulo' | 'escopo' | 'valor' | 'prazoDias' | 'fimDeSemana'>
 >
 
 type Props = {
   onFechar: () => void
-  onSalvo: () => void
+  onSalvo: (orc: Orcamento, gerarPdf?: boolean) => void
   inicial?: InicialOrcamento
-  // número do orçamento original, quando é uma cópia
   copiaDe?: number
-  // quando preenchido, o modal edita esse orçamento em vez de criar
   editando?: { id: number; numero: number }
 }
 
-// valores dos selects que abrem os mini forms
-const NOVA_EMPRESA = 'nova'
-const NOVO_SOLICITANTE = 'novo'
+const CHAVE_MECANICO = 'lg:ultimoMecanicoId'
+const lerMecanicoLembrado = (): string => { try { return localStorage.getItem(CHAVE_MECANICO) ?? '' } catch { return '' } }
+const lembrarMecanico = (id: string) => { try { localStorage.setItem(CHAVE_MECANICO, id) } catch { /* sem storage */ } }
 
-const CHAVE_EMPRESA = 'lg:ultimaEmpresaId'
+// máscara BRL da direita pra esquerda: centavos como inteiro
+const formatarCentavos = (c: string) =>
+  c === '' ? '' : (Number(c) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
 
-const lerEmpresaLembrada = (): string => {
-  try {
-    return localStorage.getItem(CHAVE_EMPRESA) ?? ''
-  } catch {
-    return ''
-  }
+const paraCentavos = (v: string | null | undefined) =>
+  v ? String(Math.round(Number(v) * 100)) : ''
+
+// data de hoje no formato yyyy-mm-dd (local)
+function hoje(): string {
+  const d = new Date()
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
-const lembrarEmpresa = (id: string) => {
-  try {
-    localStorage.setItem(CHAVE_EMPRESA, id)
-  } catch {
-    // sem storage disponível, segue sem lembrar
-  }
-}
-
-// valor guardado em centavos (só dígitos); exibido como 2.025,00
-const formatarCentavos = (centavos: string) =>
-  centavos === '' ? '' : (Number(centavos) / 100).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-
-const paraCentavos = (v: string | null | undefined) => (v ? String(Math.round(Number(v) * 100)) : '')
-
-const emailOk = (e: string) => /^\S+@\S+\.\S+$/.test(e)
-
-type Erros = Partial<Record<'empresa' | 'solicitante' | 'maquina' | 'valor' | 'prazoDias', string>>
+type Erros = Partial<Record<'empresa' | 'solicitante' | 'titulo' | 'valor' | 'prazoDias', string>>
 
 export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editando }: Props) {
+  const formRef = useRef<HTMLFormElement>(null)
+
   const [empresas, setEmpresas] = useState<Empresa[]>([])
   const [solicitantes, setSolicitantes] = useState<Solicitante[]>([])
+  const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
 
   const [empresaId, setEmpresaId] = useState(inicial?.empresaId ? String(inicial.empresaId) : '')
   const [solicitanteId, setSolicitanteId] = useState(inicial?.solicitanteId ? String(inicial.solicitanteId) : '')
-  const [maquina, setMaquina] = useState(inicial?.maquina ?? '')
+  const [mecanicoId, setMecanicoId] = useState(
+    inicial?.mecanicoId ? String(inicial.mecanicoId) : lerMecanicoLembrado()
+  )
   const [titulo, setTitulo] = useState(inicial?.titulo ?? '')
   const [escopo, setEscopo] = useState(inicial?.escopo ?? '')
   const [valor, setValor] = useState(paraCentavos(inicial?.valor))
-  // orçamento novo começa com 1 dia; cópia mantém o prazo original
   const [prazoDias, setPrazoDias] = useState(
     inicial ? (inicial.prazoDias != null ? String(inicial.prazoDias) : '') : '1'
   )
   const [fimDeSemana, setFimDeSemana] = useState(inicial?.fimDeSemana ?? false)
+  const [entradaEm, setEntradaEm] = useState(hoje())
 
-  // mini form de empresa nova
-  const [novaNome, setNovaNome] = useState('')
-  const [novaEmail, setNovaEmail] = useState('')
-  const [novaErro, setNovaErro] = useState('')
-  const [criandoEmpresa, setCriandoEmpresa] = useState(false)
-
-  // mini form de solicitante novo
-  const [solNome, setSolNome] = useState('')
-  const [solEmail, setSolEmail] = useState('')
-  const [solTelefone, setSolTelefone] = useState('')
-  const [solErro, setSolErro] = useState('')
-  const [criandoSolicitante, setCriandoSolicitante] = useState(false)
-
+  const [recentes, setRecentes] = useState<OrcamentoRecente[]>([])
   const [erros, setErros] = useState<Erros>({})
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
 
-  const formRef = useRef<HTMLFormElement>(null)
-  const empresaRef = useRef<HTMLSelectElement>(null)
+  const empresaEscolhida = empresaId !== ''
 
-  const criandoNova = empresaId === NOVA_EMPRESA
-  const empresaEscolhida = empresaId !== '' && !criandoNova
-  const criandoSol = solicitanteId === NOVO_SOLICITANTE
-
-  // foco no primeiro campo ao abrir
+  // carrega dados iniciais
   useEffect(() => {
-    empresaRef.current?.focus()
-  }, [])
-
-  // carrega empresas ao abrir; orçamento novo pré-seleciona a última empresa usada
-  useEffect(() => {
-    listarEmpresas()
-      .then((lista) => {
-        setEmpresas(lista)
-        if (inicial) return
-        const lembrada = lerEmpresaLembrada()
-        if (lembrada && lista.some((e) => String(e.id) === lembrada)) setEmpresaId(lembrada)
+    Promise.all([listarEmpresas(), listarMecanicos()])
+      .then(([emp, mec]) => {
+        setEmpresas(emp)
+        setMecanicos(mec)
       })
       .catch((e) => setErro(e.message))
-  }, [inicial])
+  }, [])
 
-  // solicitantes dependem da empresa escolhida
+  // solicitantes e recentes da empresa selecionada
   useEffect(() => {
-    if (!empresaEscolhida) return
+    if (!empresaEscolhida) { setSolicitantes([]); setRecentes([]); return }
     let cancelado = false
     listarSolicitantes(Number(empresaId))
-      .then((s) => !cancelado && setSolicitantes(s))
+      .then((s) => {
+        if (cancelado) return
+        setSolicitantes(s)
+        if (s.length === 1 && !solicitanteId) setSolicitanteId(String(s[0].id))
+      })
       .catch((e) => !cancelado && setErro(e.message))
-    return () => {
-      cancelado = true
+    // orçamentos recentes da empresa para reutilização
+    if (!editando) {
+      listarOrcamentosRecentes(Number(empresaId))
+        .then((r) => { if (!cancelado) setRecentes(r) })
+        .catch(() => { /* silencia: recentes são opcionais */ })
     }
+    return () => { cancelado = true }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [empresaId, empresaEscolhida])
 
-  // fecha com esc
+  // Esc fecha (exceto ao salvar)
   useEffect(() => {
-    const onKey = (e: globalThis.KeyboardEvent) => e.key === 'Escape' && !salvando && onFechar()
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape' && !salvando) onFechar()
+    }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [onFechar, salvando])
 
-  // limpa o erro de um campo quando ele é alterado
+  // Ctrl+Enter salva de qualquer campo
+  useEffect(() => {
+    const onKey = (e: globalThis.KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        if (formRef.current?.contains(document.activeElement)) {
+          e.preventDefault()
+          formRef.current.requestSubmit()
+        }
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   const limpar = (campo: keyof Erros) => setErros((x) => ({ ...x, [campo]: undefined }))
 
-  // enter dentro de um mini form salva só o mini form, não o orçamento
-  const aoEnter = (salvar: () => void) => (e: KeyboardEvent) => {
-    if (e.key !== 'Enter') return
-    e.preventDefault()
-    salvar()
-  }
-
-  async function salvarEmpresa() {
-    const nome = novaNome.trim()
-    const email = novaEmail.trim()
-    if (!nome) return setNovaErro('informe o nome da empresa')
-    if (email && !emailOk(email)) return setNovaErro('e-mail inválido')
-
-    setCriandoEmpresa(true)
-    setNovaErro('')
+  // cria empresa inline via "Criar 'X'" no combobox
+  async function criarEmpresaRapido(nome: string) {
     try {
-      const nova = await criarEmpresa({ nome, email: email || null })
-      setEmpresas((lista) => [...lista, nova].sort((a, b) => a.nome.localeCompare(b.nome)))
+      const nova = await criarEmpresa({ nome })
+      setEmpresas((l) => [...l, nova].sort((a, b) => a.nome.localeCompare(b.nome)))
       setEmpresaId(String(nova.id))
-      lembrarEmpresa(String(nova.id))
       setSolicitanteId('')
       limpar('empresa')
-      setNovaNome('')
-      setNovaEmail('')
     } catch (e) {
-      setNovaErro(e instanceof Error ? e.message : 'erro ao criar empresa')
-    } finally {
-      setCriandoEmpresa(false)
+      setErro(e instanceof Error ? e.message : 'erro ao criar empresa')
     }
   }
 
-  async function salvarSolicitante() {
-    const nome = solNome.trim()
-    const email = solEmail.trim()
-    const telefone = solTelefone.trim()
-    if (!nome) return setSolErro('informe o nome do solicitante')
-    if (email && !emailOk(email)) return setSolErro('e-mail inválido')
-
-    setCriandoSolicitante(true)
-    setSolErro('')
+  // cria solicitante inline via "Criar 'X'" no combobox
+  async function criarSolicitanteRapido(nome: string) {
     try {
-      const novo = await criarSolicitante({
-        empresaId: Number(empresaId),
-        nome,
-        email: email || null,
-        telefone: telefone || null,
-      })
-      setSolicitantes((lista) => [...lista, novo].sort((a, b) => a.nome.localeCompare(b.nome)))
+      const novo = await criarSolicitante({ empresaId: Number(empresaId), nome, email: null, telefone: null })
+      setSolicitantes((l) => [...l, novo].sort((a, b) => a.nome.localeCompare(b.nome)))
       setSolicitanteId(String(novo.id))
       limpar('solicitante')
-      setSolNome('')
-      setSolEmail('')
-      setSolTelefone('')
     } catch (e) {
-      setSolErro(e instanceof Error ? e.message : 'erro ao criar solicitante')
-    } finally {
-      setCriandoSolicitante(false)
+      setErro(e instanceof Error ? e.message : 'erro ao criar solicitante')
     }
   }
 
-  // validação do front; devolve os erros por campo
+  function aplicarRecente(r: OrcamentoRecente) {
+    if (r.titulo) setTitulo(r.titulo)
+    if (r.escopo) setEscopo(r.escopo)
+    if (r.valor != null) setValor(paraCentavos(r.valor))
+    limpar('titulo')
+    limpar('valor')
+  }
+
   function validar(): Erros {
     const e: Erros = {}
-    if (!empresaEscolhida) {
-      e.empresa = criandoNova ? 'salve a empresa nova antes de continuar' : 'selecione a empresa'
-    }
-    if (criandoSol) e.solicitante = 'salve o solicitante novo ou escolha outra opção'
-    if (!maquina.trim()) e.maquina = 'informe a máquina'
+    if (!empresaEscolhida) e.empresa = 'selecione a empresa'
+    if (!titulo.trim()) e.titulo = 'informe o título'
     if (valor === '') e.valor = 'informe o valor'
-    if (prazoDias !== '' && !(Number.isInteger(Number(prazoDias)) && Number(prazoDias) >= 0)) {
-      e.prazoDias = 'prazo deve ser um número inteiro de dias'
+    if (prazoDias !== '' && !(Number.isInteger(Number(prazoDias)) && Number(prazoDias) >= 1 && Number(prazoDias) <= 365)) {
+      e.prazoDias = 'deve ser entre 1 e 365'
     }
     return e
   }
 
-  async function enviar(ev: FormEvent) {
-    ev.preventDefault()
-    const encontrados = validar()
-    setErros(encontrados)
-    if (Object.keys(encontrados).length > 0) return
-
-    const body: NovoOrcamentoBody = {
+  function montarBody(): NovoOrcamentoBody & { entradaEm?: string } {
+    return {
       empresaId: Number(empresaId),
       solicitanteId: solicitanteId ? Number(solicitanteId) : null,
-      maquina: maquina.trim(),
+      mecanicoId: mecanicoId ? Number(mecanicoId) : null,
       titulo: titulo.trim() || null,
       escopo: escopo.trim() || null,
       valor: Number(valor) / 100,
       prazoDias: prazoDias !== '' ? Number(prazoDias) : null,
       fimDeSemana,
+      entradaEm,
     }
+  }
+
+  async function enviar(ev: FormEvent, gerarPdfApos = false) {
+    ev.preventDefault()
+    const encontrados = validar()
+    setErros(encontrados)
+    if (Object.keys(encontrados).length > 0) return
 
     setSalvando(true)
     setErro('')
     try {
-      if (editando) await atualizarOrcamento(editando.id, body)
-      else await criarOrcamento(body)
-      onSalvo()
+      let orc: Orcamento
+      if (editando) {
+        orc = await atualizarOrcamento(editando.id, montarBody()) as unknown as Orcamento
+      } else {
+        orc = await criarOrcamento(montarBody())
+      }
+      if (mecanicoId) lembrarMecanico(mecanicoId)
+      onSalvo(orc, gerarPdfApos)
     } catch (err) {
       setErro(err instanceof Error ? err.message : 'erro ao salvar')
       setSalvando(false)
     }
   }
 
+  // enter em campo normal avança para o próximo (não submete)
+  function aoEnterAvanca(e: KeyboardEvent<HTMLElement>) {
+    if (e.key !== 'Enter' || e.ctrlKey || e.metaKey) return
+    const form = formRef.current
+    if (!form) return
+    const focaveis = Array.from(
+      form.querySelectorAll<HTMLElement>('input:not([disabled]),select:not([disabled]),textarea:not([disabled]),button:not([disabled])')
+    ).filter((el) => !el.closest('[data-prazo-chips]'))
+    const atual = document.activeElement as HTMLElement
+    const idx = focaveis.indexOf(atual)
+    if (idx >= 0 && idx < focaveis.length - 1) {
+      e.preventDefault()
+      focaveis[idx + 1].focus()
+    }
+  }
+
+  const opcoesEmpresa: OpcaoCombo[] = empresas.map((e) => ({ valor: String(e.id), label: e.nome }))
+  const opcoesSolicitante: OpcaoCombo[] = solicitantes
+    .filter((s) => s.empresaId === Number(empresaId))
+    .map((s) => ({ valor: String(s.id), label: s.nome }))
+  const opcoesMecanico: OpcaoCombo[] = mecanicos.map((m) => ({ valor: String(m.id), label: m.nome }))
+
+  // preview das linhas de escopo como bullets
+  const linhasEscopo = escopo.split('\n').map((l) => l.trim()).filter(Boolean)
+
+  // botão salvar desabilitado: explica o motivo
+  const motivoBloqueio = salvando
+    ? 'Salvando...'
+    : !empresaEscolhida
+      ? 'Selecione a empresa'
+      : !titulo.trim()
+        ? 'Informe o título'
+        : valor === ''
+          ? 'Informe o valor'
+          : ''
+
+  const tituloPrincipal = editando
+    ? `Editar orçamento nº ${editando.numero}`
+    : copiaDe
+      ? `Novo orçamento (cópia do nº ${copiaDe})`
+      : 'Novo orçamento'
+
   return (
-    <div className="modal-overlay">
-      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div
+      className="modal-overlay"
+      onClick={(e) => { if (e.target === e.currentTarget && !salvando) onFechar() }}
+    >
+      <div className="modal modal-orc" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
         <header className="modal-header">
-          <h2 id="modal-titulo">
-            {editando
-              ? `Editar orçamento nº ${editando.numero}`
-              : copiaDe
-                ? `Novo orçamento (cópia do nº ${copiaDe})`
-                : 'Novo orçamento'}
-          </h2>
-          <button type="button" className="modal-fechar" onClick={onFechar} disabled={salvando} aria-label="Fechar">
-            ×
-          </button>
+          <h2 id="modal-titulo">{tituloPrincipal}</h2>
+          <button type="button" className="modal-fechar" onClick={onFechar} disabled={salvando} aria-label="Fechar">×</button>
         </header>
 
-        <form className="modal-form" ref={formRef} onSubmit={enviar} noValidate>
-          <div className="modal-corpo">
-            {/* quem */}
-            <section className="modal-bloco">
-              <h3 className="modal-bloco-titulo">Quem</h3>
-              <div className="modal-grade">
-                <label className="modal-campo">
-                  <span>Empresa *</span>
-                  <select
-                    ref={empresaRef}
-                    value={empresaId}
-                    onChange={(e) => {
-                      setEmpresaId(e.target.value)
-                      setSolicitanteId('')
-                      limpar('empresa')
-                      if (e.target.value && e.target.value !== NOVA_EMPRESA) lembrarEmpresa(e.target.value)
-                    }}
-                    aria-invalid={!!erros.empresa}
-                    disabled={salvando}
-                  >
-                    <option value="">Selecione...</option>
-                    {empresas.map((emp) => (
-                      <option key={emp.id} value={emp.id}>{emp.nome}</option>
-                    ))}
-                    <option value={NOVA_EMPRESA}>+ Cadastrar empresa nova</option>
-                  </select>
-                  {erros.empresa && <span className="modal-erro-campo" role="alert">{erros.empresa}</span>}
-                </label>
+        <form
+          className="modal-form"
+          ref={formRef}
+          onSubmit={(e) => enviar(e, false)}
+          noValidate
+        >
+          {/* layout duas colunas: campos | preview */}
+          <div className="modal-corpo-duplo">
 
-                <label className="modal-campo">
-                  <span>Solicitante</span>
-                  <select
-                    value={solicitanteId}
-                    onChange={(e) => {
-                      setSolicitanteId(e.target.value)
-                      limpar('solicitante')
-                    }}
-                    aria-invalid={!!erros.solicitante}
-                    disabled={!empresaEscolhida || salvando}
-                  >
-                    <option value="">
-                      {empresaEscolhida ? 'Nenhum' : 'Escolha a empresa primeiro'}
-                    </option>
-                    {solicitantes
-                      .filter((s) => s.empresaId === Number(empresaId))
-                      .map((s) => (
-                        <option key={s.id} value={s.id}>{s.nome}</option>
-                      ))}
-                    {empresaEscolhida && <option value={NOVO_SOLICITANTE}>+ Cadastrar solicitante novo</option>}
-                  </select>
-                  {erros.solicitante && <span className="modal-erro-campo" role="alert">{erros.solicitante}</span>}
-                </label>
+            {/* coluna esquerda: campos */}
+            <div className="modal-campos" onKeyDown={aoEnterAvanca}>
 
-                {criandoNova && (
-                  <div className="modal-mini-form">
-                    <label className="modal-campo">
-                      <span>Nome da empresa *</span>
-                      <input
-                        value={novaNome}
-                        onChange={(e) => setNovaNome(e.target.value)}
-                        onKeyDown={aoEnter(salvarEmpresa)}
-                      />
-                    </label>
-                    <label className="modal-campo">
-                      <span>E-mail</span>
-                      <input
-                        type="email"
-                        value={novaEmail}
-                        onChange={(e) => setNovaEmail(e.target.value)}
-                        onKeyDown={aoEnter(salvarEmpresa)}
-                      />
-                    </label>
-                    {novaErro && <p className="modal-erro modal-span-2">{novaErro}</p>}
-                    <button type="button" className="btn-primario" onClick={salvarEmpresa} disabled={criandoEmpresa}>
-                      {criandoEmpresa ? 'Salvando...' : 'Salvar empresa'}
-                    </button>
-                  </div>
-                )}
+              {/* linha 1: empresa + solicitante */}
+              <div className="modal-linha">
+                <Combobox
+                  label="Empresa *"
+                  valor={empresaId}
+                  opcoes={opcoesEmpresa}
+                  obrigatorio
+                  autoFocus={!inicial}
+                  onChange={(v) => {
+                    setEmpresaId(v)
+                    setSolicitanteId('')
+                    limpar('empresa')
+                  }}
+                  onCriar={criarEmpresaRapido}
+                  labelAdicionar="+ Cadastrar empresa"
+                  onAdicionar={() => { /* abrir modal de empresa se quiser fluxo completo */ }}
+                  placeholder="Buscar empresa..."
+                  disabled={salvando}
+                  erro={erros.empresa}
+                />
 
-                {criandoSol && (
-                  <div className="modal-mini-form">
-                    <label className="modal-campo">
-                      <span>Nome do solicitante *</span>
-                      <input
-                        value={solNome}
-                        onChange={(e) => setSolNome(e.target.value)}
-                        onKeyDown={aoEnter(salvarSolicitante)}
-                      />
-                    </label>
-                    <label className="modal-campo">
-                      <span>E-mail</span>
-                      <input
-                        type="email"
-                        value={solEmail}
-                        onChange={(e) => setSolEmail(e.target.value)}
-                        onKeyDown={aoEnter(salvarSolicitante)}
-                      />
-                    </label>
-                    <label className="modal-campo">
-                      <span>Telefone</span>
-                      <input
-                        type="tel"
-                        value={solTelefone}
-                        onChange={(e) => setSolTelefone(e.target.value)}
-                        onKeyDown={aoEnter(salvarSolicitante)}
-                      />
-                    </label>
-                    {solErro && <p className="modal-erro modal-span-2">{solErro}</p>}
-                    <button
-                      type="button"
-                      className="btn-primario"
-                      onClick={salvarSolicitante}
-                      disabled={criandoSolicitante}
-                    >
-                      {criandoSolicitante ? 'Salvando...' : 'Salvar solicitante'}
-                    </button>
-                  </div>
-                )}
+                <Combobox
+                  label="Solicitante"
+                  valor={solicitanteId}
+                  opcoes={opcoesSolicitante}
+                  onChange={(v) => { setSolicitanteId(v); limpar('solicitante') }}
+                  onCriar={empresaEscolhida ? criarSolicitanteRapido : undefined}
+                  placeholder={empresaEscolhida ? 'Buscar solicitante...' : 'Escolha a empresa primeiro'}
+                  disabled={!empresaEscolhida || salvando}
+                  erro={erros.solicitante}
+                />
               </div>
-            </section>
 
-            {/* serviço */}
-            <section className="modal-bloco">
-              <h3 className="modal-bloco-titulo">Serviço</h3>
-              <div className="modal-grade">
-                <label className="modal-campo">
-                  <span>Máquina *</span>
+              {/* recentes da empresa: reutilizar título/escopo/valor com 1 clique */}
+              {!editando && recentes.length > 0 && (
+                <div className="modal-recentes">
+                  <span className="modal-recentes-label">Reutilizar de recente:</span>
+                  {recentes.map((r) => (
+                    <button
+                      key={r.id}
+                      type="button"
+                      className="modal-recente-chip"
+                      onClick={() => aplicarRecente(r)}
+                      disabled={salvando}
+                      title={r.escopo ?? r.titulo ?? `Orçamento nº ${r.numero}`}
+                    >
+                      nº {r.numero}{r.titulo ? ` – ${r.titulo.slice(0, 30)}${r.titulo.length > 30 ? '…' : ''}` : ''}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* linha 2: título (campo principal, span total) */}
+              <div className="modal-linha">
+                <label className="modal-campo modal-campo-full">
+                  <span>Título *</span>
                   <input
-                    value={maquina}
-                    onChange={(e) => {
-                      setMaquina(e.target.value)
-                      limpar('maquina')
-                    }}
-                    aria-invalid={!!erros.maquina}
+                    value={titulo}
+                    onChange={(e) => { setTitulo(e.target.value); limpar('titulo') }}
+                    onBlur={() => { if (!titulo.trim()) setErros((x) => ({ ...x, titulo: 'informe o título' })) }}
+                    placeholder="Ex: Manutenção preventiva bomba hidráulica"
+                    aria-invalid={!!erros.titulo}
                     disabled={salvando}
                   />
-                  {erros.maquina && <span className="modal-erro-campo" role="alert">{erros.maquina}</span>}
+                  {erros.titulo && <span className="modal-erro-campo" role="alert">{erros.titulo}</span>}
                 </label>
+              </div>
 
-                <label className="modal-campo">
-                  <span>Título</span>
-                  <input value={titulo} onChange={(e) => setTitulo(e.target.value)} disabled={salvando} />
-                </label>
-
-                <label className="modal-campo modal-span-2">
-                  <span>Escopo (Ctrl+Enter salva)</span>
+              {/* linha 3: escopo (textarea, sem preview inline — fica na coluna direita) */}
+              <div className="modal-linha">
+                <label className="modal-campo modal-campo-full">
+                  <span>Escopo <span className="modal-dica-tecla">Enter = nova linha · Ctrl+Enter = salvar</span></span>
                   <textarea
-                    rows={3}
+                    rows={4}
                     value={escopo}
                     onChange={(e) => setEscopo(e.target.value)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                      // Ctrl+Enter no textarea submete o form
+                      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                         e.preventDefault()
                         formRef.current?.requestSubmit()
                       }
+                      // Enter normal no textarea = nova linha (comportamento padrão)
                     }}
+                    placeholder="Uma linha por item do serviço..."
                     disabled={salvando}
                   />
                 </label>
               </div>
-            </section>
 
-            {/* valores */}
-            <section className="modal-bloco">
-              <h3 className="modal-bloco-titulo">Valores</h3>
-              <div className="modal-grade">
+              {/* linha 4: valor + prazo */}
+              <div className="modal-linha">
                 <label className="modal-campo">
                   <span>Valor (R$) *</span>
                   <input
@@ -433,54 +387,139 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                     placeholder="0,00"
                     value={formatarCentavos(valor)}
                     onChange={(e) => {
-                      // só dígitos; limita a 12 (numeric(12,2) do banco)
-                      const digitos = e.target.value.replace(/\D/g, '').slice(0, 12)
-                      setValor(digitos === '' ? '' : String(Number(digitos)))
+                      const d = e.target.value.replace(/\D/g, '').slice(0, 12)
+                      setValor(d === '' ? '' : String(Number(d)))
                       limpar('valor')
                     }}
+                    onBlur={() => { if (valor === '') setErros((x) => ({ ...x, valor: 'informe o valor' })) }}
+                    onWheel={(e) => (e.target as HTMLInputElement).blur()}
                     aria-invalid={!!erros.valor}
                     disabled={salvando}
+                    className="modal-input-valor"
                   />
                   {erros.valor && <span className="modal-erro-campo" role="alert">{erros.valor}</span>}
                 </label>
-                <label className="modal-campo">
+
+                <div className="modal-campo">
                   <span>Prazo (dias)</span>
-                  <input
-                    type="number"
-                    min="0"
-                    step="1"
-                    inputMode="numeric"
-                    value={prazoDias}
-                    onChange={(e) => {
-                      setPrazoDias(e.target.value)
-                      limpar('prazoDias')
-                    }}
-                    aria-invalid={!!erros.prazoDias}
-                    disabled={salvando}
-                  />
-                  {erros.prazoDias && <span className="modal-erro-campo" role="alert">{erros.prazoDias}</span>}
-                </label>
-
-                <label className="modal-check modal-span-2">
-                  <input
-                    type="checkbox"
-                    checked={fimDeSemana}
-                    onChange={(e) => setFimDeSemana(e.target.checked)}
-                    disabled={salvando}
-                  />
-                  <span>Inclui fim de semana</span>
-                </label>
+                  <div className="prazo-stepper" data-prazo-chips>
+                    <button
+                      type="button"
+                      className="prazo-step-btn"
+                      onClick={() => setPrazoDias((p) => p === '' ? '' : String(Math.max(1, Number(p) - 1)))}
+                      disabled={salvando || prazoDias === '' || Number(prazoDias) <= 1}
+                      aria-label="Diminuir prazo"
+                      tabIndex={-1}
+                    ><Minus size={16} /></button>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={prazoDias}
+                      onChange={(e) => {
+                        const v = e.target.value.replace(/\D/g, '').slice(0, 3)
+                        setPrazoDias(v)
+                      }}
+                      onBlur={(e) => {
+                        const v = e.target.value.replace(/\D/g, '')
+                        if (v === '' || Number(v) < 1) setPrazoDias('1')
+                        else if (Number(v) > 365) setPrazoDias('365')
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'ArrowUp') {
+                          e.preventDefault()
+                          setPrazoDias((p) => String(Math.min(365, (Number(p) || 0) + 1)))
+                        } else if (e.key === 'ArrowDown') {
+                          e.preventDefault()
+                          setPrazoDias((p) => p === '' ? '' : String(Math.max(1, Number(p) - 1)))
+                        }
+                      }}
+                      aria-label="Prazo em dias"
+                      disabled={salvando}
+                      className="prazo-input"
+                    />
+                    <button
+                      type="button"
+                      className="prazo-step-btn"
+                      onClick={() => setPrazoDias((p) => String(Math.min(365, (Number(p) || 0) + 1)))}
+                      disabled={salvando || Number(prazoDias) >= 365}
+                      aria-label="Aumentar prazo"
+                      tabIndex={-1}
+                    ><Plus size={16} /></button>
+                  </div>
+                </div>
               </div>
-            </section>
 
-            {erro && <p className="modal-erro">{erro}</p>}
+              {/* linha 5: mecânico + fim de semana + data */}
+              <div className="modal-linha modal-linha-rodape">
+                <Combobox
+                  label="Mecânico"
+                  valor={mecanicoId}
+                  opcoes={opcoesMecanico}
+                  onChange={(v) => { setMecanicoId(v); if (v) lembrarMecanico(v) }}
+                  placeholder="Nenhum"
+                  disabled={salvando}
+                />
+
+                <div className="modal-campo">
+                  <span>Entrada</span>
+                  <input
+                    type="date"
+                    value={entradaEm}
+                    onChange={(e) => setEntradaEm(e.target.value)}
+                    disabled={salvando}
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  className={`chip-fds ${fimDeSemana ? 'chip-fds-ativo' : ''}`}
+                  onClick={() => setFimDeSemana((v) => !v)}
+                  disabled={salvando}
+                  aria-pressed={fimDeSemana}
+                >
+                  {fimDeSemana ? '✓ ' : ''}Fim de semana
+                </button>
+              </div>
+
+              {erro && <p className="modal-erro">{erro}</p>}
+            </div>
+
+            {/* coluna direita: preview do escopo */}
+            <aside className="modal-preview" aria-label="Preview do escopo no PDF">
+              <div className="modal-preview-topo">Preview PDF</div>
+              <div className="modal-preview-corpo">
+                {linhasEscopo.length > 0 ? (
+                  <ul className="modal-preview-lista">
+                    {linhasEscopo.map((l, i) => <li key={i}>{l}</li>)}
+                  </ul>
+                ) : (
+                  <p className="modal-preview-vazio">As linhas do escopo aparecerão aqui como itens do orçamento.</p>
+                )}
+              </div>
+            </aside>
           </div>
 
           <footer className="modal-rodape">
             <button type="button" className="modal-cancelar" onClick={onFechar} disabled={salvando}>
               Cancelar
             </button>
-            <button type="submit" className="btn-primario" disabled={salvando}>
+            {!editando && (
+              <button
+                type="button"
+                className="btn-secundario"
+                disabled={!!motivoBloqueio}
+                title={motivoBloqueio || 'Salvar e abrir PDF (Ctrl+Shift+Enter)'}
+                onClick={(e) => enviar(e as unknown as FormEvent, true)}
+              >
+                {salvando ? 'Salvando...' : 'Salvar e gerar PDF'}
+              </button>
+            )}
+            <button
+              type="submit"
+              className="btn-primario"
+              disabled={!!motivoBloqueio}
+              title={motivoBloqueio ? motivoBloqueio : 'Salvar (Ctrl+Enter)'}
+            >
               {salvando ? 'Salvando...' : editando ? 'Salvar alterações' : 'Salvar'}
             </button>
           </footer>

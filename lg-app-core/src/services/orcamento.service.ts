@@ -42,6 +42,7 @@ const selectLinha = `select
        o.id,
        e.nome as empresa,
        s.nome as solicitante,
+       s.telefone as "solicitanteTelefone",
        to_char(o.entrada_em, 'YYYY-MM-DD') as "entradaEm",
        o.numero,
        o.numero_pedido as "numeroPedido",
@@ -57,14 +58,18 @@ const selectLinha = `select
      left join solicitantes s on s.id = o.solicitante_id
      left join mecanicos m on m.id = o.mecanico_id`
 
-export const listar = async (busca = '', status?: string): Promise<OrcamentoLinha[]> => {
+export const listar = async (busca = '', status?: string, dataInicio?: string, dataFim?: string): Promise<OrcamentoLinha[]> => {
   const statusFiltrado = status ? (status as Status) : null
+  const inicio = dataInicio || null
+  const fim = dataFim || null
   const { rows } = await pool.query(
     `${selectLinha}
      where (e.nome ilike $1 or o.numero::text ilike $1 or o.maquina ilike $1)
        and ($2::text is null or o.status = $2)
+       and ($3::date is null or o.entrada_em >= $3::date)
+       and ($4::date is null or o.entrada_em <= $4::date)
      order by o.numero desc`,
-    [`%${busca}%`, statusFiltrado]
+    [`%${busca}%`, statusFiltrado, inicio, fim]
   )
   return rows
 }
@@ -97,6 +102,18 @@ const validarVinculos = async (empresaId: number, solicitanteId?: number | null,
     if (mec.rowCount === 0) throw new AppError('mecânico não encontrado', 404)
     if (!mec.rows[0].ativo) throw new AppError('mecânico está inativo', 400)
   }
+}
+
+export const listarRecentes = async (empresaId: number, limite = 5): Promise<{ id: number; numero: number; titulo: string | null; escopo: string | null; valor: string | null }[]> => {
+  const { rows } = await pool.query(
+    `select id, numero, titulo, escopo, valor::text
+     from orcamentos
+     where empresa_id = $1
+     order by numero desc
+     limit $2`,
+    [empresaId, limite]
+  )
+  return rows
 }
 
 export const criar = async (body: unknown): Promise<Orcamento> => {

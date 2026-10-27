@@ -1,0 +1,19 @@
+# context = raiz; usado pelo build do serviço caddy
+
+# nunca enviar para o daemon do Docker
+.git/
+.gitignore
+
+# back tem seu próprio context (lg-app-core/) — não precisa ir pro caddy
+lg-app-core/
+
+# database: o init.sql vai para o postgres via volume, não no build do Caddy
+database/
+
+# artefatos e segredos
+**/.env
+**/.env.local
+**/dist/
+**/node_modules/
+tmp/
+*.log

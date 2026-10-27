@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Copy, Loader2, Pencil } from "lucide-react";
 import { atualizarEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
@@ -10,9 +11,10 @@ type Acao = 'editar';
 type Coluna = { titulo: string; render: (e: Empresa) => React.ReactNode };
 
 function montarColunas(
-  salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null }) => Promise<void>,
+  salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) => Promise<void>,
   abrir: (e: Empresa, acao: Acao) => void,
-  carregando: { id: number; acao: Acao } | null
+  carregando: { id: number; acao: Acao } | null,
+  navegar: (id: number) => void,
 ): Coluna[] {
   return [
     { titulo: 'ID', render: (e) => String(e.id) },
@@ -49,7 +51,18 @@ function montarColunas(
         />
       ),
     },
-    { titulo: 'TELEFONES', render: (e) => <TelefonesSelect empresaId={e.id} /> },
+    {
+      titulo: 'TELEFONE',
+      render: (e) => (
+        <CelulaEditavel
+          tipo="texto"
+          rotulo={`Telefone da empresa ${e.id}`}
+          valor={e.telefone ?? ''}
+          onSalvar={(v) => salvar(e, { telefone: v.trim() || null })}
+        />
+      ),
+    },
+    { titulo: 'CONTATOS', render: (e) => <TelefonesSelect empresaId={e.id} /> },
     {
       titulo: 'AÇÕES',
       render: (e) => {
@@ -78,6 +91,16 @@ function montarColunas(
                 <Copy size={16} />
               </button>
             )}
+            <button
+              type="button"
+              className="emp-acao-btn"
+              title="Ver orçamentos"
+              aria-label={`Ver orçamentos de ${e.nome}`}
+              disabled={carregando !== null}
+              onClick={() => navegar(e.id)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            </button>
           </div>
         )
       },
@@ -92,6 +115,7 @@ export function EmpresasTable({
   refresh?: number
   onEditar?: (original: Empresa) => void
 }) {
+  const navigate = useNavigate()
   const [linhas, setLinhas] = useState<Empresa[]>([])
   const [busca, setBusca] = useState('')
   const [erro, setErro] = useState('')
@@ -105,7 +129,7 @@ export function EmpresasTable({
   }, [aviso])
 
   // envia o patch e atualiza a linha
-  async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null }) {
+  async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) {
     try {
       const nova = await atualizarEmpresa(e.id, patch)
       setLinhas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
@@ -128,7 +152,7 @@ export function EmpresasTable({
     }
   }
 
-  const colunas = montarColunas(salvar, abrir, carregando)
+  const colunas = montarColunas(salvar, abrir, carregando, (id) => navigate(`/empresas/${id}`))
 
   useEffect(() => {
     listarEmpresas()

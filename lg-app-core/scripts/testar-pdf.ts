@@ -3,13 +3,15 @@ import { gerarPdfOrcamento } from '../src/services/pdf.service'
 import fs from 'fs'
 import path from 'path'
 
+// dados idênticos ao modelo de referência
 const dados = {
-  numero: 185,
-  titulo: 'Manutenção Preventiva',
-  escopo: 'Limpeza e lubrificação geral\nVerificação de rolamentos\nTroca de correia dentada',
-  valor: '2025.00',
+  numero: 184,
+  titulo: 'Revestimento PH6 troca vedações 702',
+  escopo: 'M,O\nEscopo dos Serviços Revestimento;\nTroca de vedações cilindro hidráulico',
+  valor: '2025',
   prazoDias: 1,
-  fimDeSemana: false,
+  fimDeSemana: true,
+  entradaEm: '2026-09-16',
 }
 
 async function main() {

@@ -92,3 +92,20 @@ html, body, #root {
   background-color: var(--cor-status-entregue-fundo);
   color: var(--cor-status-entregue-texto);
 }
+
+/* indicador de atalho de teclado ao lado de botões */
+.btn-atalho {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.18);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.6;
+  color: inherit;
+  opacity: 0.85;
+}

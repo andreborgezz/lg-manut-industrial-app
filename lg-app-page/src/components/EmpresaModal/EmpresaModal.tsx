@@ -20,6 +20,7 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
   const [nome, setNome] = useState(editando?.nome ?? '')
   const [email, setEmail] = useState(editando?.email ?? '')
   const [cnpj, setCnpj] = useState(editando?.cnpj ?? '')
+  const [telefone, setTelefone] = useState(editando?.telefone ?? '')
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
 
@@ -70,13 +71,15 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
         await atualizarEmpresa(editando.id, {
           nome: nome.trim(),
           email: email.trim() || null,
-          cnpj: cnpj.trim() || null
+          cnpj: cnpj.trim() || null,
+          telefone: telefone.trim() || null,
         })
       } else {
         await criarEmpresa({
           nome: nome.trim(),
           email: email.trim() || null,
-          cnpj: cnpj.trim() || null
+          cnpj: cnpj.trim() || null,
+          telefone: telefone.trim() || null,
         })
       }
       onSalvo()
@@ -151,6 +154,16 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={salvando}
+                  />
+                </label>
+                <label className="modal-campo">
+                  <span>Telefone</span>
+                  <input
+                    type="tel"
+                    placeholder="(00) 00000-0000"
+                    value={telefone}
+                    onChange={(e) => setTelefone(e.target.value)}
                     disabled={salvando}
                   />
                 </label>

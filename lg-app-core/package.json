@@ -6,16 +6,31 @@
   "scripts": {
     "dev": "tsx server.ts",
     "test:r2": "tsx scripts/testar-r2.ts",
-    "build": "tsc",
-    "start": "node server.js"
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node server.js",
+    "migration:usuarios": "tsx scripts/migration-usuarios.ts",
+    "criar-usuario": "tsx scripts/criar-usuario.ts",
+    "backup": "tsx scripts/backup.ts",
+    "restaurar": "tsx scripts/restaurar.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1144.0",
     "@aws-sdk/s3-request-presigner": "^3.1149.0",
+    "@fontsource/alegreya": "^5.3.0",
+    "@fontsource/montserrat": "^5.3.0",
+    "@fontsource/open-sans": "^5.3.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/pg": "^8.23.1",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^18.0.5",
     "express": "^4.21.0",
+    "express-rate-limit": "^8.7.1",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
     "pg": "^8.23.1",
     "playwright-core": "^1.64.0",
     "zod": "^4.6.5"

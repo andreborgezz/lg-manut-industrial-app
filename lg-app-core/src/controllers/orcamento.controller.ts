@@ -3,7 +3,18 @@ import * as service from '../services/orcamento.service'
 import { idParam, textoQuery } from '../utils/params'
 
 export const listar = async (req: Request, res: Response): Promise<void> => {
-  res.json(await service.listar(textoQuery(req.query.busca), textoQuery(req.query.status)))
+  const empresaId = req.query.empresaId ? Number(req.query.empresaId) : null
+  const recentes = req.query.recentes ? Number(req.query.recentes) : null
+  if (empresaId && recentes) {
+    res.json(await service.listarRecentes(empresaId, recentes))
+    return
+  }
+  res.json(await service.listar(
+    textoQuery(req.query.busca),
+    textoQuery(req.query.status),
+    textoQuery(req.query.dataInicio),
+    textoQuery(req.query.dataFim),
+  ))
 }
 
 export const buscar = async (req: Request, res: Response): Promise<void> => {

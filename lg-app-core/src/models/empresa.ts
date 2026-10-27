@@ -3,6 +3,7 @@ export type Empresa = {
   nome: string
   cnpj: string | null
   email: string | null
+  telefone: string | null
 }
 
 export type NovaEmpresa = Omit<Empresa, 'id'>

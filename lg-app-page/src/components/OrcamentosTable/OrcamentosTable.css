@@ -161,7 +161,235 @@
 }
 
 @keyframes orc-giro {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
+}
+
+/* destaque transitório da linha recém-criada */
+.linha-nova {
+  background-color: var(--cor-ambar-fundo) !important;
+  transition: background-color 1.5s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .linha-nova { transition: none; }
+}
+
+/* botão verde do WhatsApp */
+.orc-acao-btn-wa:hover:not(:disabled) {
+  border-color: #25d366;
+  color: #25d366;
+}
+
+/* chips de período */
+.orc-chips-periodo {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.orc-chip-periodo {
+  padding: 6px 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 9999px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+  white-space: nowrap;
+}
+
+.orc-chip-periodo:hover {
+  border-color: var(--cor-ambar);
+  color: var(--cor-ambar-escuro);
+}
+
+.orc-chip-ativo {
+  background-color: var(--cor-ambar);
+  border-color: var(--cor-ambar);
+  color: var(--cor-preto);
+  font-weight: 600;
+}
+
+.orc-periodo-custom {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 4px;
+}
+
+.orc-input-data {
+  padding: 6px 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.orc-input-data:focus {
+  outline: none;
+  border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+}
+
+.orc-periodo-sep {
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+}
+
+.orc-limpar-data {
+  background: none;
+  border: none;
+  color: var(--cor-texto-suave);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.orc-limpar-data:hover { color: var(--cor-texto); }
+
+/* botões de exportar e atalhos na barra de filtros */
+.orc-exportar-btn {
+  padding: 10px 14px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto-suave);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.orc-exportar-btn:hover {
+  border-color: var(--cor-ambar);
+  color: var(--cor-ambar-escuro);
+}
+
+.orc-atalhos-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 6px;
+  background: var(--cor-superficie);
+  color: var(--cor-texto-suave);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.orc-atalhos-btn:hover {
+  border-color: var(--cor-ambar);
+  color: var(--cor-ambar-escuro);
+}
+
+/* rodapé da tabela com total */
+.orc-table-rodape {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-top: 1px solid var(--cor-borda);
+  font-size: 13px;
+  color: var(--cor-texto-suave);
+  background-color: var(--cor-superficie);
+}
+
+.orc-table-total strong {
+  color: var(--cor-texto);
+  font-weight: 600;
+}
+
+/* overlay e modal de atalhos */
+.orc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--cor-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.orc-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.orc-modal-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.orc-modal-fechar {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background-color 0.1s;
+}
+
+.orc-modal-fechar:hover { background-color: var(--cor-fundo); }
+
+/* modal de atalhos */
+.modal-atalhos {
+  max-width: 420px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.atalhos-lista {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.atalho-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--cor-texto);
+}
+
+.atalho-item span {
+  color: var(--cor-texto-suave);
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 7px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 4px;
+  background: var(--cor-fundo);
+  font-size: 12px;
+  font-family: monospace;
+  white-space: nowrap;
+  color: var(--cor-texto);
+  box-shadow: 0 1px 0 var(--cor-borda);
 }
