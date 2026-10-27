@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Copy, Loader2, Pencil } from "lucide-react";
+import { ExternalLink, Loader2, Pencil, Search } from "lucide-react";
 import { atualizarEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
 import { TelefonesSelect } from "./TelefonesSelect";
@@ -17,7 +17,7 @@ function montarColunas(
   navegar: (id: number) => void,
 ): Coluna[] {
   return [
-    { titulo: 'ID', render: (e) => String(e.id) },
+    { titulo: 'ID', render: (e) => <span className="tabular-nums">#{e.id}</span> },
     {
       titulo: 'NOME',
       render: (e) => (
@@ -62,44 +62,39 @@ function montarColunas(
         />
       ),
     },
-    { titulo: 'CONTATOS', render: (e) => <TelefonesSelect empresaId={e.id} /> },
+    {
+      titulo: 'CONTATOS',
+      render: (e) => (
+        <TelefonesSelect 
+          empresaId={e.id} 
+        />
+      )
+    },
     {
       titulo: 'AÇÕES',
       render: (e) => {
         const girando = (acao: Acao) => carregando?.id === e.id && carregando.acao === acao
+        const qualquerCarregando = carregando !== null
         return (
           <div className="emp-acoes">
             <button
               type="button"
               className="emp-acao-btn"
-              title="Editar"
+              title="Editar empresa no modal"
               aria-label={`Editar empresa ${e.nome}`}
-              disabled={carregando !== null}
+              disabled={qualquerCarregando}
               onClick={() => abrir(e, 'editar')}
             >
-              {girando('editar') ? <Loader2 size={16} className="emp-spin" /> : <Pencil size={16} />}
+              {girando('editar') ? <Loader2 size={15} className="orc-spin" /> : <Pencil size={15} />}
             </button>
-            {e.email && (
-              <button
-                type="button"
-                className="emp-acao-btn"
-                title="Copiar E-mail"
-                aria-label={`Copiar e-mail de ${e.nome}`}
-                disabled={carregando !== null}
-                onClick={() => navigator.clipboard.writeText(e.email!)}
-              >
-                <Copy size={16} />
-              </button>
-            )}
             <button
               type="button"
               className="emp-acao-btn"
-              title="Ver orçamentos"
-              aria-label={`Ver orçamentos de ${e.nome}`}
-              disabled={carregando !== null}
+              title="Ver detalhes da empresa"
+              aria-label={`Ver detalhes da empresa ${e.nome}`}
               onClick={() => navegar(e.id)}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              <ExternalLink size={15} />
             </button>
           </div>
         )
@@ -108,12 +103,12 @@ function montarColunas(
   ]
 }
 
-export function EmpresasTable({
+export function EmpresasTable({ 
   refresh = 0,
-  onEditar,
-}: {
-  refresh?: number
-  onEditar?: (original: Empresa) => void
+  onEditar 
+}: { 
+  refresh?: number;
+  onEditar?: (e: Empresa) => void;
 }) {
   const navigate = useNavigate()
   const [linhas, setLinhas] = useState<Empresa[]>([])
@@ -121,14 +116,12 @@ export function EmpresasTable({
   const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
 
-  // some sozinho depois de uns segundos
   useEffect(() => {
     if (!aviso) return
     const t = setTimeout(() => setAviso(''), 6000)
     return () => clearTimeout(t)
   }, [aviso])
 
-  // envia o patch e atualiza a linha
   async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) {
     try {
       const nova = await atualizarEmpresa(e.id, patch)
@@ -142,7 +135,6 @@ export function EmpresasTable({
 
   const [carregando, setCarregando] = useState<{ id: number; acao: Acao } | null>(null)
   
-  // simula um carregamento se precisar, mas a empresa já tem os dados
   async function abrir(e: Empresa, acao: Acao) {
     setCarregando({ id: e.id, acao })
     try {
@@ -157,7 +149,6 @@ export function EmpresasTable({
   useEffect(() => {
     listarEmpresas()
       .then((dados) => {
-        // filtro de busca simplificado no frontend, ou poderia ser backend
         const filtrados = busca 
           ? dados.filter(d => d.nome.toLowerCase().includes(busca.toLowerCase()))
           : dados
@@ -170,13 +161,16 @@ export function EmpresasTable({
   return (
     <section className="emp-table-container">
       <div className="emp-table-filtros">
-        <input
-          type="text"
-          className="emp-input"
-          placeholder="Buscar por nome..."
-          value={busca}
-          onChange={(e) => setBusca(e.target.value)}
-        />
+        <div className="emp-busca-wrapper">
+          <Search size={14} className="emp-busca-icone" />
+          <input
+            type="text"
+            className="emp-input"
+            placeholder="Buscar empresa por nome..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
       </div>
 
       {erro && <p className="emp-table-erro">{erro}</p>}
@@ -214,6 +208,9 @@ export function EmpresasTable({
               )}
             </tbody>
           </table>
+        </div>
+        <div className="emp-table-rodape">
+          <span>{linhas.length} {linhas.length === 1 ? 'empresa listada' : 'empresas listadas'}</span>
         </div>
       </div>
     </section>

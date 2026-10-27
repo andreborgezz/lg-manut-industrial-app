@@ -1,51 +1,85 @@
+/* ==========================================================================
+   Modal de Empresa — ERP Industrial
+   ========================================================================== */
+
+.emp-modal {
+  width: min(620px, 100% - 32px);
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-card);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
 .emp-ctt-lista {
   list-style: none;
   padding: 0;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 6px;
 }
 
 .emp-ctt-lista li {
-  padding: 12px;
+  padding: 8px 10px;
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
-  background-color: var(--cor-fundo);
-  font-size: 14px;
+  border-radius: var(--raio-controle);
+  background-color: var(--cor-superficie-subtil);
+  font-size: 12px;
+  color: var(--cor-texto);
+}
+
+.emp-ctt-lista strong {
+  color: var(--cor-texto);
+  font-weight: 600;
 }
 
 .emp-ctt-lista span {
   display: inline-block;
-  margin-right: 16px;
-  margin-top: 4px;
-  color: var(--cor-texto-suave);
+  margin-right: 12px;
+  margin-top: 2px;
+  color: var(--cor-texto-secundario);
 }
 
 .emp-ctt-vazio {
   color: var(--cor-texto-suave);
   font-style: italic;
-  font-size: 14px;
+  font-size: 12px;
+  padding: 4px 0;
 }
 
 .modal-aviso {
-  padding: 10px 12px;
-  border-radius: 6px;
-  background-color: var(--cor-ambar-fundo);
-  color: var(--cor-ambar-escuro);
-  font-size: 13px;
+  padding: 8px 10px;
+  border-radius: var(--raio-controle);
+  background-color: var(--cor-superficie-subtil);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-secundario);
+  font-size: 12px;
 }
 
 .btn-texto {
   background: none;
   border: none;
-  color: var(--cor-ambar);
-  font-size: 13px;
+  color: var(--cor-ambar-escuro);
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  text-transform: uppercase;
+  padding: 2px 4px;
 }
+
 .btn-texto:hover {
   text-decoration: underline;
 }
 
+.modal-mini-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 10px;
+  background-color: var(--cor-superficie-subtil);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
+  margin-top: 6px;
+}

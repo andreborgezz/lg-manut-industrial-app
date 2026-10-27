@@ -17,13 +17,13 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 12px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 10px 14px;
+  border-radius: var(--raio-card);
+  font-size: 13px;
   font-weight: 500;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
   pointer-events: all;
-  animation: toast-entrar 0.2s ease;
+  animation: toast-entrar 0.15s ease;
 }
 
 @keyframes toast-entrar {

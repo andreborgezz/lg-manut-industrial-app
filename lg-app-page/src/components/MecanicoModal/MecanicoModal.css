@@ -1,48 +1,63 @@
-/* modal de mecânico é curto: largura menor que a do orçamento */
+/* ==========================================================================
+   Modal de Mecânico — ERP Industrial
+   ========================================================================== */
+
 .mec-modal {
-  width: min(480px, 100% - 32px);
+  width: min(440px, 100% - 32px);
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-card);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
-/* mobile: tela cheia, como os outros modais */
 @media (max-width: 767px) {
   .mec-modal {
     width: 100%;
   }
 }
 
-/* toggle ativo/inativo */
+/* Toggle ativo/inativo plano e compacto (altura 32px) */
 .mec-modal-toggle {
   display: flex;
-  gap: 0;
-  border: 1px solid var(--border-color, #ddd);
-  border-radius: 6px;
+  height: var(--altura-controle);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
   overflow: hidden;
+  background-color: var(--cor-superficie);
 }
 
 .mec-status-btn {
   flex: 1;
-  padding: 8px 16px;
+  height: 100%;
+  padding: 0 12px;
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 0.875rem;
-  color: var(--text-muted, #888);
-  transition: background 0.15s, color 0.15s;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--cor-texto-suave);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 
 .mec-status-btn:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .mec-status-ativo {
-  background: #d1fae5;
-  color: #065f46;
+  background-color: var(--cor-status-aprovado-fundo);
+  color: var(--cor-status-aprovado-texto);
   font-weight: 600;
 }
 
 .mec-status-inativo {
-  background: #fee2e2;
-  color: #991b1b;
+  background-color: var(--cor-status-recusado-fundo);
+  color: var(--cor-status-recusado-texto);
   font-weight: 600;
 }

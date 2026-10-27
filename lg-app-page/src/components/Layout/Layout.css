@@ -1,50 +1,202 @@
-/* container global do layout */
+/* Container global do layout */
 .layout {
   display: flex;
   min-height: 100vh;
   background-color: var(--cor-fundo);
 }
 
-/* area principal de conteudo */
+.layout-corpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   Barra superior fina (48px)
+   ========================================================================== */
+.topbar {
+  height: var(--altura-topbar);
+  background-color: var(--cor-superficie);
+  border-bottom: 1px solid var(--cor-borda);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.topbar-esquerda {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar-breadcrumb {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+}
+
+.topbar-direita {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-btn-ajuda {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  transition: color 0.12s ease, background-color 0.12s ease;
+}
+
+.topbar-btn-ajuda:hover {
+  color: var(--cor-texto);
+  background-color: var(--cor-superficie-subtil);
+}
+
+.topbar-divisor {
+  width: 1px;
+  height: 16px;
+  background-color: var(--cor-borda);
+}
+
+.topbar-usuario-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-usuario-nome {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--cor-texto);
+}
+
+.topbar-btn-sair {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  border: none;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  transition: color 0.12s ease, background-color 0.12s ease;
+}
+
+.topbar-btn-sair:hover {
+  color: var(--cor-status-recusado-texto);
+  background-color: var(--cor-status-recusado-fundo);
+}
+
+/* ==========================================================================
+   Área principal de conteúdo
+   ========================================================================== */
 .layout-conteudo {
   flex: 1;
-  padding: 32px 24px;
+  padding: 20px 24px;
   min-width: 0;
-  background-color: var(--cor-fundo);
 }
 
-/* titulo principal de cada pagina com linha ambar de 3px embaixo */
-.layout-conteudo h1 {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--cor-texto);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding-bottom: 10px;
-  margin-bottom: 24px;
-  border-bottom: 3px solid var(--cor-ambar);
-}
-
-/* cabecalho opcional de pagina com titulo e acoes */
+/* Cabeçalho da página (Título 18px / 600 sóbrio + Ação à direita) */
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   gap: 16px;
 }
 
-.page-header h1 {
-  margin-bottom: 0;
-  flex: 1;
+.page-header-titulo-grupo {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
-/* adaptacao responsiva do layout */
+.page-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--cor-texto);
+  text-transform: none;
+  letter-spacing: -0.01em;
+  margin: 0;
+  padding: 0;
+  border-bottom: none;
+}
+
+.page-header-contagem {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--cor-texto-suave);
+}
+
+/* ==========================================================================
+   Modal de Atalhos
+   ========================================================================== */
+.modal-atalhos {
+  width: min(380px, 100% - 32px);
+  background-color: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-card);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.atalhos-lista {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.atalho-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--cor-texto);
+}
+
+.atalho-item span {
+  color: var(--cor-texto-secundario);
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: 3px;
+  background-color: var(--cor-superficie-subtil);
+  font-size: 11px;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--cor-texto);
+  line-height: 1;
+}
+
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
   }
-
   .layout-conteudo {
     padding: 16px;
   }

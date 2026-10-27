@@ -500,13 +500,21 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
           </div>
 
           <footer className="modal-rodape">
-            <button type="button" className="modal-cancelar" onClick={onFechar} disabled={salvando}>
+            <button type="button" className="btn-secundario" onClick={onFechar} disabled={salvando}>
               Cancelar
+            </button>
+            <button
+              type="submit"
+              className={editando ? "btn-primario" : "btn-escuro"}
+              disabled={!!motivoBloqueio}
+              title={motivoBloqueio ? motivoBloqueio : 'Salvar (Ctrl+Enter)'}
+            >
+              {salvando ? 'Salvando...' : editando ? 'Salvar alterações' : 'Salvar'}
             </button>
             {!editando && (
               <button
                 type="button"
-                className="btn-secundario"
+                className="btn-primario"
                 disabled={!!motivoBloqueio}
                 title={motivoBloqueio || 'Salvar e abrir PDF (Ctrl+Shift+Enter)'}
                 onClick={(e) => enviar(e as unknown as FormEvent, true)}
@@ -514,14 +522,6 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                 {salvando ? 'Salvando...' : 'Salvar e gerar PDF'}
               </button>
             )}
-            <button
-              type="submit"
-              className="btn-primario"
-              disabled={!!motivoBloqueio}
-              title={motivoBloqueio ? motivoBloqueio : 'Salvar (Ctrl+Enter)'}
-            >
-              {salvando ? 'Salvando...' : editando ? 'Salvar alterações' : 'Salvar'}
-            </button>
           </footer>
         </form>
       </div>

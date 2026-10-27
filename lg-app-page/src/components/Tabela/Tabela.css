@@ -1,166 +1,143 @@
-/* estilos compartilhados de tabela com filtros, avisos e ações por linha */
+/* ==========================================================================
+   Tabela Genérica (Mecânicos e outros) — ERP Industrial
+   ========================================================================== */
+
+.tabela-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .tabela-filtros {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
+.tabela-busca-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 320px;
+  max-width: 100%;
+}
+
+.tabela-busca-icone {
+  position: absolute;
+  left: 9px;
+  color: var(--cor-texto-suave);
+  pointer-events: none;
+}
+
 .tabela-input {
-  flex: 1;
-  max-width: 360px;
-  padding: 10px 14px;
+  width: 100%;
+  height: var(--altura-controle);
+  padding: 0 28px 0 28px;
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
-  font-size: 14px;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 13px;
+  transition: border-color 0.12s ease;
 }
 
 .tabela-input:focus {
-  outline: none;
   border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }
 
-/* checkbox de filtro (ex: mostrar inativos) */
 .tabela-check {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: var(--cor-texto);
+  gap: 6px;
+  font-size: 12px;
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+  user-select: none;
+}
+
+.tabela-check input[type="checkbox"] {
+  accent-color: var(--cor-ambar);
   cursor: pointer;
 }
 
 .tabela-card {
   background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
-  border-radius: 8px;
+  border-radius: var(--raio-card);
   overflow: hidden;
 }
 
-/* scroll horizontal para manter responsividade */
 .tabela-scroll {
   overflow-x: auto;
 }
 
 .tabela-scroll table {
-  border-collapse: collapse;
   width: 100%;
-  font-size: 14px;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: left;
 }
 
+/* Cabeçalho cinza claro #f0f0ee, 11px uppercase, sticky */
 .tabela-scroll th {
-  background-color: var(--cor-preto);
-  color: var(--cor-superficie);
-  text-align: left;
-  padding: 12px 16px;
-  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--cor-cabecalho-tabela);
+  color: var(--cor-texto-secundario);
+  font-size: 11px;
   font-weight: 600;
-  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--cor-borda);
+  white-space: nowrap;
 }
 
+/* Linhas com altura de 36px e divisória horizontal de 1px */
 .tabela-scroll td {
-  padding: 12px 16px;
-  border-top: 1px solid var(--cor-borda);
+  height: var(--altura-linha-tabela);
+  padding: 4px 12px;
+  border-bottom: 1px solid var(--cor-borda);
   white-space: nowrap;
   color: var(--cor-texto);
 }
 
-.tabela-scroll tbody tr:hover {
-  background-color: var(--cor-ambar-fundo);
+.tabela-scroll tbody tr:hover td {
+  background-color: var(--cor-superficie-subtil);
 }
 
-/* linha de registro inativo, mais apagada */
 .tabela-inativa td {
   color: var(--cor-texto-suave);
+  opacity: 0.75;
 }
 
 .tabela-vazio {
+  padding: 36px 16px !important;
   text-align: center;
-  color: var(--cor-texto-suave);
-  padding: 24px;
-}
-
-.tabela-erro {
-  color: var(--cor-status-recusado-texto);
-  background-color: var(--cor-status-recusado-fundo);
-  padding: 10px 14px;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  font-size: 14px;
-}
-
-/* aviso discreto de erro ao salvar */
-.tabela-aviso {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  color: var(--cor-status-recusado-texto);
-  background-color: var(--cor-status-recusado-fundo);
-  padding: 8px 14px;
-  border-radius: 6px;
-  margin-bottom: 12px;
+  color: var(--cor-texto-secundario);
   font-size: 13px;
 }
 
-.tabela-aviso button {
-  background: none;
-  border: none;
-  color: inherit;
-  font-size: 18px;
-  line-height: 1;
-  cursor: pointer;
+.tabela-erro,
+.tabela-aviso {
+  color: var(--cor-status-recusado-texto);
+  background-color: var(--cor-status-recusado-fundo);
+  border: 1px solid var(--cor-status-recusado-borda);
+  padding: 6px 12px;
+  border-radius: var(--raio-controle);
+  font-size: 12px;
 }
 
-/* botões de ação por linha */
-.tabela-acoes {
-  display: flex;
-  gap: 6px;
-}
-
-.tabela-acao-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
+.tabela-rodape {
   height: 32px;
-  border: 1px solid var(--cor-borda);
-  border-radius: 6px;
-  background-color: var(--cor-superficie);
-  color: var(--cor-texto-suave);
-  cursor: pointer;
-  transition: border-color 0.15s ease, color 0.15s ease;
-}
-
-.tabela-acao-btn:hover:not(:disabled) {
-  border-color: var(--cor-ambar);
-  color: var(--cor-ambar-escuro);
-}
-
-.tabela-acao-btn:focus-visible {
-  outline: none;
-  border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
-}
-
-.tabela-acao-btn:disabled {
-  cursor: progress;
-  opacity: 0.6;
-}
-
-.tabela-spin {
-  animation: tabela-giro 0.8s linear infinite;
-}
-
-@keyframes tabela-giro {
-  to {
-    transform: rotate(360deg);
-  }
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background-color: var(--cor-cabecalho-tabela);
+  border-top: 1px solid var(--cor-borda);
+  font-size: 12px;
+  color: var(--cor-texto-secundario);
 }

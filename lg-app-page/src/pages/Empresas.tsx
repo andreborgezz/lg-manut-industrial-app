@@ -11,19 +11,22 @@ export default function Empresas() {
 
   return (
     <Layout>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h1 style={{ margin: 0 }}>Empresas</h1>
+      <div className="page-header">
+        <div className="page-header-titulo-grupo">
+          <h1>Empresas</h1>
+        </div>
         <button
+          type="button"
           className="btn-primario"
           onClick={() => {
             setEmpresaEditando(undefined)
             setModalAberto(true)
           }}
         >
-          Nova Empresa
+          Nova empresa
         </button>
-      </header>
-      
+      </div>
+
       <EmpresasTable 
         refresh={refresh}
         onEditar={(empresa) => {

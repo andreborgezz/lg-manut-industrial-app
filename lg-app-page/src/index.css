@@ -1,30 +1,63 @@
-/* tokens globais de cores e tipografia */
-:root {
-  --cor-preto: #0a0a0a;
-  --cor-preto-2: #1c1c1c;
-  --cor-ambar: #ee9c00;
-  --cor-ambar-escuro: #c47f00;
-  --cor-ambar-fundo: #fff4dc;
-  --cor-fundo: #f6f6f4;
-  --cor-superficie: #ffffff;
-  --cor-borda: #e5e5e0;
-  --cor-texto: #1a1a1a;
-  --cor-texto-suave: #6b6b66;
-  --cor-overlay: rgba(10, 10, 10, 0.55);
+/* ==========================================================================
+   Design System ERP — L.G. Manutenção Industrial
+   Estilo denso, plano, sóbrio e profissional
+   ========================================================================== */
 
-  /* cores para os badges de status */
-  --cor-status-aberto-fundo: #e5e7eb;
-  --cor-status-aberto-texto: #374151;
-  --cor-status-aprovado-fundo: #dcfce7;
-  --cor-status-aprovado-texto: #166534;
-  --cor-status-recusado-fundo: #fee2e2;
-  --cor-status-recusado-texto: #991b1b;
-  --cor-status-entregue-fundo: #dbeafe;
-  --cor-status-entregue-texto: #1e40af;
+:root {
+  /* Paleta estrutural */
+  --cor-fundo: #f4f4f2;
+  --cor-superficie: #ffffff;
+  --cor-superficie-subtil: #f9f9f8;
+  --cor-cabecalho-tabela: #f0f0ee;
+  --cor-borda: #e2e2dc;
+  --cor-borda-forte: #d0d0c8;
+  --cor-overlay: rgba(10, 10, 10, 0.45);
+
+  /* Tipografia & texto */
+  --cor-texto: #111111;
+  --cor-texto-secundario: #4a4a46;
+  --cor-texto-suave: #71716a;
+  --cor-texto-inverso: #ffffff;
+
+  /* Identidade & Acentos */
+  --cor-preto: #0a0a0a;
+  --cor-preto-2: #181818;
+  --cor-preto-3: #222222;
+  --cor-ambar: #ee9c00;
+  --cor-ambar-escuro: #b37400;
+  --cor-ambar-fundo: #fff9ed;
+  --cor-ambar-borda: #fcd34d;
+
+  /* Status planos (sem pílula) */
+  --cor-status-aberto-fundo: #f1f1ef;
+  --cor-status-aberto-borda: #dededb;
+  --cor-status-aberto-texto: #4a4a46;
+
+  --cor-status-aprovado-fundo: #edfcf2;
+  --cor-status-aprovado-borda: #bbf7d0;
+  --cor-status-aprovado-texto: #15803d;
+
+  --cor-status-recusado-fundo: #fef2f2;
+  --cor-status-recusado-borda: #fecaca;
+  --cor-status-recusado-texto: #b91c1c;
+
+  --cor-status-entregue-fundo: #eff6ff;
+  --cor-status-entregue-borda: #bfdbfe;
+  --cor-status-entregue-texto: #1d4ed8;
+
+  /* Dimensões do ERP */
+  --altura-topbar: 48px;
+  --largura-sidebar: 216px;
+  --altura-controle: 32px;
+  --altura-linha-tabela: 36px;
+
+  /* Raios rigorosos (sem excessos de borda redonda) */
+  --raio-controle: 3px;
+  --raio-card: 4px;
 }
 
-/* reset básico */
-* {
+/* Reset técnico */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -36,76 +69,198 @@ html, body, #root {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 13px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--cor-fundo);
   color: var(--cor-texto);
 }
 
-/* botão principal padrão */
+/* Números tabulares padronizados */
+.tabular-nums, table, input[type="number"], .valor, .data, .numero {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Botões do Sistema (32px de altura, raio 3px, peso 500)
+   ========================================================================== */
+button {
+  font-family: inherit;
+  font-size: 13px;
+}
+
+/* Botão Primário (Âmbar com texto preto) */
 .btn-primario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--altura-controle);
+  padding: 0 12px;
   background-color: var(--cor-ambar);
-  color: var(--cor-preto);
-  font-weight: 600;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 6px;
+  color: #0a0a0a;
+  font-weight: 500;
+  font-size: 13px;
+  border: 1px solid var(--cor-ambar);
+  border-radius: var(--raio-controle);
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
   white-space: nowrap;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 
-.btn-primario:hover {
+.btn-primario:hover:not(:disabled) {
   background-color: var(--cor-ambar-escuro);
+  border-color: var(--cor-ambar-escuro);
+  color: #ffffff;
 }
 
-/* badges de status como pílulas */
+/* Botão Escuro (Preto com texto branco) */
+.btn-escuro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--altura-controle);
+  padding: 0 12px;
+  background-color: var(--cor-preto);
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 13px;
+  border: 1px solid var(--cor-preto);
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.12s ease;
+}
+
+.btn-escuro:hover:not(:disabled) {
+  background-color: var(--cor-preto-2);
+}
+
+/* Botão Secundário (Borda 1px, sem fundo) */
+.btn-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--altura-controle);
+  padding: 0 12px;
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-weight: 500;
+  font-size: 13px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.btn-secundario:hover:not(:disabled) {
+  background-color: var(--cor-superficie-subtil);
+  border-color: var(--cor-borda-forte);
+}
+
+/* Botão Fantasma (Sem borda, sem fundo) */
+.btn-fantasma {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: var(--altura-controle);
+  padding: 0 8px;
+  background: transparent;
+  color: var(--cor-texto-secundario);
+  font-weight: 500;
+  font-size: 13px;
+  border: 1px solid transparent;
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.btn-fantasma:hover:not(:disabled) {
+  background-color: var(--cor-borda);
+  color: var(--cor-texto);
+}
+
+.btn-primario:disabled,
+.btn-escuro:disabled,
+.btn-secundario:disabled,
+.btn-fantasma:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Foco visível consistente para acessibilidade em todo o app */
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--cor-ambar) !important;
+  outline-offset: 1px !important;
+}
+
+/* Dica de atalho de teclado discreta dentro de botões */
+.btn-atalho {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  padding: 0 4px;
+  height: 18px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.12);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: inherit;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Tags de Status Planas (Altura 20px, Raio 3px, Texto 11px uppercase)
+   ========================================================================== */
 .badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: var(--raio-controle);
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  text-align: center;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  line-height: 1;
+  border: 1px solid transparent;
 }
 
 .badge-aberto {
   background-color: var(--cor-status-aberto-fundo);
+  border-color: var(--cor-status-aberto-borda);
   color: var(--cor-status-aberto-texto);
 }
 
 .badge-aprovado {
   background-color: var(--cor-status-aprovado-fundo);
+  border-color: var(--cor-status-aprovado-borda);
   color: var(--cor-status-aprovado-texto);
 }
 
 .badge-recusado {
   background-color: var(--cor-status-recusado-fundo);
+  border-color: var(--cor-status-recusado-borda);
   color: var(--cor-status-recusado-texto);
 }
 
 .badge-entregue {
   background-color: var(--cor-status-entregue-fundo);
+  border-color: var(--cor-status-entregue-borda);
   color: var(--cor-status-entregue-texto);
-}
-
-/* indicador de atalho de teclado ao lado de botões */
-.btn-atalho {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: 8px;
-  padding: 1px 6px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.18);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1.6;
-  color: inherit;
-  opacity: 0.85;
 }

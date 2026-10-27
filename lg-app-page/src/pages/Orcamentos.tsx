@@ -96,7 +96,9 @@ function PaginaOrcamentos() {
   return (
     <Layout>
       <div className="page-header">
-        <h1>Orçamentos</h1>
+        <div className="page-header-titulo-grupo">
+          <h1>Orçamentos</h1>
+        </div>
         <button
           ref={btnNovoRef}
           className="btn-primario"

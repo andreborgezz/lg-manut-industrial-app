@@ -4,7 +4,6 @@ import { MecanicosTable } from '../components/MecanicosTable/MecanicosTable'
 import { MecanicoModal } from '../components/MecanicoModal/MecanicoModal'
 import type { Mecanico } from '../services/api'
 
-// modal fechado = null; vazio = novo; com mecânico = edição
 type EstadoModal = { editando?: Mecanico } | null
 
 export default function Mecanicos() {
@@ -14,8 +13,14 @@ export default function Mecanicos() {
   return (
     <Layout>
       <div className="page-header">
-        <h1>Mecânicos</h1>
-        <button className="btn-primario" onClick={() => setModal({})}>
+        <div className="page-header-titulo-grupo">
+          <h1>Mecânicos</h1>
+        </div>
+        <button
+          type="button"
+          className="btn-primario"
+          onClick={() => setModal({})}
+        >
           Novo mecânico
         </button>
       </div>

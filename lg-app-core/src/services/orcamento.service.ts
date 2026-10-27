@@ -52,7 +52,8 @@ const selectLinha = `select
        to_char(o.inicio_em, 'YYYY-MM-DD') as "inicioEm",
        to_char(o.entrega_em, 'YYYY-MM-DD') as "entregaEm",
        o.valor,
-       o.status
+       o.status,
+       (o.pdf_path is not null) as "temPdf"
      from orcamentos o
      join empresas e on e.id = o.empresa_id
      left join solicitantes s on s.id = o.solicitante_id
@@ -165,6 +166,10 @@ export const atualizar = async (id: number, body: unknown): Promise<OrcamentoLin
   }
 
   const sets = chaves.map((k, i) => `${editaveis[k]} = $${i + 2}`)
+  const alteraPdf = ['empresaId', 'solicitanteId', 'mecanicoId', 'maquina', 'titulo', 'escopo', 'valor', 'prazoDias', 'fimDeSemana'].some(k => chaves.includes(k))
+  if (alteraPdf && !chaves.includes('pdfPath')) {
+    sets.push('pdf_path = null')
+  }
   const valores = chaves.map(k => (patch as Record<string, unknown>)[k])
 
   await pool.query(`update orcamentos set ${sets.join(', ')} where id = $1`, [id, ...valores])

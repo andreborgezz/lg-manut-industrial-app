@@ -1,167 +1,105 @@
-/* container principal da sidebar */
+/* Sidebar estreita e densa para ERP (216px) */
 .sidebar {
-  width: 260px;
+  width: var(--largura-sidebar);
   flex-shrink: 0;
   background-color: var(--cor-preto);
   color: var(--cor-superficie);
-  padding: 24px 16px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  border-right: 1px solid var(--cor-preto-2);
+  user-select: none;
 }
 
-/* topo com logo e informacoes da empresa */
+/* Topo com logo compacto */
 .sidebar-topo {
+  height: var(--altura-topbar);
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-bottom: 16px;
+  gap: 10px;
+  padding: 0 14px;
   border-bottom: 1px solid var(--cor-preto-2);
 }
 
-/* circulo com a sigla L.G. em serifa pesada */
-.sidebar-logo-circulo {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
+.sidebar-logo-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 3px;
   background-color: var(--cor-superficie);
   color: var(--cor-preto);
-  font-family: Georgia, 'Playfair Display', serif;
   font-weight: 700;
-  font-size: 16px;
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
+  letter-spacing: -0.02em;
   flex-shrink: 0;
 }
 
-/* nome e cnpj da empresa */
-.sidebar-empresa {
+.sidebar-marca {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  line-height: 1.15;
 }
 
-.sidebar-nome {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--cor-superficie);
-  line-height: 1.3;
+.sidebar-titulo {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: -0.01em;
 }
 
-.sidebar-cnpj {
+.sidebar-subtitulo {
   font-size: 10px;
-  color: var(--cor-ambar);
-  font-weight: 500;
+  color: #71716a;
 }
 
-/* lista de links de navegacao */
+/* Navegação e grupos */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  padding: 12px 0;
+  gap: 16px;
 }
 
-/* item da sidebar */
+.sidebar-secao {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.sidebar-secao-rotulo {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #666660;
+  padding: 4px 14px 6px;
+}
+
+/* Itens da navegação (36px de altura, ícone 16px) */
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-radius: 6px;
-  color: var(--cor-superficie);
+  gap: 10px;
+  height: 36px;
+  padding: 0 14px;
+  color: #b3b3ad;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
   border-left: 3px solid transparent;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 
-/* hover nos itens da sidebar */
 .sidebar-item:hover {
   background-color: var(--cor-preto-2);
+  color: #ffffff;
 }
 
-/* estado ativo do item selecionado */
+/* Item ativo: fundo preto-2 e barra âmbar à esquerda (sem fundo creme) */
 .sidebar-item.active {
-  background-color: var(--cor-ambar-fundo);
-  color: var(--cor-preto);
-  border-left: 3px solid var(--cor-ambar);
-  font-weight: 600;
-}
-
-.sidebar-rodape {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--cor-preto-2);
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.sidebar-usuario {
-  font-size: 12px;
-  color: #888;
-  padding: 0 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.sidebar-sair {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  border-radius: 6px;
-  background: none;
-  border: none;
-  color: #888;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  transition: background-color 0.15s, color 0.15s;
-}
-
-.sidebar-sair:hover {
   background-color: var(--cor-preto-2);
-  color: var(--cor-superficie);
-}
-
-/* responsividade para telas menores que 768px */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 100%;
-    padding: 12px 16px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  .sidebar-topo {
-    padding-bottom: 0;
-    border-bottom: none;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    gap: 4px;
-  }
-
-  .sidebar-item {
-    padding: 8px 10px;
-    font-size: 13px;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-  }
-
-  .sidebar-item.active {
-    border-left: none;
-    border-bottom: 3px solid var(--cor-ambar);
-  }
+  color: #ffffff;
+  border-left-color: var(--cor-ambar);
+  font-weight: 500;
 }

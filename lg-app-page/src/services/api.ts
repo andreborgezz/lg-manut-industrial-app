@@ -17,6 +17,7 @@ export type OrcamentoLinha = {
   entregaEm: string | null
   valor: string | null
   status: Status
+  temPdf?: boolean
 }
 
 export type FiltroPeriodo = {

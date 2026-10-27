@@ -1,47 +1,55 @@
-/* célula em modo leitura: parece texto, mostra borda ao passar o mouse */
+/* Célula em modo leitura e edição rápida inline */
 .celula {
-  min-width: 60px;
-  padding: 4px 6px;
+  display: inline-flex;
+  align-items: center;
+  min-width: 48px;
+  max-width: 100%;
+  padding: 2px 4px;
   border: 1px solid transparent;
-  border-radius: 4px;
+  border-radius: var(--raio-controle);
   cursor: pointer;
-  transition: border-color 0.15s ease, opacity 0.15s ease;
+  transition: border-color 0.12s ease, background-color 0.12s ease;
+  font-size: 13px;
+  line-height: 1.3;
 }
 
 .celula:hover {
   border-color: var(--cor-borda);
+  background-color: var(--cor-superficie);
 }
 
 .celula:focus-visible {
-  outline: none;
-  border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
+  outline: 2px solid var(--cor-ambar) !important;
+  outline-offset: 1px;
 }
 
-/* salvando: sutil, sem bloquear a leitura */
 .celula-salvando {
-  opacity: 0.55;
+  opacity: 0.5;
   cursor: progress;
 }
 
-/* lembrete visual (ex: aprovado sem número de pedido) */
+/* Lembrete visual para pedido aprovado sem número de pedido */
 .celula-lembrete {
-  border-color: var(--cor-ambar);
-  background-color: var(--cor-ambar-fundo);
+  border-color: var(--cor-ambar-borda) !important;
+  background-color: var(--cor-ambar-fundo) !important;
+  color: var(--cor-ambar-escuro);
+  font-weight: 500;
 }
 
+/* Modo edição: input ou select com altura precisa */
 .celula-campo {
   width: 100%;
-  min-width: 120px;
-  padding: 4px 6px;
+  min-width: 100px;
+  height: 26px;
+  padding: 0 6px;
   border: 1px solid var(--cor-ambar);
-  border-radius: 4px;
+  border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font: inherit;
+  font-size: 13px;
 }
 
 .celula-campo:focus {
   outline: none;
-  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }

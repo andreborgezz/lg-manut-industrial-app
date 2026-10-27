@@ -1,4 +1,8 @@
-/* fundo escurecido */
+/* ==========================================================================
+   Modal de Novo Orçamento — ERP Industrial
+   ========================================================================== */
+
+/* Fundo escurecido mais discreto */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -10,46 +14,57 @@
   z-index: 1000;
 }
 
-/* modal em 2 colunas: cabe em 1366×768 sem rolagem */
+/* Modal em 2 colunas: plano, sóbrio, raio 4px, sem sombra exagerada */
 .modal-orc {
   display: flex;
   flex-direction: column;
-  width: min(1100px, 100% - 32px);
+  width: min(1040px, 100% - 32px);
   max-height: calc(100vh - 32px);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
-  border-radius: 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Cabeçalho: título 15px/600 com borda inferior */
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--cor-borda);
   flex-shrink: 0;
 }
 
 .modal-header h2 {
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--cor-texto);
+  margin: 0;
 }
 
 .modal-fechar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 18px;
   line-height: 1;
   color: var(--cor-texto-suave);
   cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  transition: background-color 0.1s;
+  border-radius: var(--raio-controle);
+  transition: background-color 0.1s ease, color 0.1s ease;
 }
 
-.modal-fechar:hover { background-color: var(--cor-fundo); }
+.modal-fechar:hover {
+  background-color: var(--cor-superficie-subtil);
+  color: var(--cor-texto);
+}
 
 .modal-form {
   display: flex;
@@ -58,7 +73,7 @@
   min-height: 0;
 }
 
-/* layout de 2 colunas */
+/* Layout de 2 colunas */
 .modal-corpo-duplo {
   display: grid;
   grid-template-columns: 1fr 280px;
@@ -67,86 +82,85 @@
   overflow: hidden;
 }
 
-/* coluna esquerda: campos */
+/* Coluna esquerda: campos densos */
 .modal-campos {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 16px 20px;
+  gap: 10px;
+  padding: 14px 16px;
   overflow-y: auto;
   border-right: 1px solid var(--cor-borda);
 }
 
-/* coluna direita: preview */
+/* Coluna direita: preview sóbrio */
 .modal-preview {
   display: flex;
   flex-direction: column;
-  background-color: var(--cor-fundo);
+  background-color: var(--cor-superficie-subtil);
   overflow: hidden;
 }
 
 .modal-preview-topo {
-  padding: 10px 14px;
+  padding: 8px 12px;
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--cor-texto-suave);
+  color: var(--cor-texto-secundario);
   border-bottom: 1px solid var(--cor-borda);
-  background-color: var(--cor-superficie);
+  background-color: var(--cor-cabecalho-tabela);
   flex-shrink: 0;
 }
 
 .modal-preview-corpo {
   flex: 1;
-  padding: 14px;
+  padding: 12px;
   overflow-y: auto;
 }
 
 .modal-preview-lista {
   list-style: disc;
-  padding-left: 18px;
+  padding-left: 16px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .modal-preview-lista li {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--cor-texto);
   line-height: 1.4;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .modal-preview-vazio {
   font-size: 12px;
   color: var(--cor-texto-suave);
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.4;
 }
 
-/* linhas de campos */
+/* Linhas de campos em grid */
 .modal-linha {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
-/* linha com 3 colunas (mecânico, data, chip) */
 .modal-linha-rodape {
   grid-template-columns: 1fr auto auto;
   align-items: end;
 }
 
-/* campo label + input */
+/* Campo label + input (altura 32px, rótulo 12px) */
 .modal-campo {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
   font-size: 12px;
-  font-weight: 600;
-  color: var(--cor-texto-suave);
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
 }
 
 .modal-campo-full {
@@ -154,30 +168,37 @@
 }
 
 .modal-campo input,
-.modal-campo select,
-.modal-campo textarea {
-  padding: 8px 10px;
+.modal-campo select {
+  height: var(--altura-controle);
+  padding: 0 10px;
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 13px;
   font-family: inherit;
   font-weight: 400;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.12s ease;
 }
 
 .modal-campo textarea {
+  padding: 8px 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
+  background-color: var(--cor-superficie);
+  color: var(--cor-texto);
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 400;
   resize: none;
-  line-height: 1.5;
+  line-height: 1.4;
+  transition: border-color 0.12s ease;
 }
 
 .modal-campo input:focus,
 .modal-campo select:focus,
 .modal-campo textarea:focus {
-  outline: none;
   border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }
 
 .modal-campo input[aria-invalid='true'],
@@ -188,7 +209,7 @@
 .modal-campo input:disabled,
 .modal-campo select:disabled,
 .modal-campo textarea:disabled {
-  background-color: var(--cor-fundo);
+  background-color: var(--cor-superficie-subtil);
   cursor: not-allowed;
 }
 
@@ -196,63 +217,62 @@
   font-weight: 400;
   font-size: 11px;
   color: var(--cor-texto-suave);
-  opacity: 0.75;
-  margin-left: 6px;
+  margin-left: 4px;
 }
 
 .modal-erro-campo {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   color: var(--cor-status-recusado-texto);
 }
 
 .modal-erro {
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 6px 10px;
+  border-radius: var(--raio-controle);
   background-color: var(--cor-status-recusado-fundo);
+  border: 1px solid var(--cor-status-recusado-borda);
   color: var(--cor-status-recusado-texto);
-  font-size: 13px;
+  font-size: 12px;
 }
 
-/* ── prazo: stepper ── */
+/* Prazo: Stepper denso de 32px */
 .prazo-stepper {
   display: inline-flex;
-  width: 132px;
+  width: 120px;
+  height: var(--altura-controle);
   align-items: stretch;
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: var(--raio-controle);
   overflow: hidden;
-  height: 36px;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  transition: border-color 0.12s ease;
 }
 
-/* foco em qualquer parte acende o grupo inteiro */
 .prazo-stepper:focus-within {
   border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 3px var(--cor-ambar-fundo);
 }
 
 .prazo-step-btn {
-  width: 40px;
+  width: 32px;
   flex-shrink: 0;
-  background: var(--cor-fundo);
+  background: var(--cor-superficie-subtil);
   border: none;
   cursor: pointer;
-  color: var(--cor-texto-suave);
+  color: var(--cor-texto-secundario);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.12s, color 0.12s;
+  transition: background-color 0.1s ease, color 0.1s ease;
 }
 
 .prazo-step-btn:hover:not(:disabled) {
-  background-color: #e9e9e4;
+  background-color: var(--cor-borda);
   color: var(--cor-texto);
 }
 
-.prazo-step-btn:focus-visible { outline: none; }
-
-.prazo-step-btn:disabled { cursor: not-allowed; opacity: 0.3; }
+.prazo-step-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
 
 .prazo-input {
   flex: 1;
@@ -263,13 +283,11 @@
   border-radius: 0 !important;
   text-align: center;
   padding: 0 !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 500;
   font-variant-numeric: tabular-nums;
-  box-shadow: none !important;
   background: var(--cor-superficie);
   color: var(--cor-texto);
-  /* remove spinners nativos */
   -moz-appearance: textfield;
 }
 
@@ -279,130 +297,95 @@
   margin: 0;
 }
 
-.prazo-input:focus { outline: none; box-shadow: none !important; }
-
-/* ── chip fim de semana ── */
+/* Fim de semana (plano e sóbrio) */
 .chip-fds {
-  padding: 8px 12px;
-  border: 1.5px solid var(--cor-borda);
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: var(--altura-controle);
+  padding: 0 10px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
   background: var(--cor-superficie);
-  color: var(--cor-texto-suave);
+  color: var(--cor-texto-secundario);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.12s ease;
+  transition: border-color 0.12s ease, background-color 0.12s ease, color 0.12s ease;
   align-self: end;
-  line-height: 1;
-  height: 34px;
-  display: flex;
-  align-items: center;
 }
 
 .chip-fds:hover:not(:disabled) {
-  border-color: var(--cor-ambar);
-  color: var(--cor-ambar-escuro);
+  border-color: var(--cor-borda-forte);
+  color: var(--cor-texto);
 }
 
 .chip-fds-ativo {
-  background-color: var(--cor-ambar);
-  border-color: var(--cor-ambar);
-  color: var(--cor-preto);
+  background-color: var(--cor-preto);
+  border-color: var(--cor-preto);
+  color: #ffffff;
 }
 
-/* ── rodapé ── */
+/* Rodapé: fundo cinza claro e botões à direita */
 .modal-rodape {
   display: flex;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
-  padding: 12px 20px;
+  padding: 10px 16px;
+  background-color: var(--cor-superficie-subtil);
   border-top: 1px solid var(--cor-borda);
   flex-shrink: 0;
 }
 
-.modal-cancelar {
-  padding: 8px 16px;
-  border: 1px solid var(--cor-borda);
-  border-radius: 6px;
-  background-color: var(--cor-superficie);
-  color: var(--cor-texto);
-  font-size: 13px;
-  cursor: pointer;
-  transition: background-color 0.1s;
-}
-
-.modal-cancelar:hover:not(:disabled) { background-color: var(--cor-fundo); }
-
-.btn-primario:disabled,
-.modal-cancelar:disabled,
-.btn-secundario:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* botão secundário: borda âmbar */
-.btn-secundario {
-  padding: 8px 16px;
-  border: 1.5px solid var(--cor-ambar);
-  border-radius: 6px;
-  background-color: var(--cor-superficie);
-  color: var(--cor-ambar-escuro);
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background-color 0.15s ease;
-}
-
-.btn-secundario:hover:not(:disabled) { background-color: var(--cor-ambar-fundo); }
-
-/* valor com prefixo R$ */
-.modal-input-valor {
-  padding-left: 28px !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctext x='4' y='14' font-size='12' fill='%236b6b66' font-family='system-ui'%3ER%24%3C/text%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 6px center;
-  background-size: 18px;
-}
-
-/* recentes: chips de orçamentos passados para reutilizar */
+/* Recentes: chips planos de orçamentos passados */
 .modal-recentes {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  padding: 10px 0 4px;
+  padding: 4px 0;
 }
 
 .modal-recentes-label {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--cor-texto-suave);
   white-space: nowrap;
 }
 
 .modal-recente-chip {
-  padding: 4px 10px;
+  height: 24px;
+  padding: 0 8px;
   border: 1px solid var(--cor-borda);
-  border-radius: 9999px;
-  background: var(--cor-fundo);
-  color: var(--cor-texto-suave);
-  font-size: 12px;
+  border-radius: var(--raio-controle);
+  background: var(--cor-superficie-subtil);
+  color: var(--cor-texto-secundario);
+  font-size: 11px;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   white-space: nowrap;
-  max-width: 220px;
+  max-width: 180px;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: border-color 0.12s ease, color 0.12s ease, background-color 0.12s ease;
 }
 
 .modal-recente-chip:hover:not(:disabled) {
-  border-color: var(--cor-ambar);
-  color: var(--cor-ambar-escuro);
-  background: var(--cor-ambar-fundo);
+  border-color: var(--cor-borda-forte);
+  color: var(--cor-texto);
+  background-color: var(--cor-borda);
 }
 
-/* mobile: empilha tudo */
+/* Valor com prefixo R$ */
+.modal-input-valor {
+  padding-left: 28px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctext x='4' y='14' font-size='12' fill='%2371716a' font-family='system-ui'%3ER%24%3C/text%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 6px center;
+  background-size: 18px;
+}
+
+/* Mobile */
 @media (max-width: 767px) {
   .modal-overlay { padding: 0; }
   .modal-orc { width: 100%; height: 100%; max-height: none; border-radius: 0; }
@@ -410,9 +393,4 @@
   .modal-preview { display: none; }
   .modal-linha { grid-template-columns: 1fr; }
   .modal-linha-rodape { grid-template-columns: 1fr 1fr; }
-}
-
-/* telas médias: preview menor */
-@media (max-width: 900px) and (min-width: 768px) {
-  .modal-corpo-duplo { grid-template-columns: 1fr 200px; }
 }
