@@ -396,6 +396,11 @@
   color: #166534;
 }
 
+.orc-acao-btn-email:hover:not(:disabled) {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
 /* PDF fica sempre visível; ações secundárias ganham opacidade no hover da linha */
 .orc-acao-pdf {
   color: var(--cor-texto-secundario);

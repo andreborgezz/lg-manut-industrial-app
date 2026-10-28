@@ -25,8 +25,10 @@ export type Orcamento = {
 export type OrcamentoLinha = {
   id: number
   empresa: string
+  empresaEmail?: string | null
   solicitante: string | null
   solicitanteTelefone: string | null
+  solicitanteEmail?: string | null
   entradaEm: string
   numero: number
   numeroPedido: string | null

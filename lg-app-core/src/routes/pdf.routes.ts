@@ -4,9 +4,25 @@ import { AppError } from '../utils/errors'
 import { buscarPorId } from '../services/orcamento.service'
 import { gerarPdfOrcamento } from '../services/pdf.service'
 import { enviarPdf, urlAssinada } from '../services/storage.service'
+import { enviarEmailOrcamento } from '../services/email.service'
 import pool from '../../database'
 
 export const pdfRoutes = Router()
+
+// envia o PDF do orçamento por e-mail via Resend
+pdfRoutes.post('/:id/email', h(async (req, res) => {
+  const id = Number(req.params.id)
+  if (isNaN(id)) throw new AppError('id inválido', 400)
+
+  const { destinatario, mensagemPersonalizada } = req.body || {}
+
+  const resultado = await enviarEmailOrcamento(id, {
+    destinatario,
+    mensagemPersonalizada,
+  })
+
+  res.json(resultado)
+}))
 
 // gera o PDF, salva no R2 e devolve URL assinada
 pdfRoutes.post('/:id/pdf', h(async (req, res) => {

@@ -15,6 +15,8 @@ const schema = z.object({
   R2_BACKUP_ACCESS_KEY_ID: z.string().optional(),
   R2_BACKUP_SECRET_ACCESS_KEY: z.string().optional(),
   BACKUP_PING_URL: z.union([z.string().url(), z.literal(''), z.undefined()]).optional(),
+  RESEND_API_KEY: z.string().default(''),
+  RESEND_FROM: z.string().default('onboarding@resend.dev'),
 })
 
 function validarEnv() {

@@ -5,8 +5,10 @@ export type Status = 'ABERTO' | 'APROVADO' | 'RECUSADO' | 'ENTREGUE'
 export type OrcamentoLinha = {
   id: number
   empresa: string
+  empresaEmail?: string | null
   solicitante: string | null
   solicitanteTelefone: string | null
+  solicitanteEmail?: string | null
   entradaEm: string
   numero: number
   numeroPedido: string | null
@@ -192,6 +194,24 @@ export const gerarPdfOrcamento = (id: number) =>
 
 export const buscarUrlPdfOrcamento = (id: number) =>
   chamar<{ url: string }>(`/orcamentos/${id}/pdf`)
+
+export type EnviarEmailOrcamentoBody = {
+  destinatario?: string
+  mensagemPersonalizada?: string
+}
+
+export type EnviarEmailOrcamentoResposta = {
+  sucesso: boolean
+  emailId: string
+  destinatario: string
+  numero: number
+}
+
+export const enviarEmailOrcamento = (id: number, body?: EnviarEmailOrcamentoBody) =>
+  chamar<EnviarEmailOrcamentoResposta>(`/orcamentos/${id}/email`, {
+    method: 'POST',
+    body: JSON.stringify(body ?? {}),
+  })
 
 export type OrcamentoRecente = { id: number; numero: number; titulo: string | null; escopo: string | null; valor: string | null }
 

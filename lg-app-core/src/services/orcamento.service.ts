@@ -41,7 +41,9 @@ const editaveis: Record<string, string> = {
 const selectLinha = `select
        o.id,
        e.nome as empresa,
+       e.email as "empresaEmail",
        s.nome as solicitante,
+       s.email as "solicitanteEmail",
        s.telefone as "solicitanteTelefone",
        to_char(o.entrada_em, 'YYYY-MM-DD') as "entradaEm",
        o.numero,

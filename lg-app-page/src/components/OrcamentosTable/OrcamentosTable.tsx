@@ -8,6 +8,7 @@ import {
   FileSearch,
   FileText,
   Loader2,
+  Mail,
   MessageCircle,
   Pencil,
   Search,
@@ -28,6 +29,7 @@ import {
   type Status,
 } from '../../services/api'
 import { CelulaEditavel, type Opcao } from '../CelulaEditavel/CelulaEditavel'
+import { EnviarEmailModal } from '../EnviarEmailModal/EnviarEmailModal'
 import { useToast } from '../Toast/Toast'
 import './OrcamentosTable.css'
 
@@ -123,6 +125,7 @@ function montarColunas(
   gerarPdf: (o: OrcamentoLinha) => void,
   compartilharWhatsapp: (o: OrcamentoLinha) => void,
   compartilhando: number | null,
+  abrirEmail: (o: OrcamentoLinha) => void,
 ): Coluna[] {
   const opcoesMecanico = (o: OrcamentoLinha): Opcao[] => {
     const lista = mecanicos.map((m) => ({ valor: String(m.id), label: m.nome }))
@@ -244,7 +247,7 @@ function montarColunas(
     },
     {
       titulo: 'AÇÕES',
-      largura: '110px',
+      largura: '140px',
       alinhamento: 'right',
       render: (o) => {
         const girando = (acao: Acao) => carregando?.id === o.id && carregando.acao === acao
@@ -295,6 +298,16 @@ function montarColunas(
             >
               {carregandoWa ? <Loader2 size={15} className="orc-spin" /> : <MessageCircle size={15} />}
             </button>
+            <button
+              type="button"
+              className="orc-acao-btn orc-acao-secundaria orc-acao-btn-email"
+              title="Enviar PDF por e-mail"
+              aria-label={`Enviar orçamento ${o.numero} por e-mail`}
+              disabled={qualquerCarregando}
+              onClick={() => abrirEmail(o)}
+            >
+              <Mail size={15} />
+            </button>
           </div>
         )
       },
@@ -327,6 +340,7 @@ export function OrcamentosTable({
   const [aviso, setAviso] = useState('')
   const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
   const [urlPdfBloqueado, setUrlPdfBloqueado] = useState<string | null>(null)
+  const [orcamentoParaEmail, setOrcamentoParaEmail] = useState<OrcamentoLinha | null>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -501,7 +515,17 @@ export function OrcamentosTable({
     }
   }
 
-  const colunas = montarColunas(mecanicos, salvar, abrir, carregandoAcao, gerandoPdf, gerarPdf, compartilharWhatsapp, compartilhando)
+  const colunas = montarColunas(
+    mecanicos,
+    salvar,
+    abrir,
+    carregandoAcao,
+    gerandoPdf,
+    gerarPdf,
+    compartilharWhatsapp,
+    compartilhando,
+    (o) => setOrcamentoParaEmail(o),
+  )
 
   const filtro: FiltroPeriodo = {
     busca,
@@ -795,6 +819,22 @@ export function OrcamentosTable({
           </span>
         </div>
       </div>
+
+      {orcamentoParaEmail && (
+        <EnviarEmailModal
+          orcamento={orcamentoParaEmail}
+          onFechar={() => setOrcamentoParaEmail(null)}
+          onEnviado={(destinatario) => {
+            const num = orcamentoParaEmail.numero
+            setOrcamentoParaEmail(null)
+            toast.mostrar({
+              tipo: 'sucesso',
+              mensagem: `Orçamento nº ${num} enviado por e-mail para ${destinatario}!`,
+              duracao: 6000,
+            })
+          }}
+        />
+      )}
     </section>
   )
 }
