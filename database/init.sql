@@ -35,6 +35,7 @@ create table solicitantes (
 create table mecanicos (
   id serial primary key,
   nome text not null,
+  telefone text,
   ativo boolean not null default true
 );
 
