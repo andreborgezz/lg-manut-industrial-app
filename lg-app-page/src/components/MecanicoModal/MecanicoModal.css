@@ -1,16 +1,23 @@
 /* ==========================================================================
-   Modal de Mecânico — ERP Industrial
+   Modal de Mecânico — ERP Industrial Clean & Corporativo
    ========================================================================== */
 
 .mec-modal {
-  width: min(440px, 100% - 32px);
-  background-color: var(--cor-superficie);
+  width: min(460px, 100% - 32px);
+  background-color: #ffffff;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.25);
   display: flex;
   flex-direction: column;
+}
+
+.mec-modal .modal-corpo {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 @media (max-width: 767px) {
@@ -19,14 +26,14 @@
   }
 }
 
-/* Toggle ativo/inativo plano e compacto (altura 32px) */
+/* Toggle ativo/inativo plano e corporativo */
 .mec-modal-toggle {
   display: flex;
   height: var(--altura-controle);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   overflow: hidden;
-  background-color: var(--cor-superficie);
+  background-color: #ffffff;
 }
 
 .mec-status-btn {
@@ -36,13 +43,13 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--cor-texto-suave);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition: all 0.12s ease;
 }
 
 .mec-status-btn:disabled {
