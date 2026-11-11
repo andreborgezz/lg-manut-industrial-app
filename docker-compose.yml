@@ -1,23 +1,64 @@
 services:
-  # POSTGRES
   postgres:
     image: postgres:16-alpine
-    container_name: postgres
+    container_name: lg-postgres-dev
     restart: unless-stopped
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_USER: lg-manutencao
-      POSTGRES_PASSWORD: lg-manutencao
-      POSTGRES_DB: lg_manut_db
+      POSTGRES_USER: ${POSTGRES_USER:-lg-manutencao}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-lg-manutencao}
+      POSTGRES_DB: ${POSTGRES_DB:-lg_manut_db}
     volumes:
-      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U lg-manutencao -d lg_manut_db" ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-lg-manutencao} -d ${POSTGRES_DB:-lg_manut_db}"]
       interval: 10s
       timeout: 5s
       retries: 5
+
+  backend:
+    build:
+      context: ./lg-app-core
+      dockerfile: Dockerfile.dev
+    container_name: lg-backend-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgres://${POSTGRES_USER:-lg-manutencao}:${POSTGRES_PASSWORD:-lg-manutencao}@postgres:5432/${POSTGRES_DB:-lg_manut_db}
+      FRONT_URL: http://localhost:5173
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-local-com-pelo-menos-32-caracteres}
+    volumes:
+      - ./lg-app-core:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./lg-app-page
+      dockerfile: Dockerfile.dev
+    container_name: lg-frontend-dev
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3000
+      CHOKIDAR_USEPOLLING: "true"
+    volumes:
+      - ./lg-app-page:/app
+      - /app/node_modules
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

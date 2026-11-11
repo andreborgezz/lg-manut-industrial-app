@@ -32,7 +32,7 @@ const ERRO_GENERICO = 'E-mail ou senha inválidos'
 const COOKIE_OPTS = {
   httpOnly: true,
   secure: env.NODE_ENV === 'production',
-  sameSite: 'lax' as const,
+  sameSite: (env.NODE_ENV === 'production' ? 'none' : 'lax') as 'none' | 'lax',
   maxAge: 7 * 24 * 60 * 60 * 1000,
 }
 
@@ -69,7 +69,7 @@ authRoutes.post('/login', limitador, async (req: Request, res: Response, next: N
 })
 
 authRoutes.post('/logout', (_req: Request, res: Response) => {
-  res.clearCookie('token', { httpOnly: true, secure: env.NODE_ENV === 'production', sameSite: 'lax' })
+  res.clearCookie('token', { httpOnly: true, secure: env.NODE_ENV === 'production', sameSite: env.NODE_ENV === 'production' ? 'none' : 'lax' })
   res.json({ ok: true })
 })
 

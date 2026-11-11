@@ -31,7 +31,7 @@ export async function gerarPdfOrcamento(dados: DadosOrcamento): Promise<Buffer> 
   const page = await b.newPage()
   try {
     const html = gerarHtml(dados)
-    await page.setContent(html, { waitUntil: 'networkidle0' })
+    await page.setContent(html, { waitUntil: 'load' })
     await page.evaluate(() => document.fonts.ready)
     const pdf = await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true })
     return Buffer.from(pdf)
