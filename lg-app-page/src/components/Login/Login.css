@@ -1,6 +1,6 @@
 /* ==========================================================================
-   Tela de Login Institucional — L.G. Manutenção Industrial
-   Design sóbrio, requintado e sem clichês de IA
+   Tela de Login Corporativa Executiva — L.G. Manutenção Industrial
+   Design clássico, sóbrio, executivo e com máxima credibilidade
    ========================================================================== */
 
 .login-viewport {
@@ -10,41 +10,29 @@
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background-color: #0c0e12;
-  /* Grade sutil e geométrica de engenharia (sem gradientes multicoloridos) */
+  background-color: #f1f5f9;
+  /* Fundo corporativo com textura suave e executiva */
   background-image: 
-    radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.04) 0%, transparent 60%),
-    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
-  background-size: 100% 100%, 32px 32px, 32px 32px;
+    radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 75%),
+    linear-gradient(#e2e8f0 1px, transparent 1px),
+    linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
   box-sizing: border-box;
 }
 
 .login-card-container {
   width: 100%;
-  max-width: 410px;
-  background-color: #15181e;
-  border: 1px solid #282f3a;
+  max-width: 420px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 8px;
   box-shadow: 
-    0 1px 3px rgba(0, 0, 0, 0.4),
-    0 20px 40px -15px rgba(0, 0, 0, 0.7);
-  padding: 36px 32px 28px;
+    0 4px 6px -1px rgba(15, 23, 42, 0.05),
+    0 20px 25px -5px rgba(15, 23, 42, 0.08);
+  padding: 40px 36px 32px;
   display: flex;
   flex-direction: column;
   gap: 24px;
-  animation: login-surgir 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes login-surgir {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* Cabeçalho Institucional */
@@ -53,27 +41,27 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 12px;
+  gap: 14px;
 }
 
 .login-marca-insignia {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .login-icone-anel {
-  width: 48px;
-  height: 48px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #1f2530 0%, #15181e 100%);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  background-color: #0f2744;
+  border: 1px solid #1e3a5f;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--cor-ambar);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(15, 39, 68, 0.2);
 }
 
 .login-icone-ferramenta {
@@ -88,10 +76,10 @@
 }
 
 .login-sigla {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #f1f3f7;
+  letter-spacing: 0.04em;
+  color: #0f2744;
   text-transform: uppercase;
 }
 
@@ -99,17 +87,17 @@
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: #f59e0b;
+  color: #475569;
   text-transform: uppercase;
-  margin-top: 2px;
+  margin-top: 3px;
 }
 
 .login-boas-vindas {
   font-size: 13px;
-  color: #8b95a5;
+  color: #64748b;
   margin: 0;
-  line-height: 1.4;
-  max-width: 280px;
+  line-height: 1.45;
+  max-width: 290px;
 }
 
 /* Formulário */
@@ -134,37 +122,37 @@
 .login-rotulo {
   font-size: 12px;
   font-weight: 600;
-  color: #c5cdd8;
-  letter-spacing: 0.01em;
+  color: #334155;
 }
 
 .login-entrada {
   width: 100%;
   height: 40px;
   padding: 0 14px;
-  background-color: #0e1014;
-  border: 1px solid #2a313d;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: 4px;
-  color: #f1f3f7;
+  color: #0f172a;
   font-size: 14px;
   font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.15s ease;
   box-sizing: border-box;
 }
 
 .login-entrada::placeholder {
-  color: #4f5866;
+  color: #94a3b8;
 }
 
 .login-entrada:focus {
   outline: none;
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.18);
-  background-color: #12151b;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.15);
 }
 
 .login-entrada:disabled {
-  opacity: 0.6;
+  background-color: #f8fafc;
+  opacity: 0.7;
   cursor: not-allowed;
 }
 
@@ -186,7 +174,7 @@
   background: none;
   border: none;
   padding: 6px;
-  color: #6e798a;
+  color: #64748b;
   cursor: pointer;
   border-radius: 4px;
   display: flex;
@@ -196,26 +184,26 @@
 }
 
 .login-botao-mostrar-senha:hover {
-  color: #c5cdd8;
+  color: #0f172a;
 }
 
 /* Alerta de Erro */
 .login-alerta-erro {
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
   border-radius: 4px;
   padding: 10px 12px;
   font-size: 13px;
-  color: #fca5a5;
+  color: #b91c1c;
   line-height: 1.4;
 }
 
 /* Botão de Entrar */
 .login-botao-submeter {
   height: 42px;
-  background-color: #f59e0b;
-  color: #0c0e12;
-  border: 1px solid #f59e0b;
+  background-color: #0f2744;
+  color: #ffffff;
+  border: 1px solid #0f2744;
   border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
@@ -224,15 +212,15 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  box-shadow: 0 1px 3px rgba(15, 39, 68, 0.2);
   transition: all 0.15s ease;
   margin-top: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .login-botao-submeter:hover:not(:disabled) {
-  background-color: #d97706;
-  border-color: #d97706;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  background-color: #1e3a8a;
+  border-color: #1e3a8a;
+  box-shadow: 0 4px 10px rgba(15, 39, 68, 0.3);
   transform: translateY(-1px);
 }
 
@@ -241,7 +229,7 @@
 }
 
 .login-botao-submeter:disabled {
-  opacity: 0.5;
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
@@ -258,7 +246,7 @@
 
 /* Rodapé */
 .login-footer {
-  border-top: 1px solid #222731;
+  border-top: 1px solid #e2e8f0;
   padding-top: 18px;
   display: flex;
   align-items: center;
@@ -270,10 +258,10 @@
   align-items: center;
   gap: 6px;
   font-size: 11px;
-  color: #647082;
+  color: #64748b;
   font-weight: 500;
 }
 
 .login-seguranca-icone {
-  color: #8b95a5;
+  color: #0f2744;
 }

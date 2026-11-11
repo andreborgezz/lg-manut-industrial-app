@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Tabela de Orçamentos — ERP Industrial
+   Tabela de Orçamentos — ERP Industrial Executivo
    ========================================================================== */
 
 .orc-table-container {
@@ -27,7 +27,7 @@
   min-width: 0;
 }
 
-/* Busca com ícone de lupa */
+/* Busca */
 .orc-busca-wrapper {
   position: relative;
   display: flex;
@@ -52,12 +52,14 @@
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 13px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.15s ease;
 }
 
 .orc-input-busca:focus {
-  border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+  border-color: var(--cor-azul-acao);
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+  outline: none;
 }
 
 .orc-btn-limpar-campo {
@@ -89,11 +91,13 @@
   color: var(--cor-texto);
   font-size: 13px;
   cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.15s ease;
 }
 
 .orc-select-status:focus {
-  border-color: var(--cor-ambar);
+  border-color: var(--cor-azul-acao);
+  outline: none;
 }
 
 /* Botão e Popover de Período */
@@ -107,9 +111,9 @@
 }
 
 .orc-btn-periodo-ativo {
-  border-color: var(--cor-ambar);
-  background-color: var(--cor-ambar-fundo);
-  color: var(--cor-ambar);
+  border-color: #93c5fd;
+  background-color: #eff6ff;
+  color: #1e40af;
   font-weight: 600;
 }
 
@@ -118,10 +122,10 @@
   top: calc(100% + 6px);
   left: 0;
   width: 260px;
-  background-color: #1b1f26;
-  border: 1px solid #2f3744;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -169,8 +173,8 @@
 }
 
 .orc-popover-item.ativo {
-  background-color: var(--cor-ambar-fundo);
-  color: var(--cor-ambar);
+  background-color: #eff6ff;
+  color: #1d4ed8;
   font-weight: 600;
 }
 
@@ -203,7 +207,7 @@
   font-size: 12px;
   font-family: inherit;
   color: var(--cor-texto);
-  background-color: var(--cor-fundo);
+  background-color: #ffffff;
 }
 
 .orc-popover-btn-aplicar {
@@ -213,7 +217,7 @@
   margin-top: 4px;
 }
 
-/* Toolbar ações à direita */
+/* Toolbar ações */
 .orc-toolbar-acoes {
   display: flex;
   align-items: center;
@@ -246,7 +250,7 @@
   gap: 6px;
   height: 24px;
   padding: 0 8px;
-  background-color: var(--cor-superficie);
+  background-color: #ffffff;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   font-size: 11px;
@@ -273,7 +277,7 @@
 .orc-btn-limpar-todos {
   border: none;
   background: transparent;
-  color: var(--cor-ambar);
+  color: var(--cor-azul-acao);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
@@ -288,19 +292,18 @@
    Card da Tabela & Elementos Tabulares
    ========================================================================== */
 .orc-table-card {
-  background-color: #171a21;
-  border: 1px solid #282f3a;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .orc-table-scroll {
   overflow-x: auto;
   max-height: calc(100vh - 215px);
-  /* Barra de rolagem discreta e elegante para quando houver overflow */
   scrollbar-width: thin;
-  scrollbar-color: #2e3644 transparent;
+  scrollbar-color: #cbd5e1 transparent;
 }
 
 .orc-table-scroll::-webkit-scrollbar {
@@ -313,12 +316,12 @@
 }
 
 .orc-table-scroll::-webkit-scrollbar-thumb {
-  background-color: #2e3644;
+  background-color: #cbd5e1;
   border-radius: 3px;
 }
 
 .orc-table-scroll::-webkit-scrollbar-thumb:hover {
-  background-color: #434e62;
+  background-color: #94a3b8;
 }
 
 .orc-table {
@@ -335,34 +338,33 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  background-color: #13161c;
-  color: #8b95a5;
+  background-color: var(--cor-cabecalho-tabela);
+  color: #475569;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   padding: 10px 12px;
-  border-bottom: 1px solid #232833;
+  border-bottom: 1px solid var(--cor-borda-forte);
   white-space: nowrap;
 }
 
-/* Linhas com altura de 42px */
+/* Linhas com altura de 40px */
 .orc-table td {
   height: var(--altura-linha-tabela);
   padding: 4px 12px;
-  border-bottom: 1px solid #20242d;
+  border-bottom: 1px solid #f1f5f9;
   white-space: nowrap;
   color: var(--cor-texto);
 }
 
 /* Hover suave */
 .orc-table tbody tr:hover td {
-  background-color: #1c2029;
+  background-color: #f8fafc;
 }
 
 /* ==========================================================================
-   Colunas Fixas (Sticky) — Extrema Usabilidade em Qualquer Resolução
-   Nº, Empresa à esquerda | Valor, Status e Ações à direita
+   Colunas Fixas (Sticky)
    ========================================================================== */
 
 /* Coluna 1: Nº */
@@ -371,13 +373,13 @@
   position: sticky;
   left: 0;
   z-index: 5;
-  background-color: #13161c;
+  background-color: var(--cor-cabecalho-tabela);
 }
 .orc-table td.col-fixa-numero {
-  background-color: #171a21;
+  background-color: #ffffff;
 }
 .orc-table tbody tr:hover td.col-fixa-numero {
-  background-color: #1c2029;
+  background-color: #f8fafc;
 }
 
 /* Coluna 2: Empresa */
@@ -386,47 +388,47 @@
   position: sticky;
   left: 64px;
   z-index: 5;
-  background-color: #13161c;
-  border-right: 1px solid #232833;
-  box-shadow: 4px 0 10px -4px rgba(0, 0, 0, 0.4);
+  background-color: var(--cor-cabecalho-tabela);
+  border-right: 1px solid var(--cor-borda);
+  box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.04);
 }
 .orc-table td.col-fixa-empresa {
-  background-color: #171a21;
+  background-color: #ffffff;
 }
 .orc-table tbody tr:hover td.col-fixa-empresa {
-  background-color: #1c2029;
+  background-color: #f8fafc;
 }
 
 /* Coluna Direita 3: Valor */
 .orc-table th.col-fixa-valor,
 .orc-table td.col-fixa-valor {
   position: sticky;
-  right: 215px; /* 105px (status) + 110px (acoes) */
+  right: 215px;
   z-index: 5;
-  background-color: #13161c;
-  border-left: 1px solid #232833;
-  box-shadow: -4px 0 10px -4px rgba(0, 0, 0, 0.4);
+  background-color: var(--cor-cabecalho-tabela);
+  border-left: 1px solid var(--cor-borda);
+  box-shadow: -3px 0 6px -2px rgba(0, 0, 0, 0.04);
 }
 .orc-table td.col-fixa-valor {
-  background-color: #171a21;
+  background-color: #ffffff;
 }
 .orc-table tbody tr:hover td.col-fixa-valor {
-  background-color: #1c2029;
+  background-color: #f8fafc;
 }
 
 /* Coluna Direita 2: Status */
 .orc-table th.col-fixa-status,
 .orc-table td.col-fixa-status {
   position: sticky;
-  right: 110px; /* 110px (acoes) */
+  right: 110px;
   z-index: 5;
-  background-color: #13161c;
+  background-color: var(--cor-cabecalho-tabela);
 }
 .orc-table td.col-fixa-status {
-  background-color: #171a21;
+  background-color: #ffffff;
 }
 .orc-table tbody tr:hover td.col-fixa-status {
-  background-color: #1c2029;
+  background-color: #f8fafc;
 }
 
 /* Coluna Direita 1: Ações */
@@ -435,16 +437,16 @@
   position: sticky;
   right: 0;
   z-index: 5;
-  background-color: #13161c;
+  background-color: var(--cor-cabecalho-tabela);
 }
 .orc-table td.col-fixa-acoes {
-  background-color: #171a21;
+  background-color: #ffffff;
 }
 .orc-table tbody tr:hover td.col-fixa-acoes {
-  background-color: #1c2029;
+  background-color: #f8fafc;
 }
 
-/* Header sticky precisa de z-index superior para as colunas fixas */
+/* Z-index no header para sobrepor o corpo */
 .orc-table th.col-fixa-numero,
 .orc-table th.col-fixa-empresa,
 .orc-table th.col-fixa-valor,
@@ -455,19 +457,19 @@
 
 /* Linha nova */
 .linha-nova td {
-  background-color: rgba(245, 158, 11, 0.15) !important;
+  background-color: #fef9c3 !important;
   transition: background-color 1.5s ease;
 }
 
 /* Colunas específicas */
 .orc-col-numero {
-  font-weight: 600;
-  color: var(--cor-ambar);
+  font-weight: 700;
+  color: var(--cor-marinho);
 }
 
 .orc-col-valor {
   font-weight: 600;
-  color: #f1f3f7;
+  color: #0f172a;
 }
 
 .orc-texto-truncado {
@@ -494,8 +496,8 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid var(--cor-borda);
+  background: #ffffff;
   color: var(--cor-texto-suave);
   border-radius: var(--raio-controle);
   cursor: pointer;
@@ -504,36 +506,37 @@
 
 .orc-acao-btn:hover:not(:disabled) {
   background-color: var(--cor-superficie-subtil);
-  border-color: var(--cor-borda);
+  border-color: var(--cor-borda-forte);
   color: var(--cor-texto);
 }
 
 .orc-acao-btn-wa:hover:not(:disabled) {
-  background-color: rgba(34, 197, 94, 0.15);
-  border-color: rgba(34, 197, 94, 0.3);
-  color: #4ade80;
+  background-color: #f0fdf4;
+  border-color: #86efac;
+  color: #15803d;
 }
 
 .orc-acao-btn-email:hover:not(:disabled) {
-  background-color: rgba(59, 130, 246, 0.15);
-  border-color: rgba(59, 130, 246, 0.3);
-  color: #60a5fa;
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
 }
 
-/* PDF tem destaque especial: cor âmbar suave */
+/* PDF com destaque institucional elegante */
 .orc-acao-pdf {
-  color: var(--cor-ambar);
-  background-color: rgba(245, 158, 11, 0.1);
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  color: #1e3a8a;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
 }
 
 .orc-acao-pdf:hover:not(:disabled) {
-  background-color: var(--cor-ambar);
-  color: #0c0e12;
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #ffffff;
 }
 
 .orc-acao-secundaria {
-  opacity: 0.45;
+  opacity: 0.7;
 }
 
 .orc-table tr:hover .orc-acao-secundaria {
@@ -557,20 +560,20 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background-color: #13161c;
-  border-top: 1px solid #232833;
+  background-color: var(--cor-cabecalho-tabela);
+  border-top: 1px solid var(--cor-borda-forte);
   font-size: 12px;
   color: var(--cor-texto-secundario);
 }
 
 .orc-table-total strong {
-  color: var(--cor-ambar);
+  color: var(--cor-marinho);
   font-weight: 700;
   margin-left: 6px;
 }
 
 /* ==========================================================================
-   Estado Vazio Sóbrio
+   Estado Vazio
    ========================================================================== */
 .orc-table-vazio-td {
   padding: 48px 16px !important;
@@ -599,9 +602,9 @@
    Avisos e Erros
    ========================================================================== */
 .orc-table-erro {
-  color: #f87171;
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #b91c1c;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
   padding: 8px 14px;
   border-radius: var(--raio-controle);
   font-size: 13px;
@@ -612,9 +615,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  color: #f87171;
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #b91c1c;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
   padding: 8px 14px;
   border-radius: var(--raio-controle);
   font-size: 13px;

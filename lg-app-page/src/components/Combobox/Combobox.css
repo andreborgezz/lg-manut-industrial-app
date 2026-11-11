@@ -37,26 +37,27 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.12s ease;
   box-sizing: border-box;
 }
 
 .combo-btn-valor:focus,
 .combo-input:focus {
-  border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+  border-color: var(--cor-azul-acao);
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
   outline: none;
 }
 
 .combo-invalido .combo-btn-valor,
 .combo-invalido .combo-input {
-  border-color: #f87171;
+  border-color: #ef4444;
 }
 
 .combo-desabilitado .combo-btn-valor {
-  background-color: var(--cor-fundo);
+  background-color: #f1f5f9;
   cursor: not-allowed;
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .combo-placeholder {
@@ -81,10 +82,10 @@
   left: 0;
   right: 0;
   z-index: 500;
-  background-color: #1b1f26;
-  border: 1px solid #2f3744;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   list-style: none;
   max-height: 220px;
   overflow-y: auto;
@@ -105,18 +106,18 @@
 
 .combo-opcao:hover,
 .combo-opcao-cursor {
-  background-color: var(--cor-superficie-subtil);
-  color: #ffffff;
+  background-color: #f1f5f9;
+  color: var(--cor-texto);
 }
 
 .combo-opcao-selecionada {
-  background-color: var(--cor-ambar-fundo);
-  color: var(--cor-ambar);
+  background-color: #eff6ff;
+  color: var(--cor-azul-acao);
   font-weight: 600;
 }
 
 .combo-opcao-criar {
-  color: var(--cor-ambar);
+  color: var(--cor-azul-acao);
   border-top: 1px solid var(--cor-borda);
   margin-top: 4px;
   padding-top: 8px;
@@ -131,5 +132,5 @@
 
 .combo-erro {
   font-size: 11px;
-  color: #f87171;
+  color: #dc2626;
 }

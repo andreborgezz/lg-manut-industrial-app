@@ -17,14 +17,15 @@
    ========================================================================== */
 .topbar {
   height: var(--altura-topbar);
-  background-color: #15181e;
-  border-bottom: 1px solid #282f3a;
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--cor-borda);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 24px;
   flex-shrink: 0;
   z-index: 10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .topbar-esquerda {
@@ -36,7 +37,7 @@
 .topbar-breadcrumb {
   font-size: 13px;
   font-weight: 600;
-  color: #f1f3f7;
+  color: #1e293b;
   letter-spacing: -0.01em;
 }
 
@@ -52,8 +53,8 @@
   justify-content: center;
   width: 30px;
   height: 30px;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-superficie);
   color: var(--cor-texto-suave);
   border-radius: var(--raio-controle);
   cursor: pointer;
@@ -63,7 +64,7 @@
 .topbar-btn-ajuda:hover {
   color: var(--cor-texto);
   background-color: var(--cor-superficie-subtil);
-  border-color: var(--cor-borda);
+  border-color: var(--cor-borda-forte);
 }
 
 .topbar-divisor {
@@ -80,8 +81,8 @@
 
 .topbar-usuario-nome {
   font-size: 13px;
-  font-weight: 500;
-  color: #d1d7e0;
+  font-weight: 600;
+  color: #334155;
 }
 
 .topbar-btn-sair {
@@ -89,9 +90,9 @@
   align-items: center;
   gap: 6px;
   padding: 5px 8px;
-  border: 1px solid transparent;
-  background: transparent;
-  color: var(--cor-texto-suave);
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-superficie);
+  color: #64748b;
   font-size: 12px;
   font-weight: 500;
   border-radius: var(--raio-controle);
@@ -100,9 +101,9 @@
 }
 
 .topbar-btn-sair:hover {
-  color: #f87171;
-  background-color: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.2);
+  color: #dc2626;
+  background-color: #fef2f2;
+  border-color: #fecaca;
 }
 
 /* ==========================================================================
@@ -114,7 +115,7 @@
   min-width: 0;
 }
 
-/* Cabeçalho da página (Título 20px / 600 sóbrio + Ação à direita) */
+/* Cabeçalho da página */
 .page-header {
   display: flex;
   align-items: center;
@@ -132,7 +133,7 @@
 .page-header h1 {
   font-size: 20px;
   font-weight: 700;
-  color: var(--cor-texto);
+  color: #0f172a;
   letter-spacing: -0.02em;
   margin: 0;
   padding: 0;
@@ -149,11 +150,11 @@
    ========================================================================== */
 .modal-atalhos {
   width: min(400px, 100% - 32px);
-  background-color: #1b1f26;
-  border: 1px solid #2f3744;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
 }
@@ -184,13 +185,13 @@ kbd {
   min-width: 24px;
   height: 24px;
   padding: 0 6px;
-  border: 1px solid #3d4657;
+  border: 1px solid #cbd5e1;
   border-radius: 4px;
-  background-color: #12151b;
+  background-color: #f1f5f9;
   font-size: 11px;
   font-family: inherit;
   font-weight: 600;
-  color: var(--cor-ambar);
+  color: #1e293b;
   line-height: 1;
 }
 

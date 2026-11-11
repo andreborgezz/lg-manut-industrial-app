@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Modal de Novo Orçamento — ERP Industrial
+   Modal de Novo Orçamento — ERP Industrial Clean
    ========================================================================== */
 
 .modal-overlay {
@@ -19,12 +19,12 @@
   flex-direction: column;
   width: min(1060px, 100% - 32px);
   max-height: calc(100vh - 40px);
-  background-color: #171a21;
+  background-color: #ffffff;
   color: var(--cor-texto);
-  border: 1px solid #282f3a;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.25);
 }
 
 .modal-header {
@@ -32,15 +32,15 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  border-bottom: 1px solid #232833;
-  background-color: #13161c;
+  border-bottom: 1px solid var(--cor-borda);
+  background-color: #f8fafc;
   flex-shrink: 0;
 }
 
 .modal-header h2 {
   font-size: 16px;
   font-weight: 700;
-  color: #f1f3f7;
+  color: #0f172a;
   letter-spacing: -0.01em;
   margin: 0;
 }
@@ -52,7 +52,7 @@
   width: 28px;
   height: 28px;
   background: none;
-  border: 1px solid transparent;
+  border: 1px solid var(--cor-borda);
   color: var(--cor-texto-suave);
   cursor: pointer;
   border-radius: var(--raio-controle);
@@ -60,9 +60,9 @@
 }
 
 .modal-fechar:hover {
-  background-color: var(--cor-superficie-subtil);
-  border-color: var(--cor-borda);
-  color: #ffffff;
+  background-color: #f1f5f9;
+  border-color: var(--cor-borda-forte);
+  color: #0f172a;
 }
 
 .modal-form {
@@ -88,14 +88,14 @@
   gap: 12px;
   padding: 18px 20px;
   overflow-y: auto;
-  border-right: 1px solid #232833;
+  border-right: 1px solid var(--cor-borda);
 }
 
-/* Coluna direita: preview fiel ao modelo PDF */
+/* Coluna direita: preview */
 .modal-preview {
   display: flex;
   flex-direction: column;
-  background-color: #12151b;
+  background-color: #f8fafc;
   overflow: hidden;
 }
 
@@ -105,9 +105,9 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--cor-ambar);
-  border-bottom: 1px solid #232833;
-  background-color: #0f1217;
+  color: var(--cor-marinho);
+  border-bottom: 1px solid var(--cor-borda);
+  background-color: #f1f5f9;
   flex-shrink: 0;
 }
 
@@ -127,7 +127,7 @@
 
 .modal-preview-lista li {
   font-size: 13px;
-  color: #d1d7e0;
+  color: #334155;
   line-height: 1.45;
 }
 
@@ -171,10 +171,11 @@
   padding: 0 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
-  background-color: var(--cor-superficie);
+  background-color: #ffffff;
   color: var(--cor-texto);
   font-size: 13px;
   font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
   transition: all 0.12s ease;
   box-sizing: border-box;
 }
@@ -190,8 +191,8 @@
 .modal-campo select:focus,
 .modal-campo textarea:focus {
   outline: none;
-  border-color: var(--cor-ambar);
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+  border-color: var(--cor-azul-acao);
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
 }
 
 /* Stepper de prazo */
@@ -203,7 +204,7 @@
 .modal-stepper button {
   width: 36px;
   height: var(--altura-controle);
-  background-color: var(--cor-superficie);
+  background-color: #ffffff;
   border: 1px solid var(--cor-borda);
   color: var(--cor-texto);
   cursor: pointer;
@@ -224,8 +225,7 @@
 }
 
 .modal-stepper button:hover:not(:disabled) {
-  background-color: var(--cor-superficie-subtil);
-  color: #ffffff;
+  background-color: #f1f5f9;
 }
 
 .modal-stepper input {
@@ -249,11 +249,11 @@
 .modal-check input {
   width: 16px;
   height: 16px;
-  accent-color: var(--cor-ambar);
+  accent-color: var(--cor-marinho);
   cursor: pointer;
 }
 
-/* Itens recentes (chips rápidos) */
+/* Itens recentes */
 .modal-recentes {
   display: flex;
   flex-direction: column;
@@ -276,10 +276,10 @@
 
 .modal-chip {
   padding: 5px 10px;
-  background-color: #1c212a;
-  border: 1px solid #2d3544;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
-  color: #d1d7e0;
+  color: #334155;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -287,9 +287,9 @@
 }
 
 .modal-chip:hover {
-  background-color: var(--cor-ambar-fundo);
-  border-color: var(--cor-ambar);
-  color: var(--cor-ambar);
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+  color: #1d4ed8;
 }
 
 /* Rodapé do Modal */
@@ -298,8 +298,8 @@
   align-items: center;
   justify-content: space-between;
   padding: 14px 20px;
-  background-color: #13161c;
-  border-top: 1px solid #232833;
+  background-color: #f8fafc;
+  border-top: 1px solid var(--cor-borda);
   flex-shrink: 0;
 }
 
@@ -315,9 +315,9 @@
 }
 
 .modal-erro-bloco {
-  color: #f87171;
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
   padding: 8px 12px;
   border-radius: var(--raio-controle);
   font-size: 12px;

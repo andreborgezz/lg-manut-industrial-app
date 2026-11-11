@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Célula Editável — Tabela ERP
+   Célula Editável — Tabela ERP Corporativa
    ========================================================================== */
 
 .celula {
@@ -20,15 +20,15 @@
 }
 
 .celula:focus-visible {
-  outline: 2px solid var(--cor-ambar);
+  outline: 2px solid var(--cor-azul-acao);
   outline-offset: 1px;
 }
 
-/* Indicador sutil de lembrete */
+/* Indicador de lembrete */
 .celula-lembrete {
-  background-color: rgba(245, 158, 11, 0.12);
-  border-color: rgba(245, 158, 11, 0.35);
-  color: var(--cor-ambar);
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
   font-weight: 500;
 }
 
@@ -45,11 +45,11 @@
   font-size: 13px;
   font-family: inherit;
   color: var(--cor-texto);
-  background-color: #0e1014;
-  border: 1px solid var(--cor-ambar);
+  background-color: #ffffff;
+  border: 1px solid var(--cor-azul-acao);
   border-radius: var(--raio-controle);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.15);
 }
 
 select.celula-campo {

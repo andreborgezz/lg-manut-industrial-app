@@ -1,12 +1,15 @@
-/* Sidebar industrial refinada (232px) */
+/* ==========================================================================
+   Sidebar Corporativa Executiva (232px)
+   ========================================================================== */
+
 .sidebar {
   width: var(--largura-sidebar);
   flex-shrink: 0;
-  background-color: #12151b;
-  color: #f1f3f7;
+  background-color: #0f2744; /* Azul Marinho Profundo Institucional */
+  color: #f8fafc;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #232833;
+  border-right: 1px solid #1e3a5f;
   user-select: none;
 }
 
@@ -17,17 +20,17 @@
   align-items: center;
   gap: 12px;
   padding: 0 16px;
-  border-bottom: 1px solid #232833;
-  background-color: #0f1217;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #0c1f38;
 }
 
 .sidebar-logo-badge {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   border-radius: 4px;
-  background-color: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  color: var(--cor-ambar);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,8 +50,8 @@
 .sidebar-titulo {
   font-size: 11px;
   font-weight: 700;
-  color: #f1f3f7;
-  letter-spacing: 0.05em;
+  color: #ffffff;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 
@@ -56,7 +59,7 @@
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.12em;
-  color: #f59e0b;
+  color: #93c5fd;
 }
 
 /* Navegação */
@@ -79,7 +82,7 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #647082;
+  color: #93a3b8;
   padding: 4px 16px 6px;
 }
 
@@ -90,7 +93,7 @@
   gap: 12px;
   height: 40px;
   padding: 0 16px;
-  color: #9aa5b5;
+  color: #cbd5e1;
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
@@ -99,22 +102,22 @@
 }
 
 .sidebar-item:hover {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(255, 255, 255, 0.06);
   color: #ffffff;
 }
 
 .sidebar-item.active {
-  background-color: rgba(245, 158, 11, 0.08);
-  color: #f59e0b;
-  border-left-color: var(--cor-ambar);
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-left-color: #38bdf8;
   font-weight: 600;
 }
 
-/* Rodapé discreto */
+/* Rodapé */
 .sidebar-rodape {
   padding: 14px 16px;
-  border-top: 1px solid #232833;
-  background-color: #0f1217;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #0c1f38;
 }
 
 .sidebar-rodape-card {
@@ -126,10 +129,10 @@
 .sidebar-rodape-empresa {
   font-size: 11px;
   font-weight: 600;
-  color: #a4adba;
+  color: #cbd5e1;
 }
 
 .sidebar-rodape-cidade {
   font-size: 10px;
-  color: #647082;
+  color: #94a3b8;
 }

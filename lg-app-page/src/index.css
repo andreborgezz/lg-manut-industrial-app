@@ -1,61 +1,62 @@
 /* ==========================================================================
-   Design System Institucional — L.G. Manutenção Industrial
-   Estilo refinado, denso, sóbrio, com alto contraste e sem IA-slop
+   Design System Corporativo Executivo — L.G. Manutenção Industrial
+   Estilo Clean Industrial: Off-white, ardósia, marinho corporativo e aço
+   Zero IA-slop, sem gradientes roxos, máxima legibilidade de dados
    ========================================================================== */
 
 :root {
-  /* Paleta Estrutural Neutra & Quente (sem cinzas azulados genéricos) */
-  --cor-fundo: #0f1115;
-  --cor-fundo-elevado: #15181e;
-  --cor-superficie: #1b1f26;
-  --cor-superficie-subtil: #222731;
-  --cor-cabecalho-tabela: #171a21;
-  --cor-borda: #2a313d;
-  --cor-borda-forte: #3d4657;
-  --cor-overlay: rgba(8, 10, 14, 0.75);
+  /* Paleta Estrutural Clean & Corporativa */
+  --cor-fundo: #f4f6f9;
+  --cor-fundo-elevado: #ffffff;
+  --cor-superficie: #ffffff;
+  --cor-superficie-subtil: #f8fafc;
+  --cor-cabecalho-tabela: #edf2f7;
+  --cor-borda: #e2e8f0;
+  --cor-borda-forte: #cbd5e1;
+  --cor-overlay: rgba(15, 23, 42, 0.55);
 
-  /* Tipografia & Legibilidade */
-  --cor-texto: #f1f3f7;
-  --cor-texto-secundario: #a4adba;
-  --cor-texto-suave: #6e798a;
-  --cor-texto-inverso: #0f1115;
+  /* Tipografia & Legibilidade Executiva */
+  --cor-texto: #0f172a;           /* Slate 900: texto principal com leitura firme */
+  --cor-texto-secundario: #475569;/* Slate 600: rótulos e colunas secundárias */
+  --cor-texto-suave: #64748b;     /* Slate 500: placeholders e metadados */
+  --cor-texto-inverso: #ffffff;
 
-  /* Identidade Visual L.G. Manutenção Industrial (Âmbar Industrial Refinado) */
-  --cor-preto: #0c0e12;
-  --cor-preto-2: #161920;
-  --cor-preto-3: #1f232c;
-  --cor-ambar: #f59e0b;
-  --cor-ambar-hover: #d97706;
-  --cor-ambar-escuro: #b45309;
-  --cor-ambar-fundo: rgba(245, 158, 11, 0.12);
-  --cor-ambar-borda: rgba(245, 158, 11, 0.35);
+  /* Identidade Corporativa Industrial (Azul Marinho Executivo + Ouro/Âmbar Institucional) */
+  --cor-marinho: #0f2744;         /* Azul marinho profundo institucional */
+  --cor-marinho-hover: #1e3a8a;
+  --cor-azul-acao: #1d4ed8;       /* Azul técnico corporativo */
+  --cor-azul-acao-hover: #1e40af;
+  --cor-ambar: #d97706;          /* Âmbar industrial sólido / fosco */
+  --cor-ambar-hover: #b45309;
+  --cor-ambar-fundo: #fef3c7;
+  --cor-ambar-borda: #fde68a;
 
-  /* Status Sóbrios e com Alto Contraste */
-  --cor-status-aberto-fundo: rgba(148, 163, 184, 0.12);
-  --cor-status-aberto-borda: rgba(148, 163, 184, 0.28);
-  --cor-status-aberto-texto: #cbd5e1;
+  /* Status Corporativos Planos (Alta legibilidade sem parecer arco-íris) */
+  --cor-status-aberto-fundo: #f1f5f9;
+  --cor-status-aberto-borda: #cbd5e1;
+  --cor-status-aberto-texto: #475569;
 
-  --cor-status-aprovado-fundo: rgba(34, 197, 94, 0.12);
-  --cor-status-aprovado-borda: rgba(34, 197, 94, 0.3);
-  --cor-status-aprovado-texto: #4ade80;
+  --cor-status-aprovado-fundo: #ecfdf5;
+  --cor-status-aprovado-borda: #a7f3d0;
+  --cor-status-aprovado-texto: #065f46;
 
-  --cor-status-recusado-fundo: rgba(239, 68, 68, 0.12);
-  --cor-status-recusado-borda: rgba(239, 68, 68, 0.3);
-  --cor-status-recusado-texto: #f87171;
+  --cor-status-recusado-fundo: #fef2f2;
+  --cor-status-recusado-borda: #fecaca;
+  --cor-status-recusado-texto: #991b1b;
 
-  --cor-status-entregue-fundo: rgba(59, 130, 246, 0.12);
-  --cor-status-entregue-borda: rgba(59, 130, 246, 0.3);
-  --cor-status-entregue-texto: #60a5fa;
+  --cor-status-entregue-fundo: #eff6ff;
+  --cor-status-entregue-borda: #bfdbfe;
+  --cor-status-entregue-texto: #1e40af;
 
   /* Dimensões Operacionais de ERP (espaçamentos ergonômicos para toque/mouse) */
   --altura-topbar: 52px;
   --largura-sidebar: 232px;
   --altura-controle: 36px;
-  --altura-linha-tabela: 42px;
+  --altura-linha-tabela: 40px;
 
-  /* Raios Elegantes (4px para controles, 8px para cards/modais) */
+  /* Raios de Controle Corporativos */
   --raio-controle: 4px;
-  --raio-card: 8px;
+  --raio-card: 6px;
 }
 
 /* Reset técnico */
@@ -71,7 +72,7 @@ html, body, #root {
   min-height: 100vh;
   margin: 0;
   padding: 0;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 13px;
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
@@ -86,14 +87,14 @@ html, body, #root {
 }
 
 /* ==========================================================================
-   Botões do Sistema (32px de altura, raio 3px, peso 500)
+   Botões do Sistema
    ========================================================================== */
 button {
   font-family: inherit;
   font-size: 13px;
 }
 
-/* Botão Primário (Âmbar institucional com texto escuro e peso 600) */
+/* Botão Primário (Azul Marinho Corporativo / Ação Principal com texto branco) */
 .btn-primario {
   display: inline-flex;
   align-items: center;
@@ -101,29 +102,51 @@ button {
   gap: 8px;
   height: var(--altura-controle);
   padding: 0 16px;
-  background-color: var(--cor-ambar);
-  color: #0c0e12;
+  background-color: var(--cor-marinho);
+  color: #ffffff;
   font-weight: 600;
   font-size: 13px;
   letter-spacing: 0.01em;
-  border: 1px solid var(--cor-ambar);
+  border: 1px solid var(--cor-marinho);
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
   transition: all 0.15s ease;
 }
 
 .btn-primario:hover:not(:disabled) {
-  background-color: var(--cor-ambar-hover);
-  border-color: var(--cor-ambar-hover);
-  color: #0c0e12;
-  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+  background-color: var(--cor-marinho-hover);
+  border-color: var(--cor-marinho-hover);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.15);
   transform: translateY(-1px);
 }
 
 .btn-primario:active:not(:disabled) {
   transform: translateY(0);
+}
+
+/* Botão Âmbar Destaque */
+.btn-ambar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--altura-controle);
+  padding: 0 16px;
+  background-color: var(--cor-ambar);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid var(--cor-ambar);
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-ambar:hover:not(:disabled) {
+  background-color: var(--cor-ambar-hover);
 }
 
 /* Botão Escuro */
@@ -134,11 +157,11 @@ button {
   gap: 8px;
   height: var(--altura-controle);
   padding: 0 14px;
-  background-color: var(--cor-superficie-subtil);
+  background-color: #334155;
   color: #ffffff;
   font-weight: 500;
   font-size: 13px;
-  border: 1px solid var(--cor-borda-forte);
+  border: 1px solid #334155;
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
@@ -146,7 +169,8 @@ button {
 }
 
 .btn-escuro:hover:not(:disabled) {
-  background-color: var(--cor-borda-forte);
+  background-color: #1e293b;
+  border-color: #1e293b;
 }
 
 /* Botão Secundário */
@@ -165,13 +189,14 @@ button {
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease;
 }
 
 .btn-secundario:hover:not(:disabled) {
   background-color: var(--cor-superficie-subtil);
   border-color: var(--cor-borda-forte);
-  color: #ffffff;
+  color: var(--cor-texto);
 }
 
 /* Botão Fantasma */
@@ -195,7 +220,7 @@ button {
 
 .btn-fantasma:hover:not(:disabled) {
   background-color: var(--cor-superficie-subtil);
-  color: #ffffff;
+  color: var(--cor-texto);
 }
 
 .btn-primario:disabled,
@@ -206,13 +231,13 @@ button {
   cursor: not-allowed;
 }
 
-/* Foco visível consistente para acessibilidade em todo o app */
+/* Foco visível corporativo */
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--cor-ambar) !important;
+  outline: 2px solid var(--cor-azul-acao) !important;
   outline-offset: 1px !important;
 }
 
@@ -222,10 +247,10 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   margin-left: 6px;
-  padding: 0 4px;
+  padding: 0 5px;
   height: 18px;
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -234,14 +259,14 @@ textarea:focus-visible,
 }
 
 /* ==========================================================================
-   Tags de Status Planas (Altura 20px, Raio 3px, Texto 11px uppercase)
+   Tags de Status Planas
    ========================================================================== */
 .badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 20px;
-  padding: 0 6px;
+  height: 22px;
+  padding: 0 8px;
   border-radius: var(--raio-controle);
   font-size: 11px;
   font-weight: 600;
