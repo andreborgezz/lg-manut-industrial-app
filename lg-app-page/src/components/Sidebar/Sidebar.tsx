@@ -6,10 +6,12 @@ export function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-topo">
-        <div className="sidebar-logo-badge">LG</div>
+        <div className="sidebar-logo-badge">
+          <Wrench size={14} className="sidebar-logo-icone" />
+        </div>
         <div className="sidebar-marca">
-          <span className="sidebar-titulo">L.G. Manutenção</span>
-          <span className="sidebar-subtitulo">Industrial</span>
+          <span className="sidebar-titulo">L.G. MANUTENÇÃO</span>
+          <span className="sidebar-subtitulo">GESTÃO INDUSTRIAL</span>
         </div>
       </div>
 
@@ -34,6 +36,13 @@ export function Sidebar() {
           </NavLink>
         </div>
       </nav>
+
+      <div className="sidebar-rodape">
+        <div className="sidebar-rodape-card">
+          <span className="sidebar-rodape-empresa">L.G. Manutenção</span>
+          <span className="sidebar-rodape-cidade">Sorocaba • SP</span>
+        </div>
+      </div>
     </aside>
   )
 }

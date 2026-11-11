@@ -5,29 +5,29 @@
 .orc-table-container {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
 }
 
 /* ==========================================================================
-   Barra de Ferramentas (UMA linha, altura 32px nos controles)
+   Barra de Ferramentas
    ========================================================================== */
 .orc-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .orc-toolbar-filtros {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex: 1;
   min-width: 0;
 }
 
-/* Busca com ícone de lupa embutido */
+/* Busca com ícone de lupa */
 .orc-busca-wrapper {
   position: relative;
   display: flex;
@@ -38,7 +38,7 @@
 
 .orc-busca-icone {
   position: absolute;
-  left: 9px;
+  left: 10px;
   color: var(--cor-texto-suave);
   pointer-events: none;
 }
@@ -46,22 +46,23 @@
 .orc-input-busca {
   width: 100%;
   height: var(--altura-controle);
-  padding: 0 28px 0 28px;
+  padding: 0 30px 0 32px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 13px;
-  transition: border-color 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .orc-input-busca:focus {
   border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
 }
 
 .orc-btn-limpar-campo {
   position: absolute;
-  right: 6px;
+  right: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -76,20 +77,19 @@
 
 .orc-btn-limpar-campo:hover {
   color: var(--cor-texto);
-  background-color: var(--cor-borda);
 }
 
 /* Select de Status */
 .orc-select-status {
   height: var(--altura-controle);
-  padding: 0 10px;
+  padding: 0 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 13px;
   cursor: pointer;
-  transition: border-color 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .orc-select-status:focus {
@@ -102,30 +102,30 @@
 }
 
 .orc-btn-periodo {
-  gap: 6px;
-  padding: 0 10px;
+  gap: 8px;
+  padding: 0 12px;
 }
 
 .orc-btn-periodo-ativo {
-  border-color: var(--cor-ambar-borda);
+  border-color: var(--cor-ambar);
   background-color: var(--cor-ambar-fundo);
-  color: var(--cor-ambar-escuro);
-  font-weight: 500;
+  color: var(--cor-ambar);
+  font-weight: 600;
 }
 
 .orc-popover-painel {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   left: 0;
-  width: 250px;
-  background-color: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
+  width: 260px;
+  background-color: #1b1f26;
+  border: 1px solid #2f3744;
   border-radius: var(--raio-card);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  padding: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
   z-index: 50;
 }
 
@@ -136,24 +136,24 @@
 }
 
 .orc-popover-rotulo {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
   color: var(--cor-texto-suave);
 }
 
 .orc-popover-opcoes {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .orc-popover-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px;
+  padding: 7px 10px;
   border: none;
   background: transparent;
   color: var(--cor-texto);
@@ -161,7 +161,7 @@
   border-radius: var(--raio-controle);
   cursor: pointer;
   text-align: left;
-  transition: background-color 0.1s ease;
+  transition: all 0.1s ease;
 }
 
 .orc-popover-item:hover {
@@ -170,7 +170,7 @@
 
 .orc-popover-item.ativo {
   background-color: var(--cor-ambar-fundo);
-  color: var(--cor-ambar-escuro);
+  color: var(--cor-ambar);
   font-weight: 600;
 }
 
@@ -190,24 +190,25 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 6px;
+  gap: 8px;
   font-size: 12px;
   color: var(--cor-texto-secundario);
 }
 
 .orc-popover-data-campo input {
-  height: 26px;
-  padding: 0 6px;
+  height: 28px;
+  padding: 0 8px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   font-size: 12px;
   font-family: inherit;
   color: var(--cor-texto);
+  background-color: var(--cor-fundo);
 }
 
 .orc-popover-btn-aplicar {
   width: 100%;
-  height: 28px;
+  height: 30px;
   font-size: 12px;
   margin-top: 4px;
 }
@@ -220,7 +221,7 @@
 }
 
 .orc-btn-exportar {
-  padding: 0 10px;
+  padding: 0 12px;
 }
 
 /* ==========================================================================
@@ -231,7 +232,6 @@
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
-  padding: 2px 0;
 }
 
 .orc-tags-rotulo {
@@ -243,10 +243,10 @@
 .orc-tag {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  height: 22px;
-  padding: 0 6px;
-  background-color: var(--cor-superficie-subtil);
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
+  background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   font-size: 11px;
@@ -267,16 +267,15 @@
 }
 
 .orc-tag button:hover {
-  background-color: var(--cor-borda);
   color: var(--cor-texto);
 }
 
 .orc-btn-limpar-todos {
   border: none;
   background: transparent;
-  color: var(--cor-ambar-escuro);
+  color: var(--cor-ambar);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   padding: 0 4px;
 }
@@ -289,69 +288,186 @@
    Card da Tabela & Elementos Tabulares
    ========================================================================== */
 .orc-table-card {
-  background-color: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
+  background-color: #171a21;
+  border: 1px solid #282f3a;
   border-radius: var(--raio-card);
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
 }
 
 .orc-table-scroll {
   overflow-x: auto;
-  max-height: calc(100vh - 210px);
+  max-height: calc(100vh - 215px);
+  /* Barra de rolagem discreta e elegante para quando houver overflow */
+  scrollbar-width: thin;
+  scrollbar-color: #2e3644 transparent;
+}
+
+.orc-table-scroll::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.orc-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.orc-table-scroll::-webkit-scrollbar-thumb {
+  background-color: #2e3644;
+  border-radius: 3px;
+}
+
+.orc-table-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #434e62;
 }
 
 .orc-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
 }
 
-/* Cabeçalho da tabela: cinza claro #f0f0ee, 11px uppercase, sticky */
+/* Cabeçalho da tabela */
 .orc-table th {
   position: sticky;
   top: 0;
-  z-index: 2;
-  background-color: var(--cor-cabecalho-tabela);
-  color: var(--cor-texto-secundario);
+  z-index: 10;
+  background-color: #13161c;
+  color: #8b95a5;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 8px 12px;
-  border-bottom: 1px solid var(--cor-borda);
+  letter-spacing: 0.06em;
+  padding: 10px 12px;
+  border-bottom: 1px solid #232833;
   white-space: nowrap;
 }
 
-/* Linhas com altura de 36px e divisória horizontal de 1px */
+/* Linhas com altura de 42px */
 .orc-table td {
   height: var(--altura-linha-tabela);
   padding: 4px 12px;
-  border-bottom: 1px solid var(--cor-borda);
+  border-bottom: 1px solid #20242d;
   white-space: nowrap;
   color: var(--cor-texto);
 }
 
-/* Hover suave sem zebra */
+/* Hover suave */
 .orc-table tbody tr:hover td {
-  background-color: var(--cor-superficie-subtil);
+  background-color: #1c2029;
 }
 
-/* Linha nova ou destacada */
+/* ==========================================================================
+   Colunas Fixas (Sticky) — Extrema Usabilidade em Qualquer Resolução
+   Nº, Empresa à esquerda | Valor, Status e Ações à direita
+   ========================================================================== */
+
+/* Coluna 1: Nº */
+.orc-table th.col-fixa-numero,
+.orc-table td.col-fixa-numero {
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background-color: #13161c;
+}
+.orc-table td.col-fixa-numero {
+  background-color: #171a21;
+}
+.orc-table tbody tr:hover td.col-fixa-numero {
+  background-color: #1c2029;
+}
+
+/* Coluna 2: Empresa */
+.orc-table th.col-fixa-empresa,
+.orc-table td.col-fixa-empresa {
+  position: sticky;
+  left: 64px;
+  z-index: 5;
+  background-color: #13161c;
+  border-right: 1px solid #232833;
+  box-shadow: 4px 0 10px -4px rgba(0, 0, 0, 0.4);
+}
+.orc-table td.col-fixa-empresa {
+  background-color: #171a21;
+}
+.orc-table tbody tr:hover td.col-fixa-empresa {
+  background-color: #1c2029;
+}
+
+/* Coluna Direita 3: Valor */
+.orc-table th.col-fixa-valor,
+.orc-table td.col-fixa-valor {
+  position: sticky;
+  right: 215px; /* 105px (status) + 110px (acoes) */
+  z-index: 5;
+  background-color: #13161c;
+  border-left: 1px solid #232833;
+  box-shadow: -4px 0 10px -4px rgba(0, 0, 0, 0.4);
+}
+.orc-table td.col-fixa-valor {
+  background-color: #171a21;
+}
+.orc-table tbody tr:hover td.col-fixa-valor {
+  background-color: #1c2029;
+}
+
+/* Coluna Direita 2: Status */
+.orc-table th.col-fixa-status,
+.orc-table td.col-fixa-status {
+  position: sticky;
+  right: 110px; /* 110px (acoes) */
+  z-index: 5;
+  background-color: #13161c;
+}
+.orc-table td.col-fixa-status {
+  background-color: #171a21;
+}
+.orc-table tbody tr:hover td.col-fixa-status {
+  background-color: #1c2029;
+}
+
+/* Coluna Direita 1: Ações */
+.orc-table th.col-fixa-acoes,
+.orc-table td.col-fixa-acoes {
+  position: sticky;
+  right: 0;
+  z-index: 5;
+  background-color: #13161c;
+}
+.orc-table td.col-fixa-acoes {
+  background-color: #171a21;
+}
+.orc-table tbody tr:hover td.col-fixa-acoes {
+  background-color: #1c2029;
+}
+
+/* Header sticky precisa de z-index superior para as colunas fixas */
+.orc-table th.col-fixa-numero,
+.orc-table th.col-fixa-empresa,
+.orc-table th.col-fixa-valor,
+.orc-table th.col-fixa-status,
+.orc-table th.col-fixa-acoes {
+  z-index: 15;
+}
+
+/* Linha nova */
 .linha-nova td {
-  background-color: var(--cor-ambar-fundo) !important;
+  background-color: rgba(245, 158, 11, 0.15) !important;
   transition: background-color 1.5s ease;
 }
 
 /* Colunas específicas */
 .orc-col-numero {
   font-weight: 600;
-  color: var(--cor-texto);
+  color: var(--cor-ambar);
 }
 
 .orc-col-valor {
-  font-weight: 500;
+  font-weight: 600;
+  color: #f1f3f7;
 }
 
 .orc-texto-truncado {
@@ -369,45 +485,55 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 2px;
+  gap: 4px;
 }
 
 .orc-acao-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 26px;
-  height: 26px;
-  border: none;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--cor-texto-suave);
   border-radius: var(--raio-controle);
   cursor: pointer;
-  transition: background-color 0.12s ease, color 0.12s ease, opacity 0.12s ease;
+  transition: all 0.12s ease;
 }
 
 .orc-acao-btn:hover:not(:disabled) {
-  background-color: var(--cor-cabecalho-tabela);
+  background-color: var(--cor-superficie-subtil);
+  border-color: var(--cor-borda);
   color: var(--cor-texto);
 }
 
 .orc-acao-btn-wa:hover:not(:disabled) {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #4ade80;
 }
 
 .orc-acao-btn-email:hover:not(:disabled) {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+  background-color: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #60a5fa;
 }
 
-/* PDF fica sempre visível; ações secundárias ganham opacidade no hover da linha */
+/* PDF tem destaque especial: cor âmbar suave */
 .orc-acao-pdf {
-  color: var(--cor-texto-secundario);
+  color: var(--cor-ambar);
+  background-color: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.orc-acao-pdf:hover:not(:disabled) {
+  background-color: var(--cor-ambar);
+  color: #0c0e12;
 }
 
 .orc-acao-secundaria {
-  opacity: 0.35;
+  opacity: 0.45;
 }
 
 .orc-table tr:hover .orc-acao-secundaria {
@@ -426,28 +552,28 @@
    Rodapé da Tabela como Barra de Status
    ========================================================================== */
 .orc-table-rodape {
-  height: 32px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  background-color: var(--cor-cabecalho-tabela);
-  border-top: 1px solid var(--cor-borda);
+  background-color: #13161c;
+  border-top: 1px solid #232833;
   font-size: 12px;
   color: var(--cor-texto-secundario);
 }
 
 .orc-table-total strong {
-  color: var(--cor-texto);
-  font-weight: 600;
-  margin-left: 4px;
+  color: var(--cor-ambar);
+  font-weight: 700;
+  margin-left: 6px;
 }
 
 /* ==========================================================================
    Estado Vazio Sóbrio
    ========================================================================== */
 .orc-table-vazio-td {
-  padding: 36px 16px !important;
+  padding: 48px 16px !important;
   text-align: center;
 }
 
@@ -456,7 +582,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .orc-estado-vazio-icone {
@@ -466,19 +592,19 @@
 .orc-estado-vazio-texto {
   font-size: 13px;
   color: var(--cor-texto-secundario);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 /* ==========================================================================
    Avisos e Erros
    ========================================================================== */
 .orc-table-erro {
-  color: var(--cor-status-recusado-texto);
-  background-color: var(--cor-status-recusado-fundo);
-  border: 1px solid var(--cor-status-recusado-borda);
-  padding: 6px 12px;
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 8px 14px;
   border-radius: var(--raio-controle);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .orc-table-aviso {
@@ -486,12 +612,12 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  color: var(--cor-status-recusado-texto);
-  background-color: var(--cor-status-recusado-fundo);
-  border: 1px solid var(--cor-status-recusado-borda);
-  padding: 6px 12px;
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 8px 14px;
   border-radius: var(--raio-controle);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .orc-table-aviso button {

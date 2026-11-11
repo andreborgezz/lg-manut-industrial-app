@@ -2,11 +2,11 @@
    Modal de Novo Orçamento — ERP Industrial
    ========================================================================== */
 
-/* Fundo escurecido mais discreto */
 .modal-overlay {
   position: fixed;
   inset: 0;
   background-color: var(--cor-overlay);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,34 +14,34 @@
   z-index: 1000;
 }
 
-/* Modal em 2 colunas: plano, sóbrio, raio 4px, sem sombra exagerada */
 .modal-orc {
   display: flex;
   flex-direction: column;
-  width: min(1040px, 100% - 32px);
-  max-height: calc(100vh - 32px);
-  background-color: var(--cor-superficie);
+  width: min(1060px, 100% - 32px);
+  max-height: calc(100vh - 40px);
+  background-color: #171a21;
   color: var(--cor-texto);
-  border: 1px solid var(--cor-borda);
+  border: 1px solid #282f3a;
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
 }
 
-/* Cabeçalho: título 15px/600 com borda inferior */
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 16px;
-  border-bottom: 1px solid var(--cor-borda);
+  padding: 14px 20px;
+  border-bottom: 1px solid #232833;
+  background-color: #13161c;
   flex-shrink: 0;
 }
 
 .modal-header h2 {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--cor-texto);
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f3f7;
+  letter-spacing: -0.01em;
   margin: 0;
 }
 
@@ -49,21 +49,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   background: none;
-  border: none;
-  font-size: 18px;
-  line-height: 1;
+  border: 1px solid transparent;
   color: var(--cor-texto-suave);
   cursor: pointer;
   border-radius: var(--raio-controle);
-  transition: background-color 0.1s ease, color 0.1s ease;
+  transition: all 0.12s ease;
 }
 
 .modal-fechar:hover {
   background-color: var(--cor-superficie-subtil);
-  color: var(--cor-texto);
+  border-color: var(--cor-borda);
+  color: #ffffff;
 }
 
 .modal-form {
@@ -76,75 +75,73 @@
 /* Layout de 2 colunas */
 .modal-corpo-duplo {
   display: grid;
-  grid-template-columns: 1fr 280px;
+  grid-template-columns: 1fr 310px;
   flex: 1;
   min-height: 0;
   overflow: hidden;
 }
 
-/* Coluna esquerda: campos densos */
+/* Coluna esquerda: campos de entrada */
 .modal-campos {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 18px 20px;
   overflow-y: auto;
-  border-right: 1px solid var(--cor-borda);
+  border-right: 1px solid #232833;
 }
 
-/* Coluna direita: preview sóbrio */
+/* Coluna direita: preview fiel ao modelo PDF */
 .modal-preview {
   display: flex;
   flex-direction: column;
-  background-color: var(--cor-superficie-subtil);
+  background-color: #12151b;
   overflow: hidden;
 }
 
 .modal-preview-topo {
-  padding: 8px 12px;
+  padding: 12px 16px;
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--cor-texto-secundario);
-  border-bottom: 1px solid var(--cor-borda);
-  background-color: var(--cor-cabecalho-tabela);
+  color: var(--cor-ambar);
+  border-bottom: 1px solid #232833;
+  background-color: #0f1217;
   flex-shrink: 0;
 }
 
 .modal-preview-corpo {
   flex: 1;
-  padding: 12px;
+  padding: 16px;
   overflow-y: auto;
 }
 
 .modal-preview-lista {
   list-style: disc;
-  padding-left: 16px;
+  padding-left: 20px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .modal-preview-lista li {
-  font-size: 12px;
-  color: var(--cor-texto);
-  line-height: 1.4;
-  font-weight: 500;
+  font-size: 13px;
+  color: #d1d7e0;
+  line-height: 1.45;
 }
 
 .modal-preview-vazio {
   font-size: 12px;
   color: var(--cor-texto-suave);
-  font-style: italic;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 /* Linhas de campos em grid */
 .modal-linha {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
 .modal-linha-rodape {
@@ -152,245 +149,176 @@
   align-items: end;
 }
 
-/* Campo label + input (altura 32px, rótulo 12px) */
+/* Campo label + input */
 .modal-campo {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
+}
+
+.modal-campo label {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--cor-texto-secundario);
 }
 
-.modal-campo-full {
-  grid-column: 1 / -1;
-}
-
 .modal-campo input,
-.modal-campo select {
+.modal-campo select,
+.modal-campo textarea {
+  width: 100%;
   height: var(--altura-controle);
-  padding: 0 10px;
+  padding: 0 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 13px;
   font-family: inherit;
-  font-weight: 400;
-  transition: border-color 0.12s ease;
+  transition: all 0.12s ease;
+  box-sizing: border-box;
 }
 
 .modal-campo textarea {
-  padding: 8px 10px;
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-controle);
-  background-color: var(--cor-superficie);
-  color: var(--cor-texto);
-  font-size: 13px;
-  font-family: inherit;
-  font-weight: 400;
-  resize: none;
-  line-height: 1.4;
-  transition: border-color 0.12s ease;
+  height: 90px;
+  padding: 10px 12px;
+  resize: vertical;
+  line-height: 1.45;
 }
 
 .modal-campo input:focus,
 .modal-campo select:focus,
 .modal-campo textarea:focus {
+  outline: none;
   border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
 }
 
-.modal-campo input[aria-invalid='true'],
-.modal-campo select[aria-invalid='true'] {
-  border-color: var(--cor-status-recusado-texto);
+/* Stepper de prazo */
+.modal-stepper {
+  display: flex;
+  align-items: center;
 }
 
-.modal-campo input:disabled,
-.modal-campo select:disabled,
-.modal-campo textarea:disabled {
-  background-color: var(--cor-superficie-subtil);
-  cursor: not-allowed;
-}
-
-.modal-dica-tecla {
-  font-weight: 400;
-  font-size: 11px;
-  color: var(--cor-texto-suave);
-  margin-left: 4px;
-}
-
-.modal-erro-campo {
-  font-size: 12px;
-  font-weight: 400;
-  color: var(--cor-status-recusado-texto);
-}
-
-.modal-erro {
-  padding: 6px 10px;
-  border-radius: var(--raio-controle);
-  background-color: var(--cor-status-recusado-fundo);
-  border: 1px solid var(--cor-status-recusado-borda);
-  color: var(--cor-status-recusado-texto);
-  font-size: 12px;
-}
-
-/* Prazo: Stepper denso de 32px */
-.prazo-stepper {
-  display: inline-flex;
-  width: 120px;
+.modal-stepper button {
+  width: 36px;
   height: var(--altura-controle);
-  align-items: stretch;
+  background-color: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-controle);
-  overflow: hidden;
-  transition: border-color 0.12s ease;
-}
-
-.prazo-stepper:focus-within {
-  border-color: var(--cor-ambar);
-}
-
-.prazo-step-btn {
-  width: 32px;
-  flex-shrink: 0;
-  background: var(--cor-superficie-subtil);
-  border: none;
+  color: var(--cor-texto);
   cursor: pointer;
-  color: var(--cor-texto-secundario);
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.1s ease, color 0.1s ease;
+  transition: all 0.12s ease;
 }
 
-.prazo-step-btn:hover:not(:disabled) {
-  background-color: var(--cor-borda);
-  color: var(--cor-texto);
+.modal-stepper button:first-child {
+  border-radius: var(--raio-controle) 0 0 var(--raio-controle);
+  border-right: none;
 }
 
-.prazo-step-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.4;
+.modal-stepper button:last-child {
+  border-radius: 0 var(--raio-controle) var(--raio-controle) 0;
+  border-left: none;
 }
 
-.prazo-input {
-  flex: 1;
-  min-width: 0;
-  border: none !important;
-  border-left: 1px solid var(--cor-borda) !important;
-  border-right: 1px solid var(--cor-borda) !important;
-  border-radius: 0 !important;
-  text-align: center;
-  padding: 0 !important;
-  font-size: 13px !important;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  background: var(--cor-superficie);
-  color: var(--cor-texto);
-  -moz-appearance: textfield;
-}
-
-.prazo-input::-webkit-outer-spin-button,
-.prazo-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Fim de semana (plano e sóbrio) */
-.chip-fds {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: var(--altura-controle);
-  padding: 0 10px;
-  border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-controle);
-  background: var(--cor-superficie);
-  color: var(--cor-texto-secundario);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: border-color 0.12s ease, background-color 0.12s ease, color 0.12s ease;
-  align-self: end;
-}
-
-.chip-fds:hover:not(:disabled) {
-  border-color: var(--cor-borda-forte);
-  color: var(--cor-texto);
-}
-
-.chip-fds-ativo {
-  background-color: var(--cor-preto);
-  border-color: var(--cor-preto);
+.modal-stepper button:hover:not(:disabled) {
+  background-color: var(--cor-superficie-subtil);
   color: #ffffff;
 }
 
-/* Rodapé: fundo cinza claro e botões à direita */
-.modal-rodape {
+.modal-stepper input {
+  width: 60px !important;
+  text-align: center;
+  border-radius: 0 !important;
+}
+
+/* Checkbox fim de semana */
+.modal-check {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 8px;
-  padding: 10px 16px;
-  background-color: var(--cor-superficie-subtil);
-  border-top: 1px solid var(--cor-borda);
+  height: var(--altura-controle);
+  font-size: 13px;
+  color: var(--cor-texto);
+  cursor: pointer;
+  user-select: none;
+}
+
+.modal-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--cor-ambar);
+  cursor: pointer;
+}
+
+/* Itens recentes (chips rápidos) */
+.modal-recentes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-recentes-rotulo {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-recentes-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.modal-chip {
+  padding: 5px 10px;
+  background-color: #1c212a;
+  border: 1px solid #2d3544;
+  border-radius: var(--raio-controle);
+  color: #d1d7e0;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.modal-chip:hover {
+  background-color: var(--cor-ambar-fundo);
+  border-color: var(--cor-ambar);
+  color: var(--cor-ambar);
+}
+
+/* Rodapé do Modal */
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background-color: #13161c;
+  border-top: 1px solid #232833;
   flex-shrink: 0;
 }
 
-/* Recentes: chips planos de orçamentos passados */
-.modal-recentes {
+.modal-footer-info {
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+}
+
+.modal-footer-acoes {
   display: flex;
   align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  padding: 4px 0;
+  gap: 10px;
 }
 
-.modal-recentes-label {
-  font-size: 11px;
-  color: var(--cor-texto-suave);
-  white-space: nowrap;
-}
-
-.modal-recente-chip {
-  height: 24px;
-  padding: 0 8px;
-  border: 1px solid var(--cor-borda);
+.modal-erro-bloco {
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 8px 12px;
   border-radius: var(--raio-controle);
-  background: var(--cor-superficie-subtil);
-  color: var(--cor-texto-secundario);
-  font-size: 11px;
-  cursor: pointer;
-  white-space: nowrap;
-  max-width: 180px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: border-color 0.12s ease, color 0.12s ease, background-color 0.12s ease;
-}
-
-.modal-recente-chip:hover:not(:disabled) {
-  border-color: var(--cor-borda-forte);
-  color: var(--cor-texto);
-  background-color: var(--cor-borda);
-}
-
-/* Valor com prefixo R$ */
-.modal-input-valor {
-  padding-left: 28px !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ctext x='4' y='14' font-size='12' fill='%2371716a' font-family='system-ui'%3ER%24%3C/text%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: 6px center;
-  background-size: 18px;
-}
-
-/* Mobile */
-@media (max-width: 767px) {
-  .modal-overlay { padding: 0; }
-  .modal-orc { width: 100%; height: 100%; max-height: none; border-radius: 0; }
-  .modal-corpo-duplo { grid-template-columns: 1fr; }
-  .modal-preview { display: none; }
-  .modal-linha { grid-template-columns: 1fr; }
-  .modal-linha-rodape { grid-template-columns: 1fr 1fr; }
+  font-size: 12px;
 }

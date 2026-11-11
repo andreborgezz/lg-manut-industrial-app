@@ -1,4 +1,7 @@
-/* Wrapper relativo para o dropdown absoluto */
+/* ==========================================================================
+   Combobox Autocomplete & Criação Rápida
+   ========================================================================== */
+
 .combo {
   position: relative;
   display: flex;
@@ -9,7 +12,7 @@
 
 .combo-label {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--cor-texto-secundario);
 }
 
@@ -21,48 +24,52 @@
 .combo-input {
   width: 100%;
   height: var(--altura-controle);
-  padding: 0 28px 0 10px;
+  padding: 0 30px 0 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-size: 13px;
   font-family: inherit;
-  font-weight: 400;
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: border-color 0.12s ease;
+  transition: all 0.12s ease;
+  box-sizing: border-box;
 }
 
 .combo-btn-valor:focus,
 .combo-input:focus {
   border-color: var(--cor-ambar);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15);
+  outline: none;
 }
 
 .combo-invalido .combo-btn-valor,
 .combo-invalido .combo-input {
-  border-color: var(--cor-status-recusado-texto);
+  border-color: #f87171;
 }
 
 .combo-desabilitado .combo-btn-valor {
-  background-color: var(--cor-superficie-subtil);
+  background-color: var(--cor-fundo);
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 .combo-placeholder {
   color: var(--cor-texto-suave);
+  font-weight: 400;
 }
 
 .combo-seta {
   position: absolute;
-  right: 8px;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 11px;
+  font-size: 12px;
   color: var(--cor-texto-suave);
   pointer-events: none;
 }
@@ -70,29 +77,59 @@
 /* Dropdown da lista */
 .combo-lista {
   position: absolute;
-  top: calc(100% + 3px);
+  top: calc(100% + 4px);
   left: 0;
   right: 0;
   z-index: 500;
-  background-color: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
+  background-color: #1b1f26;
+  border: 1px solid #2f3744;
   border-radius: var(--raio-card);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
   list-style: none;
-  max-height: 200px;
+  max-height: 220px;
   overflow-y: auto;
-  padding: 2px 0;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .combo-opcao {
-  padding: 6px 10px;
+  padding: 8px 12px;
   font-size: 13px;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.1s ease;
+  color: var(--cor-texto);
+  transition: all 0.1s ease;
 }
 
 .combo-opcao:hover,
 .combo-opcao-cursor {
   background-color: var(--cor-superficie-subtil);
-  color: var(--cor-texto);
+  color: #ffffff;
+}
+
+.combo-opcao-selecionada {
+  background-color: var(--cor-ambar-fundo);
+  color: var(--cor-ambar);
+  font-weight: 600;
+}
+
+.combo-opcao-criar {
+  color: var(--cor-ambar);
+  border-top: 1px solid var(--cor-borda);
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.combo-vazio {
+  padding: 12px;
+  font-size: 12px;
+  color: var(--cor-texto-suave);
+  text-align: center;
+}
+
+.combo-erro {
+  font-size: 11px;
+  color: #f87171;
 }

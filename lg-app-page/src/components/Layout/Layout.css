@@ -13,12 +13,12 @@
 }
 
 /* ==========================================================================
-   Barra superior fina (48px)
+   Barra superior fina (52px)
    ========================================================================== */
 .topbar {
   height: var(--altura-topbar);
-  background-color: var(--cor-superficie);
-  border-bottom: 1px solid var(--cor-borda);
+  background-color: #15181e;
+  border-bottom: 1px solid #282f3a;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -35,8 +35,9 @@
 
 .topbar-breadcrumb {
   font-size: 13px;
-  font-weight: 500;
-  color: var(--cor-texto-secundario);
+  font-weight: 600;
+  color: #f1f3f7;
+  letter-spacing: -0.01em;
 }
 
 .topbar-direita {
@@ -49,24 +50,25 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  border: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--cor-texto-suave);
   border-radius: var(--raio-controle);
   cursor: pointer;
-  transition: color 0.12s ease, background-color 0.12s ease;
+  transition: all 0.12s ease;
 }
 
 .topbar-btn-ajuda:hover {
   color: var(--cor-texto);
   background-color: var(--cor-superficie-subtil);
+  border-color: var(--cor-borda);
 }
 
 .topbar-divisor {
   width: 1px;
-  height: 16px;
+  height: 18px;
   background-color: var(--cor-borda);
 }
 
@@ -79,27 +81,28 @@
 .topbar-usuario-nome {
   font-size: 13px;
   font-weight: 500;
-  color: var(--cor-texto);
+  color: #d1d7e0;
 }
 
 .topbar-btn-sair {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 6px;
-  border: none;
+  gap: 6px;
+  padding: 5px 8px;
+  border: 1px solid transparent;
   background: transparent;
   color: var(--cor-texto-suave);
   font-size: 12px;
   font-weight: 500;
   border-radius: var(--raio-controle);
   cursor: pointer;
-  transition: color 0.12s ease, background-color 0.12s ease;
+  transition: all 0.12s ease;
 }
 
 .topbar-btn-sair:hover {
-  color: var(--cor-status-recusado-texto);
-  background-color: var(--cor-status-recusado-fundo);
+  color: #f87171;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 /* ==========================================================================
@@ -107,16 +110,16 @@
    ========================================================================== */
 .layout-conteudo {
   flex: 1;
-  padding: 20px 24px;
+  padding: 24px 28px;
   min-width: 0;
 }
 
-/* Cabeçalho da página (Título 18px / 600 sóbrio + Ação à direita) */
+/* Cabeçalho da página (Título 20px / 600 sóbrio + Ação à direita) */
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   gap: 16px;
 }
 
@@ -127,14 +130,12 @@
 }
 
 .page-header h1 {
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: var(--cor-texto);
-  text-transform: none;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   margin: 0;
   padding: 0;
-  border-bottom: none;
 }
 
 .page-header-contagem {
@@ -147,12 +148,12 @@
    Modal de Atalhos
    ========================================================================== */
 .modal-atalhos {
-  width: min(380px, 100% - 32px);
-  background-color: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
+  width: min(400px, 100% - 32px);
+  background-color: #1b1f26;
+  border: 1px solid #2f3744;
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
 }
@@ -161,13 +162,13 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .atalho-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   font-size: 13px;
   color: var(--cor-texto);
 }
@@ -180,16 +181,16 @@ kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 22px;
-  height: 22px;
+  min-width: 24px;
+  height: 24px;
   padding: 0 6px;
-  border: 1px solid var(--cor-borda-forte);
-  border-radius: 3px;
-  background-color: var(--cor-superficie-subtil);
+  border: 1px solid #3d4657;
+  border-radius: 4px;
+  background-color: #12151b;
   font-size: 11px;
   font-family: inherit;
   font-weight: 600;
-  color: var(--cor-texto);
+  color: var(--cor-ambar);
   line-height: 1;
 }
 

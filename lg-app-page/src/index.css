@@ -1,59 +1,61 @@
 /* ==========================================================================
-   Design System ERP — L.G. Manutenção Industrial
-   Estilo denso, plano, sóbrio e profissional
+   Design System Institucional — L.G. Manutenção Industrial
+   Estilo refinado, denso, sóbrio, com alto contraste e sem IA-slop
    ========================================================================== */
 
 :root {
-  /* Paleta estrutural */
-  --cor-fundo: #f4f4f2;
-  --cor-superficie: #ffffff;
-  --cor-superficie-subtil: #f9f9f8;
-  --cor-cabecalho-tabela: #f0f0ee;
-  --cor-borda: #e2e2dc;
-  --cor-borda-forte: #d0d0c8;
-  --cor-overlay: rgba(10, 10, 10, 0.45);
+  /* Paleta Estrutural Neutra & Quente (sem cinzas azulados genéricos) */
+  --cor-fundo: #0f1115;
+  --cor-fundo-elevado: #15181e;
+  --cor-superficie: #1b1f26;
+  --cor-superficie-subtil: #222731;
+  --cor-cabecalho-tabela: #171a21;
+  --cor-borda: #2a313d;
+  --cor-borda-forte: #3d4657;
+  --cor-overlay: rgba(8, 10, 14, 0.75);
 
-  /* Tipografia & texto */
-  --cor-texto: #111111;
-  --cor-texto-secundario: #4a4a46;
-  --cor-texto-suave: #71716a;
-  --cor-texto-inverso: #ffffff;
+  /* Tipografia & Legibilidade */
+  --cor-texto: #f1f3f7;
+  --cor-texto-secundario: #a4adba;
+  --cor-texto-suave: #6e798a;
+  --cor-texto-inverso: #0f1115;
 
-  /* Identidade & Acentos */
-  --cor-preto: #0a0a0a;
-  --cor-preto-2: #181818;
-  --cor-preto-3: #222222;
-  --cor-ambar: #ee9c00;
-  --cor-ambar-escuro: #b37400;
-  --cor-ambar-fundo: #fff9ed;
-  --cor-ambar-borda: #fcd34d;
+  /* Identidade Visual L.G. Manutenção Industrial (Âmbar Industrial Refinado) */
+  --cor-preto: #0c0e12;
+  --cor-preto-2: #161920;
+  --cor-preto-3: #1f232c;
+  --cor-ambar: #f59e0b;
+  --cor-ambar-hover: #d97706;
+  --cor-ambar-escuro: #b45309;
+  --cor-ambar-fundo: rgba(245, 158, 11, 0.12);
+  --cor-ambar-borda: rgba(245, 158, 11, 0.35);
 
-  /* Status planos (sem pílula) */
-  --cor-status-aberto-fundo: #f1f1ef;
-  --cor-status-aberto-borda: #dededb;
-  --cor-status-aberto-texto: #4a4a46;
+  /* Status Sóbrios e com Alto Contraste */
+  --cor-status-aberto-fundo: rgba(148, 163, 184, 0.12);
+  --cor-status-aberto-borda: rgba(148, 163, 184, 0.28);
+  --cor-status-aberto-texto: #cbd5e1;
 
-  --cor-status-aprovado-fundo: #edfcf2;
-  --cor-status-aprovado-borda: #bbf7d0;
-  --cor-status-aprovado-texto: #15803d;
+  --cor-status-aprovado-fundo: rgba(34, 197, 94, 0.12);
+  --cor-status-aprovado-borda: rgba(34, 197, 94, 0.3);
+  --cor-status-aprovado-texto: #4ade80;
 
-  --cor-status-recusado-fundo: #fef2f2;
-  --cor-status-recusado-borda: #fecaca;
-  --cor-status-recusado-texto: #b91c1c;
+  --cor-status-recusado-fundo: rgba(239, 68, 68, 0.12);
+  --cor-status-recusado-borda: rgba(239, 68, 68, 0.3);
+  --cor-status-recusado-texto: #f87171;
 
-  --cor-status-entregue-fundo: #eff6ff;
-  --cor-status-entregue-borda: #bfdbfe;
-  --cor-status-entregue-texto: #1d4ed8;
+  --cor-status-entregue-fundo: rgba(59, 130, 246, 0.12);
+  --cor-status-entregue-borda: rgba(59, 130, 246, 0.3);
+  --cor-status-entregue-texto: #60a5fa;
 
-  /* Dimensões do ERP */
-  --altura-topbar: 48px;
-  --largura-sidebar: 216px;
-  --altura-controle: 32px;
-  --altura-linha-tabela: 36px;
+  /* Dimensões Operacionais de ERP (espaçamentos ergonômicos para toque/mouse) */
+  --altura-topbar: 52px;
+  --largura-sidebar: 232px;
+  --altura-controle: 36px;
+  --altura-linha-tabela: 42px;
 
-  /* Raios rigorosos (sem excessos de borda redonda) */
-  --raio-controle: 3px;
-  --raio-card: 4px;
+  /* Raios Elegantes (4px para controles, 8px para cards/modais) */
+  --raio-controle: 4px;
+  --raio-card: 8px;
 }
 
 /* Reset técnico */
@@ -91,62 +93,70 @@ button {
   font-size: 13px;
 }
 
-/* Botão Primário (Âmbar com texto preto) */
+/* Botão Primário (Âmbar institucional com texto escuro e peso 600) */
 .btn-primario {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   height: var(--altura-controle);
-  padding: 0 12px;
+  padding: 0 16px;
   background-color: var(--cor-ambar);
-  color: #0a0a0a;
-  font-weight: 500;
+  color: #0c0e12;
+  font-weight: 600;
   font-size: 13px;
+  letter-spacing: 0.01em;
   border: 1px solid var(--cor-ambar);
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.15s ease;
 }
 
 .btn-primario:hover:not(:disabled) {
-  background-color: var(--cor-ambar-escuro);
-  border-color: var(--cor-ambar-escuro);
-  color: #ffffff;
+  background-color: var(--cor-ambar-hover);
+  border-color: var(--cor-ambar-hover);
+  color: #0c0e12;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+  transform: translateY(-1px);
 }
 
-/* Botão Escuro (Preto com texto branco) */
+.btn-primario:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Botão Escuro */
 .btn-escuro {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   height: var(--altura-controle);
-  padding: 0 12px;
-  background-color: var(--cor-preto);
+  padding: 0 14px;
+  background-color: var(--cor-superficie-subtil);
   color: #ffffff;
   font-weight: 500;
   font-size: 13px;
-  border: 1px solid var(--cor-preto);
+  border: 1px solid var(--cor-borda-forte);
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-escuro:hover:not(:disabled) {
-  background-color: var(--cor-preto-2);
+  background-color: var(--cor-borda-forte);
 }
 
-/* Botão Secundário (Borda 1px, sem fundo) */
+/* Botão Secundário */
 .btn-secundario {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
   height: var(--altura-controle);
-  padding: 0 12px;
+  padding: 0 14px;
   background-color: var(--cor-superficie);
   color: var(--cor-texto);
   font-weight: 500;
@@ -155,22 +165,23 @@ button {
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-secundario:hover:not(:disabled) {
   background-color: var(--cor-superficie-subtil);
   border-color: var(--cor-borda-forte);
+  color: #ffffff;
 }
 
-/* Botão Fantasma (Sem borda, sem fundo) */
+/* Botão Fantasma */
 .btn-fantasma {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
   height: var(--altura-controle);
-  padding: 0 8px;
+  padding: 0 10px;
   background: transparent;
   color: var(--cor-texto-secundario);
   font-weight: 500;
@@ -179,12 +190,12 @@ button {
   border-radius: var(--raio-controle);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-fantasma:hover:not(:disabled) {
-  background-color: var(--cor-borda);
-  color: var(--cor-texto);
+  background-color: var(--cor-superficie-subtil);
+  color: #ffffff;
 }
 
 .btn-primario:disabled,

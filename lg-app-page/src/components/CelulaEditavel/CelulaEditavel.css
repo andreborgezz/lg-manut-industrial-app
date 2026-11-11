@@ -1,55 +1,57 @@
-/* Célula em modo leitura e edição rápida inline */
+/* ==========================================================================
+   Célula Editável — Tabela ERP
+   ========================================================================== */
+
 .celula {
-  display: inline-flex;
+  min-height: 28px;
+  display: flex;
   align-items: center;
-  min-width: 48px;
-  max-width: 100%;
-  padding: 2px 4px;
-  border: 1px solid transparent;
+  padding: 2px 6px;
   border-radius: var(--raio-controle);
   cursor: pointer;
-  transition: border-color 0.12s ease, background-color 0.12s ease;
-  font-size: 13px;
-  line-height: 1.3;
+  border: 1px solid transparent;
+  transition: all 0.1s ease;
+  user-select: none;
 }
 
 .celula:hover {
+  background-color: var(--cor-superficie-subtil);
   border-color: var(--cor-borda);
-  background-color: var(--cor-superficie);
 }
 
 .celula:focus-visible {
-  outline: 2px solid var(--cor-ambar) !important;
+  outline: 2px solid var(--cor-ambar);
   outline-offset: 1px;
 }
 
-.celula-salvando {
-  opacity: 0.5;
-  cursor: progress;
-}
-
-/* Lembrete visual para pedido aprovado sem número de pedido */
+/* Indicador sutil de lembrete */
 .celula-lembrete {
-  border-color: var(--cor-ambar-borda) !important;
-  background-color: var(--cor-ambar-fundo) !important;
-  color: var(--cor-ambar-escuro);
+  background-color: rgba(245, 158, 11, 0.12);
+  border-color: rgba(245, 158, 11, 0.35);
+  color: var(--cor-ambar);
   font-weight: 500;
 }
 
-/* Modo edição: input ou select com altura precisa */
-.celula-campo {
-  width: 100%;
-  min-width: 100px;
-  height: 26px;
-  padding: 0 6px;
-  border: 1px solid var(--cor-ambar);
-  border-radius: var(--raio-controle);
-  background-color: var(--cor-superficie);
-  color: var(--cor-texto);
-  font: inherit;
-  font-size: 13px;
+.celula-salvando {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
-.celula-campo:focus {
+/* Campo ativo ao clicar para editar */
+.celula-campo {
+  width: 100%;
+  height: 28px;
+  padding: 0 6px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--cor-texto);
+  background-color: #0e1014;
+  border: 1px solid var(--cor-ambar);
+  border-radius: var(--raio-controle);
   outline: none;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+select.celula-campo {
+  cursor: pointer;
 }

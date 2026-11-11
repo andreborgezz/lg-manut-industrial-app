@@ -1,38 +1,41 @@
-/* Sidebar estreita e densa para ERP (216px) */
+/* Sidebar industrial refinada (232px) */
 .sidebar {
   width: var(--largura-sidebar);
   flex-shrink: 0;
-  background-color: var(--cor-preto);
-  color: var(--cor-superficie);
+  background-color: #12151b;
+  color: #f1f3f7;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--cor-preto-2);
+  border-right: 1px solid #232833;
   user-select: none;
 }
 
-/* Topo com logo compacto */
+/* Topo institucional */
 .sidebar-topo {
   height: var(--altura-topbar);
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 14px;
-  border-bottom: 1px solid var(--cor-preto-2);
+  gap: 12px;
+  padding: 0 16px;
+  border-bottom: 1px solid #232833;
+  background-color: #0f1217;
 }
 
 .sidebar-logo-badge {
-  width: 24px;
-  height: 24px;
-  border-radius: 3px;
-  background-color: var(--cor-superficie);
-  color: var(--cor-preto);
-  font-weight: 700;
-  font-size: 11px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  background-color: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: var(--cor-ambar);
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: -0.02em;
   flex-shrink: 0;
+}
+
+.sidebar-logo-icone {
+  color: #f59e0b;
 }
 
 .sidebar-marca {
@@ -42,64 +45,91 @@
 }
 
 .sidebar-titulo {
-  font-size: 12px;
-  font-weight: 600;
-  color: #ffffff;
-  letter-spacing: -0.01em;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f3f7;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .sidebar-subtitulo {
-  font-size: 10px;
-  color: #71716a;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #f59e0b;
 }
 
-/* Navegação e grupos */
+/* Navegação */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: 12px 0;
-  gap: 16px;
+  padding: 16px 0;
+  gap: 20px;
+  flex: 1;
 }
 
 .sidebar-secao {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .sidebar-secao-rotulo {
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #666660;
-  padding: 4px 14px 6px;
+  letter-spacing: 0.1em;
+  color: #647082;
+  padding: 4px 16px 6px;
 }
 
-/* Itens da navegação (36px de altura, ícone 16px) */
+/* Itens de navegação */
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 36px;
-  padding: 0 14px;
-  color: #b3b3ad;
+  gap: 12px;
+  height: 40px;
+  padding: 0 16px;
+  color: #9aa5b5;
   text-decoration: none;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 500;
   border-left: 3px solid transparent;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition: all 0.12s ease;
 }
 
 .sidebar-item:hover {
-  background-color: var(--cor-preto-2);
+  background-color: rgba(255, 255, 255, 0.03);
   color: #ffffff;
 }
 
-/* Item ativo: fundo preto-2 e barra âmbar à esquerda (sem fundo creme) */
 .sidebar-item.active {
-  background-color: var(--cor-preto-2);
-  color: #ffffff;
+  background-color: rgba(245, 158, 11, 0.08);
+  color: #f59e0b;
   border-left-color: var(--cor-ambar);
-  font-weight: 500;
+  font-weight: 600;
+}
+
+/* Rodapé discreto */
+.sidebar-rodape {
+  padding: 14px 16px;
+  border-top: 1px solid #232833;
+  background-color: #0f1217;
+}
+
+.sidebar-rodape-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-rodape-empresa {
+  font-size: 11px;
+  font-weight: 600;
+  color: #a4adba;
+}
+
+.sidebar-rodape-cidade {
+  font-size: 10px;
+  color: #647082;
 }
