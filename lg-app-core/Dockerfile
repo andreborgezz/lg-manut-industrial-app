@@ -1,5 +1,5 @@
 # ── Stage 1: build TypeScript ──────────────────────────────────────────────
-FROM node:22-alpine AS build
+FROM node:22-slim AS build
 
 WORKDIR /app
 
@@ -12,20 +12,21 @@ RUN npm run build
 RUN npm ci --omit=dev
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────────
-FROM node:22-alpine AS runtime
+FROM node:22-slim AS runtime
 
-# @sparticuz/chromium inclui o próprio Chromium; só precisa dessas libs
-RUN apk add --no-cache \
-    ca-certificates \
-    libstdc++ \
-    nss \
-    freetype \
-    harfbuzz \
-    ttf-freefont
-
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN groupadd -r appuser && useradd -r -g appuser -m appuser
 
 WORKDIR /app
+
+# Dependências do Chromium headless no Debian/slim (glibc compatível com @sparticuz/chromium)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates fonts-liberation libasound2 libatk-bridge2.0-0 libatk1.0-0 \
+    libc6 libcairo2 libcups2 libdbus-1-3 libexpat1 libfontconfig1 libgbm1 \
+    libgcc1 libglib2.0-0 libgtk-3-0 libnspr4 libnss3 libpango-1.0-0 \
+    libpangocairo-1.0-0 libstdc++6 libx11-6 libx11-xcb1 libxcb1 \
+    libxcomposite1 libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 \
+    libxrandr2 libxrender1 libxss1 libxtst6 lsb-release wget xdg-utils \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
