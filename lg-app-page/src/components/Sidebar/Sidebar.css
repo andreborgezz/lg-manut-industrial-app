@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Sidebar Corporativa Executiva (232px)
+   Sidebar Corporativa Executiva (Modo Aberta: 232px / Colapsada: 0px ou Mini)
    ========================================================================== */
 
 .sidebar {
@@ -11,6 +11,20 @@
   flex-direction: column;
   border-right: 1px solid #1e3a5f;
   user-select: none;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 100;
+}
+
+/* Estado Colapsado no Desktop: recolhe completamente para dar 100% de tela à tabela */
+.sidebar.sidebar-colapsada {
+  width: 0 !important;
+  border-right-color: transparent;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* Topo institucional */
@@ -18,10 +32,19 @@
   height: var(--altura-topbar);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 0 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background-color: #0c1f38;
+  flex-shrink: 0;
+}
+
+.sidebar-marca-grupo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
 .sidebar-logo-badge {
@@ -45,6 +68,7 @@
   display: flex;
   flex-direction: column;
   line-height: 1.15;
+  overflow: hidden;
 }
 
 .sidebar-titulo {
@@ -62,6 +86,23 @@
   color: #93c5fd;
 }
 
+.sidebar-btn-fechar {
+  display: none;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-btn-fechar:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
 /* Navegação */
 .sidebar-nav {
   display: flex;
@@ -69,6 +110,7 @@
   padding: 16px 0;
   gap: 20px;
   flex: 1;
+  overflow-y: auto;
 }
 
 .sidebar-secao {
@@ -98,7 +140,16 @@
   font-size: 13px;
   font-weight: 500;
   border-left: 3px solid transparent;
-  transition: all 0.12s ease;
+  transition: all 0.15s ease;
+}
+
+.sidebar-item svg {
+  flex-shrink: 0;
+}
+
+.sidebar-item-texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-item:hover {
@@ -109,30 +160,58 @@
 .sidebar-item.active {
   background-color: rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  border-left-color: #38bdf8;
+  border-left-color: #d97706; /* Destaque Âmbar Nobre */
   font-weight: 600;
 }
 
-/* Rodapé */
+/* Rodapé institucional */
 .sidebar-rodape {
-  padding: 14px 16px;
+  padding: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background-color: #0c1f38;
+  flex-shrink: 0;
 }
 
 .sidebar-rodape-card {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .sidebar-rodape-empresa {
   font-size: 11px;
   font-weight: 600;
-  color: #cbd5e1;
+  color: #e2e8f0;
 }
 
 .sidebar-rodape-cidade {
   font-size: 10px;
   color: #94a3b8;
+}
+
+/* Mobile & Telas Menores (gaveta flutuante) */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+    transform: translateX(-100%);
+    width: 250px;
+    visibility: hidden;
+  }
+
+  .sidebar.sidebar-aberta {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .sidebar-btn-fechar {
+    display: inline-flex;
+  }
 }

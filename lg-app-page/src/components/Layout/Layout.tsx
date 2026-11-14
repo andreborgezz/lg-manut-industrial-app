@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { HelpCircle, LogOut, X } from 'lucide-react'
+import { HelpCircle, LogOut, Menu, X } from 'lucide-react'
 import { Sidebar } from '../Sidebar/Sidebar'
 import { useAuth } from '../../contexts/AuthContext'
 import './Layout.css'
@@ -53,7 +53,21 @@ export function Layout({ children }: { children: ReactNode }) {
   const navigate = useNavigate()
   const [mostrarAtalhos, setMostrarAtalhos] = useState(false)
 
+  // Lê preferência de sidebar salva no localStorage (padrão true = aberta, ou false se colapsada)
+  const [sidebarAberta, setSidebarAberta] = useState(() => {
+    const salvo = localStorage.getItem('lg_sidebar_aberta')
+    return salvo !== null ? salvo === 'true' : true
+  })
+
   const breadcrumb = obterBreadcrumb(location.pathname)
+
+  const toggleSidebar = () => {
+    setSidebarAberta((prev) => {
+      const novo = !prev
+      localStorage.setItem('lg_sidebar_aberta', String(novo))
+      return novo
+    })
+  }
 
   // Tecla '?' abre os atalhos
   useEffect(() => {
@@ -75,11 +89,30 @@ export function Layout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="layout">
-      <Sidebar />
+    <div className={`layout ${sidebarAberta ? 'layout-sidebar-aberta' : 'layout-sidebar-colapsada'}`}>
+      <Sidebar aberta={sidebarAberta} onFechar={() => setSidebarAberta(false)} />
+      
+      {/* Overlay para fechar sidebar no mobile/telas compactas quando aberta */}
+      {sidebarAberta && (
+        <div 
+          className="sidebar-backdrop" 
+          onClick={() => setSidebarAberta(false)} 
+          aria-hidden="true" 
+        />
+      )}
+
       <div className="layout-corpo">
         <header className="topbar">
           <div className="topbar-esquerda">
+            <button
+              type="button"
+              className="topbar-btn-menu"
+              onClick={toggleSidebar}
+              title={sidebarAberta ? 'Recolher menu lateral' : 'Expandir menu lateral'}
+              aria-label={sidebarAberta ? 'Recolher menu lateral' : 'Expandir menu lateral'}
+            >
+              <Menu size={18} />
+            </button>
             <span className="topbar-breadcrumb">{breadcrumb}</span>
           </div>
           <div className="topbar-direita">
@@ -110,6 +143,7 @@ export function Layout({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
+
         <main className="layout-conteudo">{children}</main>
       </div>
 

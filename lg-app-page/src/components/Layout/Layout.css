@@ -3,6 +3,8 @@
   display: flex;
   min-height: 100vh;
   background-color: var(--cor-fundo);
+  position: relative;
+  overflow-x: hidden;
 }
 
 .layout-corpo {
@@ -10,10 +12,27 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Backdrop escuro quando abre menu no mobile */
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(2px);
+    z-index: 1040;
+  }
 }
 
 /* ==========================================================================
-   Barra superior fina (52px)
+   Barra superior fina (52px) com botão hambúrguer
    ========================================================================== */
 .topbar {
   height: var(--altura-topbar);
@@ -22,7 +41,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 0 20px;
   flex-shrink: 0;
   z-index: 10;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
@@ -31,13 +50,34 @@
 .topbar-esquerda {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+}
+
+/* Botão de Hambúrguer Corporativo */
+.topbar-btn-menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--cor-borda);
+  background: var(--cor-superficie);
+  color: var(--cor-marinho);
+  border-radius: var(--raio-controle);
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.topbar-btn-menu:hover {
+  background-color: #f1f5f9;
+  border-color: var(--cor-borda-forte);
+  color: #0f172a;
 }
 
 .topbar-breadcrumb {
-  font-size: 13px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
   letter-spacing: -0.01em;
 }
 
@@ -51,8 +91,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border: 1px solid var(--cor-borda);
   background: var(--cor-superficie);
   color: var(--cor-texto-suave);
@@ -89,7 +129,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 8px;
+  padding: 6px 10px;
   border: 1px solid var(--cor-borda);
   background: var(--cor-superficie);
   color: #64748b;
@@ -111,7 +151,7 @@
    ========================================================================== */
 .layout-conteudo {
   flex: 1;
-  padding: 24px 28px;
+  padding: 20px 24px;
   min-width: 0;
 }
 
@@ -120,7 +160,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   gap: 16px;
 }
 
@@ -196,10 +236,7 @@ kbd {
 }
 
 @media (max-width: 768px) {
-  .layout {
-    flex-direction: column;
-  }
   .layout-conteudo {
-    padding: 16px;
+    padding: 14px;
   }
 }
