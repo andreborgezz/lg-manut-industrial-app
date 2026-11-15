@@ -1,145 +1,267 @@
-.login-fundo {
+/* ==========================================================================
+   Tela de Login Corporativa Executiva — L.G. Manutenção Industrial
+   Design clássico, sóbrio, executivo e com máxima credibilidade
+   ========================================================================== */
+
+.login-viewport {
   min-height: 100vh;
-  background: #0d0d0d;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 24px;
+  background-color: #f1f5f9;
+  /* Fundo corporativo com textura suave e executiva */
+  background-image: 
+    radial-gradient(circle at 50% 0%, #ffffff 0%, transparent 75%),
+    linear-gradient(#e2e8f0 1px, transparent 1px),
+    linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+  box-sizing: border-box;
 }
 
-.login-card {
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 8px;
-  padding: 40px 36px;
+.login-card-container {
   width: 100%;
-  max-width: 380px;
+  max-width: 420px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  box-shadow: 
+    0 4px 6px -1px rgba(15, 23, 42, 0.05),
+    0 20px 25px -5px rgba(15, 23, 42, 0.08);
+  padding: 40px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Cabeçalho Institucional */
+.login-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  text-align: center;
+  gap: 14px;
 }
 
-.login-logo-circulo {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background: #ffffff;
+.login-marca-insignia {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.login-icone-anel {
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  background-color: #0f2744;
+  border: 1px solid #1e3a5f;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Alegreya', Georgia, serif;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(15, 39, 68, 0.2);
+}
+
+.login-icone-ferramenta {
+  color: #f59e0b;
+}
+
+.login-titulos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.2;
+}
+
+.login-sigla {
+  font-size: 15px;
   font-weight: 700;
-  font-size: 22px;
-  color: #0d0d0d;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
+  letter-spacing: 0.04em;
+  color: #0f2744;
+  text-transform: uppercase;
 }
 
-.login-empresa {
-  font-size: 11px;
+.login-subsigla {
+  font-size: 10px;
   font-weight: 600;
-  color: #EE9C00;
-  letter-spacing: 0.8px;
-  text-align: center;
-  margin-bottom: 24px;
+  letter-spacing: 0.14em;
+  color: #475569;
+  text-transform: uppercase;
+  margin-top: 3px;
 }
 
-.login-form {
-  width: 100%;
+.login-boas-vindas {
+  font-size: 13px;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.45;
+  max-width: 290px;
+}
+
+/* Formulário */
+.login-formulario {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.login-campo {
+.login-campo-grupo {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.login-campo label {
-  font-size: 13px;
-  font-weight: 500;
-  color: #aaa;
+.login-rotulo-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.login-campo input {
-  background: #111;
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 10px 12px;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-  transition: border-color 0.15s;
+.login-rotulo {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.login-entrada {
   width: 100%;
+  height: 40px;
+  padding: 0 14px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  color: #0f172a;
+  font-size: 14px;
+  font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.15s ease;
   box-sizing: border-box;
 }
 
-.login-campo input:focus {
-  border-color: #EE9C00;
+.login-entrada::placeholder {
+  color: #94a3b8;
 }
 
-.login-campo input:disabled {
-  opacity: 0.5;
+.login-entrada:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.15);
 }
 
-.login-senha-wrap {
+.login-entrada:disabled {
+  background-color: #f8fafc;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.login-senha-container {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.login-senha-wrap input {
-  padding-right: 40px;
+.login-entrada-senha {
+  padding-right: 42px;
 }
 
-.login-olho {
+.login-botao-mostrar-senha {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
+  padding: 6px;
+  color: #64748b;
   cursor: pointer;
-  color: #666;
-  padding: 4px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
-  transition: color 0.15s;
+  justify-content: center;
+  transition: color 0.15s ease;
 }
 
-.login-olho:hover {
-  color: #aaa;
+.login-botao-mostrar-senha:hover {
+  color: #0f172a;
 }
 
-.login-erro {
-  background: rgba(220, 60, 60, 0.12);
-  border: 1px solid rgba(220, 60, 60, 0.3);
-  border-radius: 6px;
+/* Alerta de Erro */
+.login-alerta-erro {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
   padding: 10px 12px;
   font-size: 13px;
-  color: #f87171;
+  color: #b91c1c;
+  line-height: 1.4;
 }
 
-.login-btn {
-  background: #EE9C00;
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  padding: 11px 16px;
+/* Botão de Entrar */
+.login-botao-submeter {
+  height: 42px;
+  background-color: #0f2744;
+  color: #ffffff;
+  border: 1px solid #0f2744;
+  border-radius: 4px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  width: 100%;
-  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(15, 39, 68, 0.2);
+  transition: all 0.15s ease;
   margin-top: 4px;
 }
 
-.login-btn:hover:not(:disabled) {
-  background: #d98c00;
+.login-botao-submeter:hover:not(:disabled) {
+  background-color: #1e3a8a;
+  border-color: #1e3a8a;
+  box-shadow: 0 4px 10px rgba(15, 39, 68, 0.3);
+  transform: translateY(-1px);
 }
 
-.login-btn:disabled {
-  opacity: 0.5;
+.login-botao-submeter:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-botao-submeter:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
+}
+
+.login-spin {
+  animation: login-giro 0.8s linear infinite;
+}
+
+@keyframes login-giro {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Rodapé */
+.login-footer {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-seguranca {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.login-seguranca-icone {
+  color: #0f2744;
 }

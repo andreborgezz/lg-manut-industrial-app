@@ -1,16 +1,136 @@
 /* ==========================================================================
-   Modal de Empresa — ERP Industrial
+   Modal de Empresa — ERP Industrial Clean & Corporativo
    ========================================================================== */
 
 .emp-modal {
-  width: min(620px, 100% - 32px);
-  background-color: var(--cor-superficie);
+  width: min(580px, 100% - 32px);
+  background-color: #ffffff;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.25);
   display: flex;
   flex-direction: column;
+}
+
+.modal-bloco {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modal-bloco-titulo {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cor-marinho);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--cor-borda);
+  margin: 0;
+}
+
+.modal-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.modal-span-2 {
+  grid-column: 1 / -1;
+}
+
+.modal-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-campo span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cor-texto-secundario);
+}
+
+.modal-campo input,
+.modal-campo select {
+  width: 100%;
+  height: var(--altura-controle);
+  padding: 0 12px;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
+  background-color: #ffffff;
+  color: var(--cor-texto);
+  font-size: 13px;
+  font-family: inherit;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.12s ease;
+  box-sizing: border-box;
+}
+
+.modal-campo input:focus,
+.modal-campo select:focus {
+  outline: none;
+  border-color: var(--cor-azul-acao);
+  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+}
+
+.modal-corpo {
+  padding: 20px 24px;
+  overflow-y: auto;
+  max-height: calc(85vh - 120px);
+}
+
+.modal-rodape {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 24px;
+  background-color: #f8fafc;
+  border-top: 1px solid var(--cor-borda);
+  flex-shrink: 0;
+}
+
+.modal-cancelar {
+  height: var(--altura-controle);
+  padding: 0 16px;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-controle);
+  color: var(--cor-texto-secundario);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.modal-cancelar:hover {
+  background-color: #f1f5f9;
+  border-color: var(--cor-borda-forte);
+  color: var(--cor-texto);
+}
+
+.modal-aviso {
+  padding: 10px 14px;
+  border-radius: var(--raio-controle);
+  background-color: #f8fafc;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-secundario);
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 6px;
+}
+
+.modal-erro {
+  padding: 8px 12px;
+  border-radius: var(--raio-controle);
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 12px;
+  margin-top: 6px;
 }
 
 .emp-ctt-lista {
@@ -19,27 +139,27 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 }
 
 .emp-ctt-lista li {
-  padding: 8px 10px;
+  padding: 10px 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
-  background-color: var(--cor-superficie-subtil);
+  background-color: #f8fafc;
   font-size: 12px;
   color: var(--cor-texto);
 }
 
 .emp-ctt-lista strong {
-  color: var(--cor-texto);
+  color: #0f172a;
   font-weight: 600;
 }
 
 .emp-ctt-lista span {
   display: inline-block;
   margin-right: 12px;
-  margin-top: 2px;
+  margin-top: 4px;
   color: var(--cor-texto-secundario);
 }
 
@@ -48,15 +168,6 @@
   font-style: italic;
   font-size: 12px;
   padding: 4px 0;
-}
-
-.modal-aviso {
-  padding: 8px 10px;
-  border-radius: var(--raio-controle);
-  background-color: var(--cor-superficie-subtil);
-  border: 1px solid var(--cor-borda);
-  color: var(--cor-texto-secundario);
-  font-size: 12px;
 }
 
 .btn-texto {
@@ -76,10 +187,10 @@
 .modal-mini-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 10px;
-  background-color: var(--cor-superficie-subtil);
+  gap: 10px;
+  padding: 14px;
+  background-color: #f8fafc;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
-  margin-top: 6px;
+  margin-top: 8px;
 }

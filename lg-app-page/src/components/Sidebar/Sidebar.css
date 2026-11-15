@@ -1,105 +1,217 @@
-/* Sidebar estreita e densa para ERP (216px) */
+/* ==========================================================================
+   Sidebar Corporativa Executiva (Modo Aberta: 232px / Colapsada: 0px ou Mini)
+   ========================================================================== */
+
 .sidebar {
   width: var(--largura-sidebar);
   flex-shrink: 0;
-  background-color: var(--cor-preto);
-  color: var(--cor-superficie);
+  background-color: #0f2744; /* Azul Marinho Profundo Institucional */
+  color: #f8fafc;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid var(--cor-preto-2);
+  border-right: 1px solid #1e3a5f;
   user-select: none;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.2s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  z-index: 100;
 }
 
-/* Topo com logo compacto */
+/* Estado Colapsado no Desktop: recolhe completamente para dar 100% de tela à tabela */
+.sidebar.sidebar-colapsada {
+  width: 0 !important;
+  border-right-color: transparent;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Topo institucional */
 .sidebar-topo {
   height: var(--altura-topbar);
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 14px;
-  border-bottom: 1px solid var(--cor-preto-2);
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #0c1f38;
+  flex-shrink: 0;
+}
+
+.sidebar-marca-grupo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
 }
 
 .sidebar-logo-badge {
-  width: 24px;
-  height: 24px;
-  border-radius: 3px;
-  background-color: var(--cor-superficie);
-  color: var(--cor-preto);
-  font-weight: 700;
-  font-size: 11px;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  letter-spacing: -0.02em;
   flex-shrink: 0;
+}
+
+.sidebar-logo-icone {
+  color: #f59e0b;
 }
 
 .sidebar-marca {
   display: flex;
   flex-direction: column;
   line-height: 1.15;
+  overflow: hidden;
 }
 
 .sidebar-titulo {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   color: #ffffff;
-  letter-spacing: -0.01em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .sidebar-subtitulo {
-  font-size: 10px;
-  color: #71716a;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #93c5fd;
 }
 
-/* Navegação e grupos */
+.sidebar-btn-fechar {
+  display: none;
+  background: none;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-btn-fechar:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Navegação */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  padding: 12px 0;
-  gap: 16px;
+  padding: 16px 0;
+  gap: 20px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .sidebar-secao {
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .sidebar-secao-rotulo {
   font-size: 10px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #666660;
-  padding: 4px 14px 6px;
+  letter-spacing: 0.1em;
+  color: #93a3b8;
+  padding: 4px 16px 6px;
 }
 
-/* Itens da navegação (36px de altura, ícone 16px) */
+/* Itens de navegação */
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  height: 36px;
-  padding: 0 14px;
-  color: #b3b3ad;
+  gap: 12px;
+  height: 40px;
+  padding: 0 16px;
+  color: #cbd5e1;
   text-decoration: none;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 500;
   border-left: 3px solid transparent;
-  transition: background-color 0.12s ease, color 0.12s ease;
+  transition: all 0.15s ease;
+}
+
+.sidebar-item svg {
+  flex-shrink: 0;
+}
+
+.sidebar-item-texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar-item:hover {
-  background-color: var(--cor-preto-2);
+  background-color: rgba(255, 255, 255, 0.06);
   color: #ffffff;
 }
 
-/* Item ativo: fundo preto-2 e barra âmbar à esquerda (sem fundo creme) */
 .sidebar-item.active {
-  background-color: var(--cor-preto-2);
+  background-color: rgba(255, 255, 255, 0.12);
   color: #ffffff;
-  border-left-color: var(--cor-ambar);
-  font-weight: 500;
+  border-left-color: #d97706; /* Destaque Âmbar Nobre */
+  font-weight: 600;
+}
+
+/* Rodapé institucional */
+.sidebar-rodape {
+  padding: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.sidebar-rodape-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-rodape-empresa {
+  font-size: 11px;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.sidebar-rodape-cidade {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+/* Mobile & Telas Menores (gaveta flutuante) */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
+    transform: translateX(-100%);
+    width: 250px;
+    visibility: hidden;
+  }
+
+  .sidebar.sidebar-aberta {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .sidebar-btn-fechar {
+    display: inline-flex;
+  }
 }
