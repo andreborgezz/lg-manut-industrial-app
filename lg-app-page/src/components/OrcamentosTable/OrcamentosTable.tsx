@@ -139,13 +139,13 @@ function montarColunas(
   return [
     {
       titulo: 'Nº',
-      largura: '64px',
+      largura: '60px',
       classeColuna: 'col-fixa-numero',
       render: (o) => <span className="tabular-nums orc-col-numero">#{o.numero}</span>,
     },
     {
       titulo: 'EMPRESA',
-      largura: '160px',
+      largura: '180px',
       classeColuna: 'col-fixa-empresa',
       render: (o) => (
         <span className="orc-texto-truncado" title={o.empresa}>
@@ -155,8 +155,7 @@ function montarColunas(
     },
     {
       titulo: 'SOLICITANTE',
-      largura: '120px',
-      classeColuna: 'col-fixa-solicitante',
+      largura: '130px',
       render: (o) => (
         <span className="orc-texto-truncado" title={o.solicitante ?? '-'}>
           {o.solicitante ?? '-'}
@@ -231,14 +230,14 @@ function montarColunas(
     },
     {
       titulo: 'VALOR',
-      largura: '150px',
+      largura: '110px',
       alinhamento: 'right',
       classeColuna: 'col-fixa-valor',
       render: (o) => <span className="tabular-nums orc-col-valor">{moeda(o.valor)}</span>,
     },
     {
       titulo: 'STATUS',
-      largura: '150px',
+      largura: '110px',
       alinhamento: 'center',
       classeColuna: 'col-fixa-status',
       render: (o) => (
@@ -254,7 +253,7 @@ function montarColunas(
     },
     {
       titulo: 'AÇÕES',
-      largura: '175px',
+      largura: '130px',
       alinhamento: 'right',
       classeColuna: 'col-fixa-acoes',
       render: (o) => {
@@ -776,6 +775,8 @@ export function OrcamentosTable({
                     className={c.classeColuna ?? ''}
                     style={{
                       width: c.largura,
+                      minWidth: c.largura,
+                      maxWidth: c.largura,
                       textAlign: c.alinhamento ?? 'left',
                     }}
                   >
@@ -792,6 +793,9 @@ export function OrcamentosTable({
                       key={c.titulo}
                       className={c.classeColuna ?? ''}
                       style={{
+                        width: c.largura,
+                        minWidth: c.largura,
+                        maxWidth: c.largura,
                         textAlign: c.alinhamento ?? 'left',
                       }}
                     >

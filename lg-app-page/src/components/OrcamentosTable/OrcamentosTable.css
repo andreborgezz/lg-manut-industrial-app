@@ -372,6 +372,10 @@
 .orc-table td.col-fixa-numero {
   position: sticky;
   left: 0;
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
+  box-sizing: border-box;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
 }
@@ -386,11 +390,15 @@
 .orc-table th.col-fixa-empresa,
 .orc-table td.col-fixa-empresa {
   position: sticky;
-  left: 64px;
+  left: 60px;
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  box-sizing: border-box;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
   border-right: 1px solid var(--cor-borda);
-  box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.04);
+  box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.05);
 }
 .orc-table td.col-fixa-empresa {
   background-color: #ffffff;
@@ -399,11 +407,15 @@
   background-color: #f8fafc;
 }
 
-/* Coluna Direita 3: Valor */
+/* Coluna Direita 3: Valor (largura 110px, offset = 130 + 110 = 240px) */
 .orc-table th.col-fixa-valor,
 .orc-table td.col-fixa-valor {
   position: sticky;
-  right: 325px;
+  right: 240px;
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+  box-sizing: border-box;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
   border-left: 1px solid var(--cor-borda);
@@ -416,11 +428,15 @@
   background-color: #f8fafc;
 }
 
-/* Coluna Direita 2: Status */
+/* Coluna Direita 2: Status (largura 110px, offset = 130px) */
 .orc-table th.col-fixa-status,
 .orc-table td.col-fixa-status {
   position: sticky;
-  right: 175px;
+  right: 130px;
+  width: 110px;
+  min-width: 110px;
+  max-width: 110px;
+  box-sizing: border-box;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
 }
@@ -431,11 +447,15 @@
   background-color: #f8fafc;
 }
 
-/* Coluna Direita 1: Ações */
+/* Coluna Direita 1: Ações (largura 130px, offset = 0) */
 .orc-table th.col-fixa-acoes,
 .orc-table td.col-fixa-acoes {
   position: sticky;
   right: 0;
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
+  box-sizing: border-box;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
 }
@@ -452,7 +472,7 @@
 .orc-table th.col-fixa-valor,
 .orc-table th.col-fixa-status,
 .orc-table th.col-fixa-acoes {
-  z-index: 15;
+  z-index: 20;
 }
 
 /* Linha nova */
