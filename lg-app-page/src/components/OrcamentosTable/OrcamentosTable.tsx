@@ -231,14 +231,14 @@ function montarColunas(
     },
     {
       titulo: 'VALOR',
-      largura: '110px',
+      largura: '150px',
       alinhamento: 'right',
       classeColuna: 'col-fixa-valor',
       render: (o) => <span className="tabular-nums orc-col-valor">{moeda(o.valor)}</span>,
     },
     {
       titulo: 'STATUS',
-      largura: '105px',
+      largura: '150px',
       alinhamento: 'center',
       classeColuna: 'col-fixa-status',
       render: (o) => (
@@ -254,7 +254,7 @@ function montarColunas(
     },
     {
       titulo: 'AÇÕES',
-      largura: '110px',
+      largura: '175px',
       alinhamento: 'right',
       classeColuna: 'col-fixa-acoes',
       render: (o) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { HelpCircle, LogOut, Menu, X } from 'lucide-react'
+import { HelpCircle, LogOut, Menu, Wrench, X } from 'lucide-react'
 import { Sidebar } from '../Sidebar/Sidebar'
 import { useAuth } from '../../contexts/AuthContext'
 import './Layout.css'
@@ -111,10 +111,23 @@ export function Layout({ children }: { children: ReactNode }) {
               title={sidebarAberta ? 'Recolher menu lateral' : 'Expandir menu lateral'}
               aria-label={sidebarAberta ? 'Recolher menu lateral' : 'Expandir menu lateral'}
             >
-              <Menu size={18} />
+              <Menu size={17} />
             </button>
+
+            {/* Quando a sidebar está recolhida, mostra a marca institucional elegante no header */}
+            {!sidebarAberta && (
+              <div className="topbar-marca-mini">
+                <div className="topbar-marca-badge">
+                  <Wrench size={13} />
+                </div>
+                <span className="topbar-marca-nome">LG MANUTENÇÃO</span>
+                <span className="topbar-marca-divisor">/</span>
+              </div>
+            )}
+
             <span className="topbar-breadcrumb">{breadcrumb}</span>
           </div>
+
           <div className="topbar-direita">
             <button
               type="button"

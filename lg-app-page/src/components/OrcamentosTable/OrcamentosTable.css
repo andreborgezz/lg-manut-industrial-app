@@ -403,7 +403,7 @@
 .orc-table th.col-fixa-valor,
 .orc-table td.col-fixa-valor {
   position: sticky;
-  right: 215px;
+  right: 325px;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
   border-left: 1px solid var(--cor-borda);
@@ -420,7 +420,7 @@
 .orc-table th.col-fixa-status,
 .orc-table td.col-fixa-status {
   position: sticky;
-  right: 110px;
+  right: 175px;
   z-index: 5;
   background-color: var(--cor-cabecalho-tabela);
 }
