@@ -301,9 +301,7 @@
 
 .orc-table-scroll {
   overflow-x: auto;
-  overflow-y: auto;
-  max-height: calc(100vh - 195px);
-  min-height: 480px;
+  overflow-y: visible;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
 }
@@ -328,8 +326,7 @@
 
 .orc-table {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
+  border-collapse: collapse;
   font-size: 13px;
   line-height: 1.4;
   text-align: left;
@@ -337,16 +334,13 @@
 
 /* Cabeçalho da tabela */
 .orc-table th {
-  position: sticky;
-  top: 0;
-  z-index: 10;
   background-color: var(--cor-cabecalho-tabela);
   color: #475569;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-bottom: 1px solid var(--cor-borda-forte);
   white-space: nowrap;
 }
@@ -354,7 +348,7 @@
 /* Linhas com altura de 40px */
 .orc-table td {
   height: var(--altura-linha-tabela);
-  padding: 4px 12px;
+  padding: 6px 14px;
   border-bottom: 1px solid #f1f5f9;
   white-space: nowrap;
   color: var(--cor-texto);
@@ -363,118 +357,6 @@
 /* Hover suave */
 .orc-table tbody tr:hover td {
   background-color: #f8fafc;
-}
-
-/* ==========================================================================
-   Colunas Fixas (Sticky)
-   ========================================================================== */
-
-/* Coluna 1: Nº */
-.orc-table th.col-fixa-numero,
-.orc-table td.col-fixa-numero {
-  position: sticky;
-  left: 0;
-  width: 60px;
-  min-width: 60px;
-  max-width: 60px;
-  box-sizing: border-box;
-  z-index: 5;
-  background-color: var(--cor-cabecalho-tabela);
-}
-.orc-table td.col-fixa-numero {
-  background-color: #ffffff;
-}
-.orc-table tbody tr:hover td.col-fixa-numero {
-  background-color: #f8fafc;
-}
-
-/* Coluna 2: Empresa */
-.orc-table th.col-fixa-empresa,
-.orc-table td.col-fixa-empresa {
-  position: sticky;
-  left: 60px;
-  width: 180px;
-  min-width: 180px;
-  max-width: 180px;
-  box-sizing: border-box;
-  z-index: 5;
-  background-color: var(--cor-cabecalho-tabela);
-  border-right: 1px solid var(--cor-borda);
-  box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.05);
-}
-.orc-table td.col-fixa-empresa {
-  background-color: #ffffff;
-}
-.orc-table tbody tr:hover td.col-fixa-empresa {
-  background-color: #f8fafc;
-}
-
-/* Coluna Direita 3: Valor (largura 110px, offset = 130 + 110 = 240px) */
-.orc-table th.col-fixa-valor,
-.orc-table td.col-fixa-valor {
-  position: sticky;
-  right: 240px;
-  width: 110px;
-  min-width: 110px;
-  max-width: 110px;
-  box-sizing: border-box;
-  z-index: 5;
-  background-color: var(--cor-cabecalho-tabela);
-  border-left: 1px solid var(--cor-borda);
-  box-shadow: -3px 0 6px -2px rgba(0, 0, 0, 0.04);
-}
-.orc-table td.col-fixa-valor {
-  background-color: #ffffff;
-}
-.orc-table tbody tr:hover td.col-fixa-valor {
-  background-color: #f8fafc;
-}
-
-/* Coluna Direita 2: Status (largura 110px, offset = 130px) */
-.orc-table th.col-fixa-status,
-.orc-table td.col-fixa-status {
-  position: sticky;
-  right: 130px;
-  width: 110px;
-  min-width: 110px;
-  max-width: 110px;
-  box-sizing: border-box;
-  z-index: 5;
-  background-color: var(--cor-cabecalho-tabela);
-}
-.orc-table td.col-fixa-status {
-  background-color: #ffffff;
-}
-.orc-table tbody tr:hover td.col-fixa-status {
-  background-color: #f8fafc;
-}
-
-/* Coluna Direita 1: Ações (largura 130px, offset = 0) */
-.orc-table th.col-fixa-acoes,
-.orc-table td.col-fixa-acoes {
-  position: sticky;
-  right: 0;
-  width: 130px;
-  min-width: 130px;
-  max-width: 130px;
-  box-sizing: border-box;
-  z-index: 5;
-  background-color: var(--cor-cabecalho-tabela);
-}
-.orc-table td.col-fixa-acoes {
-  background-color: #ffffff;
-}
-.orc-table tbody tr:hover td.col-fixa-acoes {
-  background-color: #f8fafc;
-}
-
-/* Z-index no header para sobrepor o corpo */
-.orc-table th.col-fixa-numero,
-.orc-table th.col-fixa-empresa,
-.orc-table th.col-fixa-valor,
-.orc-table th.col-fixa-status,
-.orc-table th.col-fixa-acoes {
-  z-index: 20;
 }
 
 /* Linha nova */
@@ -503,8 +385,135 @@
 }
 
 /* ==========================================================================
-   Ações por Linha
+   Ações por Linha - Dropdown Elegante & Produtivo
    ========================================================================== */
+.orc-menu-acoes-container {
+  display: inline-flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.orc-btn-acoes-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda, #cbd5e1);
+  border-radius: var(--raio-controle, 6px);
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.orc-btn-acoes-trigger:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.orc-btn-acoes-trigger.ativo {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.orc-btn-acoes-trigger:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.orc-seta-acoes {
+  color: #64748b;
+  transition: transform 0.15s ease;
+}
+
+.orc-btn-acoes-trigger.ativo .orc-seta-acoes,
+.orc-seta-acoes.rotacionada {
+  transform: rotate(180deg);
+  color: #1d4ed8;
+}
+
+/* Menu Popover Flutuante (renderizado no body via createPortal) */
+.orc-dropdown-acoes {
+  position: fixed;
+  z-index: 9999;
+  min-width: 185px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  animation: orcDropdownEntrada 0.12s ease-out;
+}
+
+@keyframes orcDropdownEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.orc-dropdown-divisor {
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 4px 0;
+}
+
+.orc-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  background: transparent;
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.orc-dropdown-item:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.orc-dropdown-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.orc-dropdown-item.orc-item-pdf:hover:not(:disabled) {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.orc-dropdown-item.orc-item-wa:hover:not(:disabled) {
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+
+.orc-dropdown-item.orc-item-email:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #0369a1;
+}
+
+/* Fallback para caso os antigos botões ainda sejam usados */
 .orc-acoes {
   display: flex;
   align-items: center;
@@ -530,39 +539,6 @@
   background-color: var(--cor-superficie-subtil);
   border-color: var(--cor-borda-forte);
   color: var(--cor-texto);
-}
-
-.orc-acao-btn-wa:hover:not(:disabled) {
-  background-color: #f0fdf4;
-  border-color: #86efac;
-  color: #15803d;
-}
-
-.orc-acao-btn-email:hover:not(:disabled) {
-  background-color: #eff6ff;
-  border-color: #93c5fd;
-  color: #1d4ed8;
-}
-
-/* PDF com destaque institucional elegante */
-.orc-acao-pdf {
-  color: #1e3a8a;
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-}
-
-.orc-acao-pdf:hover:not(:disabled) {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
-  color: #ffffff;
-}
-
-.orc-acao-secundaria {
-  opacity: 0.7;
-}
-
-.orc-table tr:hover .orc-acao-secundaria {
-  opacity: 1;
 }
 
 .orc-spin {
