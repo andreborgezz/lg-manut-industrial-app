@@ -362,34 +362,39 @@ function montarColunas(
   return [
     {
       titulo: 'Nº',
+      largura: '60px',
       alinhamento: 'left',
       render: (o) => <span className="tabular-nums orc-col-numero">#{o.numero}</span>,
     },
     {
       titulo: 'EMPRESA',
+      largura: '160px',
       alinhamento: 'left',
       render: (o) => (
-        <span className="orc-texto-truncado" title={o.empresa}>
+        <span className="orc-texto-truncado orc-col-empresa" title={o.empresa}>
           {o.empresa}
         </span>
       ),
     },
     {
       titulo: 'SOLICITANTE',
+      largura: '120px',
       alinhamento: 'left',
       render: (o) => (
-        <span className="orc-texto-truncado" title={o.solicitante ?? '-'}>
+        <span className="orc-texto-truncado orc-col-solicitante" title={o.solicitante ?? '-'}>
           {o.solicitante ?? '-'}
         </span>
       ),
     },
     {
       titulo: 'ENTRADA',
+      largura: '85px',
       alinhamento: 'left',
       render: (o) => <span className="tabular-nums">{dataBR(o.entradaEm)}</span>,
     },
     {
       titulo: 'Nº PEDIDO',
+      largura: '100px',
       alinhamento: 'left',
       render: (o) => (
         <CelulaEditavel
@@ -403,15 +408,17 @@ function montarColunas(
     },
     {
       titulo: 'MÁQUINA',
+      largura: '130px',
       alinhamento: 'left',
       render: (o) => (
-        <span className="orc-texto-truncado" title={o.maquina ?? '-'}>
+        <span className="orc-texto-truncado orc-col-maquina" title={o.maquina ?? '-'}>
           {o.maquina ?? '-'}
         </span>
       ),
     },
     {
       titulo: 'MECÂNICO',
+      largura: '115px',
       alinhamento: 'left',
       render: (o) => (
         <CelulaEditavel
@@ -425,6 +432,7 @@ function montarColunas(
     },
     {
       titulo: 'INÍCIO',
+      largura: '85px',
       alinhamento: 'left',
       render: (o) => (
         <CelulaEditavel
@@ -438,6 +446,7 @@ function montarColunas(
     },
     {
       titulo: 'ENTREGA',
+      largura: '85px',
       alinhamento: 'left',
       render: (o) => (
         <CelulaEditavel
@@ -451,11 +460,13 @@ function montarColunas(
     },
     {
       titulo: 'VALOR',
+      largura: '95px',
       alinhamento: 'right',
       render: (o) => <span className="tabular-nums orc-col-valor">{moeda(o.valor)}</span>,
     },
     {
       titulo: 'STATUS',
+      largura: '90px',
       alinhamento: 'center',
       render: (o) => (
         <CelulaEditavel
@@ -470,7 +481,9 @@ function montarColunas(
     },
     {
       titulo: 'AÇÕES',
-      alinhamento: 'right',
+      largura: '85px',
+      alinhamento: 'center',
+      classeColuna: 'col-fixa-acoes',
       render: (o) => (
         <MenuAcoes
           o={o}
@@ -944,8 +957,10 @@ export function OrcamentosTable({
                 {colunas.map((c) => (
                   <th
                     key={c.titulo}
+                    className={c.classeColuna}
                     style={{
                       textAlign: c.alinhamento ?? 'left',
+                      width: c.largura,
                     }}
                   >
                     {c.titulo}
@@ -959,6 +974,7 @@ export function OrcamentosTable({
                   {colunas.map((c) => (
                     <td
                       key={c.titulo}
+                      className={c.classeColuna}
                       style={{
                         textAlign: c.alinhamento ?? 'left',
                       }}
