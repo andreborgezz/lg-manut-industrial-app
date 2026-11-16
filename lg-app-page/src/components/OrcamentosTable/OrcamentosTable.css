@@ -385,8 +385,135 @@
 }
 
 /* ==========================================================================
-   Ações por Linha
+   Ações por Linha - Dropdown Elegante & Produtivo
    ========================================================================== */
+.orc-menu-acoes-container {
+  display: inline-flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.orc-btn-acoes-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 28px;
+  padding: 0 10px;
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda, #cbd5e1);
+  border-radius: var(--raio-controle, 6px);
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.orc-btn-acoes-trigger:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.orc-btn-acoes-trigger.ativo {
+  background-color: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15);
+}
+
+.orc-btn-acoes-trigger:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.orc-seta-acoes {
+  color: #64748b;
+  transition: transform 0.15s ease;
+}
+
+.orc-btn-acoes-trigger.ativo .orc-seta-acoes,
+.orc-seta-acoes.rotacionada {
+  transform: rotate(180deg);
+  color: #1d4ed8;
+}
+
+/* Menu Popover Flutuante (renderizado no body via createPortal) */
+.orc-dropdown-acoes {
+  position: fixed;
+  z-index: 9999;
+  min-width: 185px;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 5px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  animation: orcDropdownEntrada 0.12s ease-out;
+}
+
+@keyframes orcDropdownEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.orc-dropdown-divisor {
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 4px 0;
+}
+
+.orc-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  background: transparent;
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 500;
+  text-align: left;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.orc-dropdown-item:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+.orc-dropdown-item:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.orc-dropdown-item.orc-item-pdf:hover:not(:disabled) {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.orc-dropdown-item.orc-item-wa:hover:not(:disabled) {
+  background-color: #f0fdf4;
+  color: #15803d;
+}
+
+.orc-dropdown-item.orc-item-email:hover:not(:disabled) {
+  background-color: #f8fafc;
+  color: #0369a1;
+}
+
+/* Fallback para caso os antigos botões ainda sejam usados */
 .orc-acoes {
   display: flex;
   align-items: center;
@@ -412,39 +539,6 @@
   background-color: var(--cor-superficie-subtil);
   border-color: var(--cor-borda-forte);
   color: var(--cor-texto);
-}
-
-.orc-acao-btn-wa:hover:not(:disabled) {
-  background-color: #f0fdf4;
-  border-color: #86efac;
-  color: #15803d;
-}
-
-.orc-acao-btn-email:hover:not(:disabled) {
-  background-color: #eff6ff;
-  border-color: #93c5fd;
-  color: #1d4ed8;
-}
-
-/* PDF com destaque institucional elegante */
-.orc-acao-pdf {
-  color: #1e3a8a;
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
-}
-
-.orc-acao-pdf:hover:not(:disabled) {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
-  color: #ffffff;
-}
-
-.orc-acao-secundaria {
-  opacity: 0.7;
-}
-
-.orc-table tr:hover .orc-acao-secundaria {
-  opacity: 1;
 }
 
 .orc-spin {

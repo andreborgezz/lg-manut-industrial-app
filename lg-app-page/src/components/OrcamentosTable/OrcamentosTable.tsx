@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import {
   Calendar,
   Check,
@@ -117,6 +118,226 @@ function exportarCSV(linhas: OrcamentoLinha[]) {
   URL.revokeObjectURL(url)
 }
 
+interface MenuAcoesProps {
+  o: OrcamentoLinha
+  aberto: boolean
+  onToggle: () => void
+  onFechar: () => void
+  abrir: (o: OrcamentoLinha, acao: Acao) => void
+  carregando: { id: number; acao: Acao } | null
+  gerandoPdf: number | null
+  gerarPdf: (o: OrcamentoLinha) => void
+  compartilharWhatsapp: (o: OrcamentoLinha) => void
+  compartilhando: number | null
+  abrirEmail: (o: OrcamentoLinha) => void
+}
+
+function MenuAcoes({
+  o,
+  aberto,
+  onToggle,
+  onFechar,
+  abrir,
+  carregando,
+  gerandoPdf,
+  gerarPdf,
+  compartilharWhatsapp,
+  compartilhando,
+  abrirEmail,
+}: MenuAcoesProps) {
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const [posicao, setPosicao] = useState<{
+    top?: number
+    bottom?: number
+    left: number
+  } | null>(null)
+
+  const girando = (acao: Acao) => carregando?.id === o.id && carregando.acao === acao
+  const carregandoPdf = gerandoPdf === o.id
+  const carregandoWa = compartilhando === o.id
+  const qualquerCarregando = carregando?.id === o.id || carregandoPdf || carregandoWa
+
+  useEffect(() => {
+    if (!aberto || !triggerRef.current) return
+
+    function atualizarPosicao() {
+      if (!triggerRef.current) return
+      const rect = triggerRef.current.getBoundingClientRect()
+      const menuWidth = 185
+      const menuHeight = 205
+      const espacoAbaixo = window.innerHeight - rect.bottom
+      const abrirParaCima = espacoAbaixo < menuHeight && rect.top > menuHeight
+
+      if (abrirParaCima) {
+        setPosicao({
+          bottom: Math.max(8, window.innerHeight - rect.top + 4),
+          left: Math.max(8, rect.right - menuWidth),
+        })
+      } else {
+        setPosicao({
+          top: Math.max(8, rect.bottom + 4),
+          left: Math.max(8, rect.right - menuWidth),
+        })
+      }
+    }
+
+    atualizarPosicao()
+
+    function cliqueFora(e: MouseEvent) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target as Node) &&
+        triggerRef.current &&
+        !triggerRef.current.contains(e.target as Node)
+      ) {
+        onFechar()
+      }
+    }
+
+    function fecharAoRolar(e: Event) {
+      if (menuRef.current && menuRef.current.contains(e.target as Node)) {
+        return
+      }
+      onFechar()
+    }
+
+    document.addEventListener('mousedown', cliqueFora)
+    window.addEventListener('scroll', fecharAoRolar, true)
+    window.addEventListener('resize', fecharAoRolar)
+
+    return () => {
+      document.removeEventListener('mousedown', cliqueFora)
+      window.removeEventListener('scroll', fecharAoRolar, true)
+      window.removeEventListener('resize', fecharAoRolar)
+    }
+  }, [aberto, onFechar])
+
+  return (
+    <div className="orc-menu-acoes-container">
+      <button
+        ref={triggerRef}
+        type="button"
+        className={`orc-btn-acoes-trigger ${aberto ? 'ativo' : ''}`}
+        title={`Ações para o orçamento #${o.numero}`}
+        aria-label={`Ações para o orçamento #${o.numero}`}
+        aria-expanded={aberto}
+        disabled={qualquerCarregando}
+        onClick={(e) => {
+          e.stopPropagation()
+          onToggle()
+        }}
+      >
+        {qualquerCarregando ? (
+          <>
+            <Loader2 size={13} className="orc-spin" />
+            <span>Aguarde...</span>
+          </>
+        ) : (
+          <>
+            <span>Ações</span>
+            <ChevronDown size={13} className={`orc-seta-acoes ${aberto ? 'rotacionada' : ''}`} />
+          </>
+        )}
+      </button>
+
+      {aberto &&
+        posicao &&
+        createPortal(
+          <div
+            ref={menuRef}
+            className="orc-dropdown-acoes"
+            style={{
+              top: posicao.top !== undefined ? `${posicao.top}px` : undefined,
+              bottom: posicao.bottom !== undefined ? `${posicao.bottom}px` : undefined,
+              left: `${posicao.left}px`,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="orc-dropdown-item orc-item-pdf"
+              onClick={() => {
+                onFechar()
+                gerarPdf(o)
+              }}
+            >
+              {carregandoPdf ? (
+                <Loader2 size={14} className="orc-spin" />
+              ) : (
+                <FileText size={14} />
+              )}
+              <span>{o.temPdf ? 'Visualizar PDF' : 'Gerar PDF'}</span>
+            </button>
+
+            <button
+              type="button"
+              className="orc-dropdown-item"
+              onClick={() => {
+                onFechar()
+                abrir(o, 'editar')
+              }}
+            >
+              {girando('editar') ? (
+                <Loader2 size={14} className="orc-spin" />
+              ) : (
+                <Pencil size={14} />
+              )}
+              <span>Editar</span>
+            </button>
+
+            <button
+              type="button"
+              className="orc-dropdown-item"
+              onClick={() => {
+                onFechar()
+                abrir(o, 'duplicar')
+              }}
+            >
+              {girando('duplicar') ? (
+                <Loader2 size={14} className="orc-spin" />
+              ) : (
+                <Copy size={14} />
+              )}
+              <span>Duplicar</span>
+            </button>
+
+            <div className="orc-dropdown-divisor" />
+
+            <button
+              type="button"
+              className="orc-dropdown-item orc-item-wa"
+              onClick={() => {
+                onFechar()
+                compartilharWhatsapp(o)
+              }}
+            >
+              {carregandoWa ? (
+                <Loader2 size={14} className="orc-spin" />
+              ) : (
+                <MessageCircle size={14} />
+              )}
+              <span>Enviar WhatsApp</span>
+            </button>
+
+            <button
+              type="button"
+              className="orc-dropdown-item orc-item-email"
+              onClick={() => {
+                onFechar()
+                abrirEmail(o)
+              }}
+            >
+              <Mail size={14} />
+              <span>Enviar por E-mail</span>
+            </button>
+          </div>,
+          document.body,
+        )}
+    </div>
+  )
+}
+
 function montarColunas(
   mecanicos: Mecanico[],
   salvar: (o: OrcamentoLinha, patch: AtualizarOrcamentoBody) => Promise<void>,
@@ -127,6 +348,8 @@ function montarColunas(
   compartilharWhatsapp: (o: OrcamentoLinha) => void,
   compartilhando: number | null,
   abrirEmail: (o: OrcamentoLinha) => void,
+  menuAbertoId: number | null,
+  setMenuAbertoId: React.Dispatch<React.SetStateAction<number | null>>,
 ): Coluna[] {
   const opcoesMecanico = (o: OrcamentoLinha): Opcao[] => {
     const lista = mecanicos.map((m) => ({ valor: String(m.id), label: m.nome }))
@@ -248,68 +471,21 @@ function montarColunas(
     {
       titulo: 'AÇÕES',
       alinhamento: 'right',
-      render: (o) => {
-        const girando = (acao: Acao) => carregando?.id === o.id && carregando.acao === acao
-        const carregandoPdf = gerandoPdf === o.id
-        const carregandoWa = compartilhando === o.id
-        const qualquerCarregando = carregando !== null || gerandoPdf !== null || compartilhando !== null
-        return (
-          <div className="orc-acoes">
-            {/* Ação principal: PDF visível sempre */}
-            <button
-              type="button"
-              className="orc-acao-btn orc-acao-pdf"
-              title={o.temPdf ? 'Visualizar PDF' : 'Gerar PDF'}
-              aria-label={o.temPdf ? `Visualizar PDF do orçamento ${o.numero}` : `Gerar PDF do orçamento ${o.numero}`}
-              disabled={qualquerCarregando}
-              onClick={() => gerarPdf(o)}
-            >
-              {carregandoPdf ? <Loader2 size={15} className="orc-spin" /> : <FileText size={15} />}
-            </button>
-            {/* Ações secundárias: aparecem no hover da linha */}
-            <button
-              type="button"
-              className="orc-acao-btn orc-acao-secundaria"
-              title="Editar no modal"
-              aria-label={`Editar orçamento ${o.numero}`}
-              disabled={qualquerCarregando}
-              onClick={() => abrir(o, 'editar')}
-            >
-              {girando('editar') ? <Loader2 size={15} className="orc-spin" /> : <Pencil size={15} />}
-            </button>
-            <button
-              type="button"
-              className="orc-acao-btn orc-acao-secundaria"
-              title="Duplicar orçamento"
-              aria-label={`Duplicar orçamento ${o.numero}`}
-              disabled={qualquerCarregando}
-              onClick={() => abrir(o, 'duplicar')}
-            >
-              {girando('duplicar') ? <Loader2 size={15} className="orc-spin" /> : <Copy size={15} />}
-            </button>
-            <button
-              type="button"
-              className="orc-acao-btn orc-acao-secundaria orc-acao-btn-wa"
-              title="Compartilhar por WhatsApp"
-              aria-label={`Compartilhar orçamento ${o.numero} por WhatsApp`}
-              disabled={qualquerCarregando}
-              onClick={() => compartilharWhatsapp(o)}
-            >
-              {carregandoWa ? <Loader2 size={15} className="orc-spin" /> : <MessageCircle size={15} />}
-            </button>
-            <button
-              type="button"
-              className="orc-acao-btn orc-acao-secundaria orc-acao-btn-email"
-              title="Enviar PDF por e-mail"
-              aria-label={`Enviar orçamento ${o.numero} por e-mail`}
-              disabled={qualquerCarregando}
-              onClick={() => abrirEmail(o)}
-            >
-              <Mail size={15} />
-            </button>
-          </div>
-        )
-      },
+      render: (o) => (
+        <MenuAcoes
+          o={o}
+          aberto={menuAbertoId === o.id}
+          onToggle={() => setMenuAbertoId((atual) => (atual === o.id ? null : o.id))}
+          onFechar={() => setMenuAbertoId(null)}
+          abrir={abrir}
+          carregando={carregando}
+          gerandoPdf={gerandoPdf}
+          gerarPdf={gerarPdf}
+          compartilharWhatsapp={compartilharWhatsapp}
+          compartilhando={compartilhando}
+          abrirEmail={abrirEmail}
+        />
+      ),
     },
   ]
 }
@@ -514,6 +690,8 @@ export function OrcamentosTable({
     }
   }
 
+  const [menuAbertoId, setMenuAbertoId] = useState<number | null>(null)
+
   const colunas = montarColunas(
     mecanicos,
     salvar,
@@ -524,6 +702,8 @@ export function OrcamentosTable({
     compartilharWhatsapp,
     compartilhando,
     (o) => setOrcamentoParaEmail(o),
+    menuAbertoId,
+    setMenuAbertoId,
   )
 
   const filtro: FiltroPeriodo = {
