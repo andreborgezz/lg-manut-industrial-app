@@ -23,6 +23,7 @@ import {
 } from '../../services/api'
 import { Minus, Plus } from 'lucide-react'
 import { Combobox, type OpcaoCombo } from '../Combobox/Combobox'
+import { EmpresaModal } from '../EmpresaModal/EmpresaModal'
 import './NovoOrcamentoModal.css'
 
 export type InicialOrcamento = Partial<
@@ -82,6 +83,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   const [erros, setErros] = useState<Erros>({})
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
+  const [modalEmpresaAberto, setModalEmpresaAberto] = useState(false)
 
   const empresaEscolhida = empresaId !== ''
 
@@ -301,8 +303,8 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                     limpar('empresa')
                   }}
                   onCriar={criarEmpresaRapido}
-                  labelAdicionar="+ Cadastrar empresa"
-                  onAdicionar={() => { /* abrir modal de empresa se quiser fluxo completo */ }}
+                  labelAdicionar="+ Cadastrar nova empresa"
+                  onAdicionar={() => setModalEmpresaAberto(true)}
                   placeholder="Buscar empresa..."
                   disabled={salvando}
                   erro={erros.empresa}
@@ -525,6 +527,29 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
           </footer>
         </form>
       </div>
+
+      {modalEmpresaAberto && (
+        <EmpresaModal
+          onFechar={() => setModalEmpresaAberto(false)}
+          onSalvo={() => {
+            setModalEmpresaAberto(false)
+            listarEmpresas()
+              .then((lista) => {
+                setEmpresas(lista)
+                // Se a lista não estiver vazia, seleciona a última cadastrada criada recentemente
+                if (lista.length > 0) {
+                  const ultima = [...lista].sort((a, b) => b.id - a.id)[0]
+                  if (ultima) {
+                    setEmpresaId(String(ultima.id))
+                    setSolicitanteId('')
+                    limpar('empresa')
+                  }
+                }
+              })
+              .catch((e) => setErro(e.message))
+          }}
+        />
+      )}
     </div>
   )
 }

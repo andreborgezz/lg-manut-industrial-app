@@ -301,7 +301,9 @@
 
 .orc-table-scroll {
   overflow-x: auto;
-  max-height: calc(100vh - 215px);
+  overflow-y: auto;
+  max-height: calc(100vh - 195px);
+  min-height: 480px;
   scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
 }

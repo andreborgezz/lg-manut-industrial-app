@@ -116,11 +116,22 @@
   font-weight: 600;
 }
 
-.combo-opcao-criar {
+.combo-opcao-criar,
+.combo-opcao-adicionar {
   color: var(--cor-azul-acao);
   border-top: 1px solid var(--cor-borda);
   margin-top: 4px;
   padding-top: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.combo-opcao-adicionar:hover,
+.combo-opcao-criar:hover {
+  background-color: #eff6ff;
+  color: #1e40af;
 }
 
 .combo-vazio {
