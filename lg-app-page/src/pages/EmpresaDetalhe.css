@@ -7,15 +7,15 @@
 }
 
 .emp-detalhe-voltar {
-  background: none;
+  background: #f4f6f9;
   border: 1px solid var(--cor-borda);
-  border-radius: 6px;
+  border-radius: 8px;
   padding: 8px 14px;
   font-size: 13px;
   color: var(--cor-texto-suave);
   cursor: pointer;
   white-space: nowrap;
-  transition: border-color 0.15s, color 0.15s;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
 }
 
 .emp-detalhe-voltar:hover {
@@ -60,8 +60,9 @@
 .emp-detalhe-card {
   background: var(--cor-superficie);
   border: 1px solid var(--cor-borda);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
 .emp-detalhe-card h2 {

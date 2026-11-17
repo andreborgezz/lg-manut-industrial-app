@@ -27,7 +27,7 @@
   padding: 0 30px 0 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
-  background-color: var(--cor-superficie);
+  background-color: #f8fafc;
   color: var(--cor-texto);
   font-size: 13px;
   font-family: inherit;
@@ -37,7 +37,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  box-shadow: none;
   transition: all 0.12s ease;
   box-sizing: border-box;
 }
@@ -45,7 +45,8 @@
 .combo-btn-valor:focus,
 .combo-input:focus {
   border-color: var(--cor-azul-acao);
-  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
   outline: none;
 }
 
@@ -85,7 +86,7 @@
   background-color: #ffffff;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-card);
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px -6px rgba(15, 23, 42, 0.14);
   list-style: none;
   max-height: 220px;
   overflow-y: auto;
@@ -98,7 +99,7 @@
 .combo-opcao {
   padding: 8px 12px;
   font-size: 13px;
-  border-radius: 4px;
+  border-radius: 7px;
   cursor: pointer;
   color: var(--cor-texto);
   transition: all 0.1s ease;

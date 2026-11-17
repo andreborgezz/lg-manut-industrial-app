@@ -6,14 +6,14 @@
 
 :root {
   /* Paleta Estrutural Clean & Corporativa */
-  --cor-fundo: #f4f6f9;
+  --cor-fundo: #f0f2f5;
   --cor-fundo-elevado: #ffffff;
   --cor-superficie: #ffffff;
   --cor-superficie-subtil: #f8fafc;
-  --cor-cabecalho-tabela: #edf2f7;
-  --cor-borda: #e2e8f0;
-  --cor-borda-forte: #cbd5e1;
-  --cor-overlay: rgba(15, 23, 42, 0.55);
+  --cor-cabecalho-tabela: #f4f6f9;
+  --cor-borda: #e4e9f0;
+  --cor-borda-forte: #c8d3e0;
+  --cor-overlay: rgba(15, 23, 42, 0.5);
 
   /* Tipografia & Legibilidade Executiva */
   --cor-texto: #0f172a;           /* Slate 900: texto principal com leitura firme */
@@ -49,14 +49,15 @@
   --cor-status-entregue-texto: #1e40af;
 
   /* Dimensões Operacionais de ERP (espaçamentos ergonômicos para toque/mouse) */
-  --altura-topbar: 52px;
+  --altura-topbar: 54px;
   --largura-sidebar: 232px;
   --altura-controle: 36px;
   --altura-linha-tabela: 40px;
 
-  /* Raios de Controle Corporativos */
-  --raio-controle: 4px;
-  --raio-card: 6px;
+  /* Raios de Controle Modernos */
+  --raio-controle: 8px;
+  --raio-card: 12px;
+  --raio-modal: 16px;
 }
 
 /* Reset técnico */
@@ -266,8 +267,8 @@ textarea:focus-visible,
   align-items: center;
   justify-content: center;
   height: 22px;
-  padding: 0 8px;
-  border-radius: var(--raio-controle);
+  padding: 0 9px;
+  border-radius: 20px;
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;

@@ -22,9 +22,9 @@
   background-color: #ffffff;
   color: var(--cor-texto);
   border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-card);
+  border-radius: var(--raio-modal);
   overflow: hidden;
-  box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.25);
+  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.22);
 }
 
 .modal-header {
@@ -49,18 +49,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: none;
+  width: 30px;
+  height: 30px;
+  background-color: #f4f6f9;
   border: 1px solid var(--cor-borda);
   color: var(--cor-texto-suave);
   cursor: pointer;
-  border-radius: var(--raio-controle);
+  border-radius: 8px;
   transition: all 0.12s ease;
 }
 
 .modal-fechar:hover {
-  background-color: #f1f5f9;
+  background-color: #e9ecf0;
   border-color: var(--cor-borda-forte);
   color: #0f172a;
 }
@@ -171,11 +171,11 @@
   padding: 0 12px;
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
-  background-color: #ffffff;
+  background-color: #f8fafc;
   color: var(--cor-texto);
   font-size: 13px;
   font-family: inherit;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  box-shadow: none;
   transition: all 0.12s ease;
   box-sizing: border-box;
 }
@@ -192,7 +192,8 @@
 .modal-campo textarea:focus {
   outline: none;
   border-color: var(--cor-azul-acao);
-  box-shadow: 0 0 0 2px rgba(29, 78, 216, 0.12);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
 }
 
 /* Stepper de prazo */
@@ -275,10 +276,10 @@
 }
 
 .modal-chip {
-  padding: 5px 10px;
-  background-color: #ffffff;
+  padding: 5px 12px;
+  background-color: #f4f6f9;
   border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-controle);
+  border-radius: 20px;
   color: #334155;
   font-size: 12px;
   font-weight: 500;
