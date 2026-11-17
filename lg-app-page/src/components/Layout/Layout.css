@@ -5,6 +5,7 @@
   background-color: var(--cor-fundo);
   position: relative;
   overflow-x: hidden;
+  background-image: none;
 }
 
 .layout-corpo {
@@ -44,7 +45,7 @@
   padding: 0 20px;
   flex-shrink: 0;
   z-index: 10;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 1px 8px rgba(15, 23, 42, 0.04);
 }
 
 .topbar-esquerda {
@@ -63,7 +64,7 @@
   border: 1px solid var(--cor-borda);
   background: var(--cor-superficie);
   color: var(--cor-marinho);
-  border-radius: var(--raio-controle);
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.12s ease;
 }
@@ -84,7 +85,7 @@
 .topbar-marca-badge {
   width: 24px;
   height: 24px;
-  border-radius: 4px;
+  border-radius: 7px;
   background-color: #0f2744;
   color: #f59e0b;
   display: flex;
@@ -128,7 +129,7 @@
   border: 1px solid var(--cor-borda);
   background: var(--cor-superficie);
   color: var(--cor-texto-suave);
-  border-radius: var(--raio-controle);
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.12s ease;
 }
@@ -167,7 +168,7 @@
   color: #64748b;
   font-size: 12px;
   font-weight: 500;
-  border-radius: var(--raio-controle);
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.12s ease;
 }
@@ -224,9 +225,9 @@
   width: min(400px, 100% - 32px);
   background-color: #ffffff;
   border: 1px solid var(--cor-borda);
-  border-radius: var(--raio-card);
+  border-radius: var(--raio-modal);
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 50px -10px rgba(15, 23, 42, 0.18);
   display: flex;
   flex-direction: column;
 }

@@ -14,9 +14,9 @@
 }
 
 .email-detalhes-orcamento {
-  background: var(--cor-cabecalho-tabela, #f8fafc);
-  border: 1px solid var(--cor-borda, #e2e8f0);
-  border-radius: 6px;
+  background: var(--cor-cabecalho-tabela, #f4f6f9);
+  border: 1px solid var(--cor-borda, #e4e9f0);
+  border-radius: 10px;
   padding: 12px 14px;
   margin-bottom: 16px;
   display: flex;
@@ -50,7 +50,7 @@
   background-color: #eff6ff;
   border: 1px solid #bfdbfe;
   color: #1e40af;
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 10px 12px;
   font-size: 12px;
   line-height: 1.45;

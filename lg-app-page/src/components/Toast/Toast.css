@@ -17,11 +17,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 14px;
-  border-radius: var(--raio-card);
+  padding: 12px 16px;
+  border-radius: 12px;
   font-size: 13px;
   font-weight: 500;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
   pointer-events: all;
   animation: toast-entrar 0.15s ease;
 }
@@ -67,7 +67,7 @@
   background: rgba(255, 255, 255, 0.2);
   color: inherit;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 5px;
+  border-radius: 7px;
   padding: 4px 10px;
   font-size: 13px;
   font-weight: 600;
