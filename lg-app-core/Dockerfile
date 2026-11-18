@@ -9,7 +9,7 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-RUN npm ci --omit=dev
+RUN npm prune --omit=dev
 
 # ── Stage 2: runtime ────────────────────────────────────────────────────────
 FROM node:22-slim AS runtime

@@ -27,6 +27,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
+          command_timeout: 25m
           envs: APP_DIR,BRANCH,ENV_FILE
           script: |
             set -e

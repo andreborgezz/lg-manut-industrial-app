@@ -16,7 +16,7 @@ app.set('trust proxy', 1)
 
 app.use(helmet())
 app.use(cors({
-  origin: env.FRONT_URL,
+  origin: env.FRONT_URL.replace(/\/+$/, ''),
   credentials: true,
 }))
 app.use(cookieParser())
