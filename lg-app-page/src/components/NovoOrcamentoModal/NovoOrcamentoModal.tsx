@@ -23,7 +23,7 @@ import {
   type OrcamentoRecente,
   type Solicitante,
 } from '../../services/api'
-import { Check, FileText, Minus, Plus } from 'lucide-react'
+import { Check, FileText, Minus, Plus, Trash2 } from 'lucide-react'
 import { Combobox, type OpcaoCombo } from '../Combobox/Combobox'
 import { EmpresaModal } from '../EmpresaModal/EmpresaModal'
 import './NovoOrcamentoModal.css'
@@ -58,6 +58,17 @@ function hoje(): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 }
 
+// converte string de escopo (incluindo '\n' literais) em lista de itens
+function parsearEscopo(texto?: string | null): string[] {
+  if (!texto) return ['']
+  const itens = texto
+    .replace(/\\n/g, '\n')
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean)
+  return itens.length > 0 ? itens : ['']
+}
+
 type Erros = Partial<Record<'empresa' | 'solicitante' | 'titulo' | 'valor' | 'prazoDias', string>>
 
 export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editando }: Props) {
@@ -74,7 +85,8 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   )
   const [maquina, setMaquina] = useState(inicial?.maquina ?? '')
   const [titulo, setTitulo] = useState(inicial?.titulo ?? '')
-  const [escopo, setEscopo] = useState(inicial?.escopo ?? '')
+  const [itensEscopo, setItensEscopo] = useState<string[]>(() => parsearEscopo(inicial?.escopo))
+  const itemRefs = useRef<(HTMLInputElement | null)[]>([])
   const [valor, setValor] = useState(paraCentavos(inicial?.valor))
   const [prazoDias, setPrazoDias] = useState(
     inicial ? (inicial.prazoDias != null ? String(inicial.prazoDias) : '') : '1'
@@ -183,11 +195,34 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
 
   function aplicarRecente(r: OrcamentoRecente) {
     if (r.titulo) setTitulo(r.titulo)
-    if (r.escopo) setEscopo(r.escopo)
+    if (r.escopo) setItensEscopo(parsearEscopo(r.escopo))
     if (r.valor != null) setValor(paraCentavos(r.valor))
     limpar('titulo')
     limpar('valor')
   }
+
+  function atualizarItem(idx: number, texto: string) {
+    setItensEscopo((lista) => lista.map((item, i) => (i === idx ? texto : item)))
+  }
+
+  function adicionarItem(aposIdx?: number) {
+    const novoIdx = aposIdx !== undefined ? aposIdx + 1 : itensEscopo.length
+    setItensEscopo((lista) => {
+      const copia = [...lista]
+      copia.splice(novoIdx, 0, '')
+      return copia
+    })
+    setTimeout(() => itemRefs.current[novoIdx]?.focus(), 0)
+  }
+
+  function removerItem(idx: number) {
+    setItensEscopo((lista) => {
+      if (lista.length <= 1) return ['']
+      return lista.filter((_, i) => i !== idx)
+    })
+  }
+
+  const escopoTexto = itensEscopo.map((l) => l.trim()).filter(Boolean).join('\n')
 
   function validar(): Erros {
     const e: Erros = {}
@@ -207,7 +242,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       mecanicoId: mecanicoId ? Number(mecanicoId) : null,
       maquina: maquina.trim() || null,
       titulo: titulo.trim() || null,
-      escopo: escopo.trim() || null,
+      escopo: escopoTexto || null,
       valor: Number(valor) / 100,
       prazoDias: prazoDias !== '' ? Number(prazoDias) : null,
       fimDeSemana,
@@ -286,7 +321,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       previewHtmlOrcamento({
         numero: numeroExibido ?? 0,
         titulo: titulo.trim() || null,
-        escopo: escopo || null,
+        escopo: escopoTexto || null,
         valor: valor !== '' ? Number(valor) / 100 : null,
         prazoDias: prazoDias !== '' ? Number(prazoDias) : null,
         fimDeSemana,
@@ -296,7 +331,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
         .catch(() => { /* silencia falha transitória de preview */ })
     }, 180)
     return () => { cancelado = true; clearTimeout(t) }
-  }, [numeroExibido, titulo, escopo, valor, prazoDias, fimDeSemana, entradaEm])
+  }, [numeroExibido, titulo, escopoTexto, valor, prazoDias, fimDeSemana, entradaEm])
 
   // calcula escala proporcional da folha A4 (794px) para caber no painel lateral
   useEffect(() => {
@@ -420,29 +455,57 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                 </label>
               </div>
 
-              {/* linha 3: escopo (textarea compacta, largura total) */}
+              {/* linha 3: lista de itens do serviço (escopo) */}
               <div className="modal-linha">
-                <label className="modal-campo modal-campo-full">
-                  <span className="modal-campo-cabecalho">
+                <div className="modal-campo modal-campo-full">
+                  <div className="modal-campo-cabecalho">
                     <span>Itens do serviço (Escopo)</span>
-                    <span className="modal-dica-tecla">Enter = nova linha · Ctrl+Enter = salvar</span>
-                  </span>
-                  <textarea
-                    rows={3}
-                    value={escopo}
-                    onChange={(e) => setEscopo(e.target.value)}
-                    onKeyDown={(e) => {
-                      // Ctrl+Enter no textarea submete o form
-                      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                        e.preventDefault()
-                        formRef.current?.requestSubmit()
-                      }
-                      // Enter normal no textarea = nova linha (comportamento padrão)
-                    }}
-                    placeholder="Uma linha por item do serviço..."
-                    disabled={salvando}
-                  />
-                </label>
+                    <button
+                      type="button"
+                      className="btn-add-item"
+                      onClick={() => adicionarItem()}
+                      disabled={salvando}
+                    >
+                      <Plus size={13} />
+                      <span>Adicionar item</span>
+                    </button>
+                  </div>
+                  <div className="itens-escopo-lista">
+                    {itensEscopo.map((item, idx) => (
+                      <div key={idx} className="itens-escopo-linha">
+                        <span className="itens-escopo-num tabular-nums">{idx + 1}.</span>
+                        <input
+                          ref={(el) => { itemRefs.current[idx] = el }}
+                          type="text"
+                          value={item}
+                          onChange={(e) => atualizarItem(idx, e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey) {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              adicionarItem(idx)
+                            }
+                          }}
+                          placeholder={`Descreva o item ${idx + 1}...`}
+                          disabled={salvando}
+                        />
+                        {(itensEscopo.length > 1 || item.trim() !== '') && (
+                          <button
+                            type="button"
+                            className="itens-escopo-remover"
+                            onClick={() => removerItem(idx)}
+                            disabled={salvando}
+                            aria-label={`Remover item ${idx + 1}`}
+                            title="Remover item"
+                            tabIndex={-1}
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* linha 4: valor + prazo */}

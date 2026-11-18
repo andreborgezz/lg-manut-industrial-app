@@ -122,6 +122,7 @@ export function gerarHtml(dados: DadosOrcamento): string {
   const valorFormatado = esc(formatarValor(dados.valor))
 
   const linhasEscopo = (dados.escopo ?? '')
+    .replace(/\\n/g, '\n')
     .split('\n')
     .map(l => l.trim())
     .filter(Boolean)
