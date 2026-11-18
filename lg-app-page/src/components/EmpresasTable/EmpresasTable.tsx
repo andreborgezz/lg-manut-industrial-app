@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ExternalLink, Loader2, Pencil, Search } from "lucide-react";
-import { atualizarEmpresa, listarEmpresas, type Empresa } from "../../services/api";
+import { ExternalLink, Loader2, Pencil, Search, Trash2 } from "lucide-react";
+import { atualizarEmpresa, excluirEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
 import { TelefonesSelect } from "./TelefonesSelect";
+import { useToast } from "../Toast/Toast";
 import { normalizarTexto } from "../../utils/texto";
 import "./EmpresasTable.css";
 
@@ -12,10 +13,11 @@ type Acao = 'editar';
 type Coluna = { titulo: string; render: (e: Empresa) => React.ReactNode };
 
 function montarColunas(
-  salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) => Promise<void>,
+  salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null; endereco?: string | null }) => Promise<void>,
   abrir: (e: Empresa, acao: Acao) => void,
   carregando: { id: number; acao: Acao } | null,
   navegar: (id: number) => void,
+  solicitarExclusao: (e: Empresa) => void,
 ): Coluna[] {
   return [
     { titulo: 'ID', render: (e) => <span className="tabular-nums">#{e.id}</span> },
@@ -64,6 +66,17 @@ function montarColunas(
       ),
     },
     {
+      titulo: 'ENDEREÇO',
+      render: (e) => (
+        <CelulaEditavel
+          tipo="texto"
+          rotulo={`Endereço da empresa ${e.id}`}
+          valor={e.endereco ?? ''}
+          onSalvar={(v) => salvar(e, { endereco: v.trim() || null })}
+        />
+      ),
+    },
+    {
       titulo: 'CONTATOS',
       render: (e) => (
         <TelefonesSelect 
@@ -97,6 +110,16 @@ function montarColunas(
             >
               <ExternalLink size={15} />
             </button>
+            <button
+              type="button"
+              className="emp-acao-btn emp-acao-excluir"
+              title="Excluir empresa"
+              aria-label={`Excluir empresa ${e.nome}`}
+              disabled={qualquerCarregando}
+              onClick={() => solicitarExclusao(e)}
+            >
+              <Trash2 size={15} />
+            </button>
           </div>
         )
       },
@@ -112,11 +135,14 @@ export function EmpresasTable({
   onEditar?: (e: Empresa) => void;
 }) {
   const navigate = useNavigate()
+  const toast = useToast()
   const [todasEmpresas, setTodasEmpresas] = useState<Empresa[]>([])
   const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
   const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
+  const [empresaParaExcluir, setEmpresaParaExcluir] = useState<Empresa | null>(null)
+  const [excluindo, setExcluindo] = useState(false)
 
   useEffect(() => {
     if (!aviso) return
@@ -124,7 +150,7 @@ export function EmpresasTable({
     return () => clearTimeout(t)
   }, [aviso])
 
-  async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) {
+  async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null; endereco?: string | null }) {
     try {
       const nova = await atualizarEmpresa(e.id, patch)
       setTodasEmpresas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
@@ -132,6 +158,23 @@ export function EmpresasTable({
     } catch (err) {
       setAviso(`Empresa ${e.id}: ${err instanceof Error ? err.message : 'erro ao salvar'}`)
       throw err
+    }
+  }
+
+  async function confirmarExclusao() {
+    if (!empresaParaExcluir) return
+    const alvo = empresaParaExcluir
+    setExcluindo(true)
+    try {
+      await excluirEmpresa(alvo.id)
+      setTodasEmpresas((ls) => ls.filter((l) => l.id !== alvo.id))
+      setEmpresaParaExcluir(null)
+      toast.mostrar({ tipo: 'sucesso', mensagem: `Empresa "${alvo.nome}" excluída.` })
+    } catch (err) {
+      setAviso(err instanceof Error ? err.message : 'Erro ao excluir empresa')
+      setEmpresaParaExcluir(null)
+    } finally {
+      setExcluindo(false)
     }
   }
 
@@ -146,7 +189,13 @@ export function EmpresasTable({
     }
   }
 
-  const colunas = montarColunas(salvar, abrir, carregando, (id) => navigate(`/empresas/${id}`))
+  const colunas = montarColunas(
+    salvar,
+    abrir,
+    carregando,
+    (id) => navigate(`/empresas/${id}`),
+    (e) => setEmpresaParaExcluir(e),
+  )
 
   useEffect(() => {
     let cancelado = false
@@ -170,6 +219,7 @@ export function EmpresasTable({
       normalizarTexto(d.cnpj).includes(q) ||
       normalizarTexto(d.email).includes(q) ||
       normalizarTexto(d.telefone).includes(q) ||
+      normalizarTexto(d.endereco).includes(q) ||
       String(d.id).includes(q)
     )
   }, [todasEmpresas, busca])
@@ -238,6 +288,38 @@ export function EmpresasTable({
           <span>{linhas.length} {linhas.length === 1 ? 'empresa listada' : 'empresas listadas'}</span>
         </div>
       </div>
+
+      {empresaParaExcluir && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !excluindo) setEmpresaParaExcluir(null)
+          }}
+        >
+          <div className="emp-modal-excluir" role="dialog" aria-modal="true" aria-labelledby="emp-excluir-titulo">
+            <h3 id="emp-excluir-titulo">Excluir empresa "{empresaParaExcluir.nome}"?</h3>
+            <p>Os contatos e solicitantes vinculados também serão removidos.</p>
+            <div className="emp-modal-excluir-acoes">
+              <button
+                type="button"
+                className="btn-secundario"
+                onClick={() => setEmpresaParaExcluir(null)}
+                disabled={excluindo}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="emp-btn-confirmar-excluir"
+                onClick={confirmarExclusao}
+                disabled={excluindo}
+              >
+                {excluindo ? 'Excluindo...' : 'Excluir empresa'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

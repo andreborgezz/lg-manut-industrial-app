@@ -40,7 +40,15 @@ export async function listarOrcamentos(filtro: FiltroPeriodo): Promise<Orcamento
   return res.json()
 }
 
-export type Empresa = { id: number; nome: string; cnpj: string | null; email: string | null; telefone: string | null }
+export type Empresa = {
+  id: number
+  nome: string
+  cnpj: string | null
+  email: string | null
+  telefone: string | null
+  endereco: string | null
+  observacoes: string | null
+}
 export type Solicitante = { id: number; empresaId: number; nome: string; email: string | null; telefone: string | null }
 export type Mecanico = { id: number; nome: string; telefone: string | null; ativo: boolean }
 
@@ -133,11 +141,29 @@ function mensagemErro(dados: unknown, status: number): string {
 
 export const listarEmpresas = () => chamar<Empresa[]>('/empresas')
 
-export const criarEmpresa = (body: { nome: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) =>
-  chamar<Empresa>('/empresas', { method: 'POST', body: JSON.stringify(body) })
+export const criarEmpresa = (body: {
+  nome: string
+  email?: string | null
+  cnpj?: string | null
+  telefone?: string | null
+  endereco?: string | null
+  observacoes?: string | null
+}) => chamar<Empresa>('/empresas', { method: 'POST', body: JSON.stringify(body) })
 
-export const atualizarEmpresa = (id: number, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) =>
-  chamar<Empresa>(`/empresas/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
+export const atualizarEmpresa = (
+  id: number,
+  patch: {
+    nome?: string
+    email?: string | null
+    cnpj?: string | null
+    telefone?: string | null
+    endereco?: string | null
+    observacoes?: string | null
+  }
+) => chamar<Empresa>(`/empresas/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
+
+export const excluirEmpresa = (id: number) =>
+  chamar<{ ok: boolean }>(`/empresas/${id}`, { method: 'DELETE' })
 
 export const listarSolicitantes = (empresaId: number) =>
   chamar<Solicitante[]>(`/solicitantes?empresaId=${empresaId}`)

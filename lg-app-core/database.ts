@@ -19,6 +19,9 @@ const pool = new Pool({
 export async function connect() {
   try {
     await pool.query('SELECT 1');
+    await pool.query(
+      'ALTER TABLE empresas ADD COLUMN IF NOT EXISTS endereco text, ADD COLUMN IF NOT EXISTS observacoes text'
+    );
     console.log('Banco de dados conectado');
   } catch (error) {
     console.error('Erro ao conectar ao banco de dados:', error);

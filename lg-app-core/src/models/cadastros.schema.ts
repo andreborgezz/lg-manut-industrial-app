@@ -12,7 +12,14 @@ const textoOpcional = z.preprocess(
   z.string().nullable().optional()
 )
 
-export const empresaSchema = z.object({ nome, cnpj: textoOpcional, email, telefone: textoOpcional })
+export const empresaSchema = z.object({
+  nome,
+  cnpj: textoOpcional,
+  email,
+  telefone: textoOpcional,
+  endereco: textoOpcional,
+  observacoes: textoOpcional,
+})
 
 // patch: todos os campos opcionais, só o que vier é alterado
 export const empresaPatchSchema = empresaSchema.partial()

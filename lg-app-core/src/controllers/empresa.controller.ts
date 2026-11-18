@@ -42,3 +42,12 @@ export const atualizar = async (req: Request, res: Response): Promise<void> => {
   }
   res.json(item)
 }
+
+export const remover = async (req: Request, res: Response): Promise<void> => {
+  const removido = await service.remover(idParam(req))
+  if (!removido) {
+    res.status(404).json({ message: 'Empresa não encontrada' })
+    return
+  }
+  res.json({ ok: true })
+}

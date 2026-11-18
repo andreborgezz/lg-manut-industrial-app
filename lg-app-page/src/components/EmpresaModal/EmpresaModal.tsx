@@ -52,6 +52,8 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
   const [email, setEmail] = useState(editando?.email ?? '')
   const [cnpj, setCnpj] = useState(editando?.cnpj ? formatarCnpj(editando.cnpj) : '')
   const [telefone, setTelefone] = useState(editando?.telefone ? formatarTelefone(editando.telefone) : '')
+  const [endereco, setEndereco] = useState(editando?.endereco ?? '')
+  const [observacoes, setObservacoes] = useState(editando?.observacoes ?? '')
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
 
@@ -121,6 +123,8 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
           email: email.trim() || null,
           cnpj: cnpj.trim() || null,
           telefone: telefone.trim() || null,
+          endereco: endereco.trim() || null,
+          observacoes: observacoes.trim() || null,
         })
       } else {
         salva = await criarEmpresa({
@@ -128,6 +132,8 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
           email: email.trim() || null,
           cnpj: cnpj.trim() || null,
           telefone: telefone.trim() || null,
+          endereco: endereco.trim() || null,
+          observacoes: observacoes.trim() || null,
         })
 
         // Se houver contatos/solicitantes adicionados durante a criação, grava todos junto
@@ -291,6 +297,24 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
                     placeholder="contato@empresa.com.br"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    disabled={salvando}
+                  />
+                </label>
+                <label className="modal-campo modal-span-2">
+                  <span>Endereço</span>
+                  <input
+                    value={endereco}
+                    placeholder="Rua, número, bairro, cidade - UF"
+                    onChange={(e) => setEndereco(e.target.value)}
+                    disabled={salvando}
+                  />
+                </label>
+                <label className="modal-campo modal-span-2">
+                  <span>Observações</span>
+                  <input
+                    value={observacoes}
+                    placeholder="Ex: Condição de pagamento, horário de recebimento..."
+                    onChange={(e) => setObservacoes(e.target.value)}
                     disabled={salvando}
                   />
                 </label>

@@ -95,6 +95,8 @@ function PaginaEmpresaDetalhe() {
       <div className="emp-detalhe-info">
         {empresa.email && <span>{empresa.email}</span>}
         {empresa.telefone && <span>{empresa.telefone}</span>}
+        {empresa.endereco && <span>{empresa.endereco}</span>}
+        {empresa.observacoes && <span>Obs: {empresa.observacoes}</span>}
       </div>
 
       <div className="emp-detalhe-grade">

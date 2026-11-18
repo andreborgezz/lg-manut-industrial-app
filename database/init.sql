@@ -13,6 +13,8 @@ create table empresas (
   cnpj text,
   email text,
   telefone text,
+  endereco text,
+  observacoes text,
   created_at timestamptz not null default now()
 );
 
