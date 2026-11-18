@@ -82,6 +82,16 @@ export const buscarLinha = async (id: number): Promise<OrcamentoLinha | undefine
   return rows[0]
 }
 
+export const proximoNumero = async (): Promise<number> => {
+  const { rows } = await pool.query<{ proximo: number }>(
+    `select greatest(
+       coalesce((select max(numero) from orcamentos), 184) + 1,
+       (select case when is_called then last_value + 1 else last_value end from orcamento_numero_seq)
+     )::int as proximo`
+  )
+  return rows[0].proximo
+}
+
 export const buscarPorId = async (id: number): Promise<Orcamento | undefined> => {
   const { rows } = await pool.query(`select ${cols} from orcamentos where id = $1`, [id])
   return rows[0]

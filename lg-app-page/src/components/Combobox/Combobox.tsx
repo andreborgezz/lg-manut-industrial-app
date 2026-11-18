@@ -45,6 +45,7 @@ export function Combobox({
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [aberto, setAberto] = useState(false)
+  const [abrirParaCima, setAbrirParaCima] = useState(false)
   const [busca, setBusca] = useState('')
   const [cursor, setCursor] = useState(-1)
 
@@ -66,6 +67,11 @@ export function Combobox({
 
   function abrir() {
     if (disabled) return
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect()
+      const espacoAbaixo = window.innerHeight - rect.bottom
+      setAbrirParaCima(espacoAbaixo < 230 && rect.top > espacoAbaixo)
+    }
     setBusca('')
     setCursor(-1)
     setAberto(true)
@@ -174,7 +180,7 @@ export function Combobox({
       {aberto && (
         <ul
           id={listId}
-          className="combo-lista"
+          className={`combo-lista ${abrirParaCima ? 'combo-lista-cima' : ''}`}
           role="listbox"
           aria-label={label}
         >

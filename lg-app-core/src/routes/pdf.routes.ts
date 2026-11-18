@@ -39,6 +39,7 @@ pdfRoutes.post('/:id/pdf', h(async (req, res) => {
     valor: orc.valor,
     prazoDias: orc.prazoDias,
     fimDeSemana: orc.fimDeSemana,
+    entradaEm: orc.entradaEm,
   })
 
   const chave = `orcamentos/${orc.numero}.pdf`

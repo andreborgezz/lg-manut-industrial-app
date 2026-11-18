@@ -96,6 +96,11 @@
   gap: 2px;
 }
 
+.combo-lista-cima {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+
 .combo-opcao {
   padding: 8px 12px;
   font-size: 13px;

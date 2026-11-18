@@ -60,6 +60,7 @@ export async function enviarEmailOrcamento(
     valor: orc.valor,
     prazoDias: orc.prazoDias,
     fimDeSemana: orc.fimDeSemana,
+    entradaEm: orc.entradaEm,
   })
 
   // Salva no storage R2 se configurado e atualiza pdf_path

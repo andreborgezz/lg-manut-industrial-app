@@ -1,0 +1,60 @@
+name: Deploy (CD)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-producao
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build e Deploy no Servidor
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Conectar via SSH e atualizar aplicação
+        uses: appleboy/ssh-action@v1
+        env:
+          APP_DIR: ${{ vars.APP_DIR }}
+          BRANCH: ${{ vars.BRANCH || 'main' }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          envs: APP_DIR,BRANCH,ENV_FILE
+          script_stop: true
+          script: |
+            set -e
+            cd "$APP_DIR"
+
+            echo "==> Atualizando código ($BRANCH)..."
+            git fetch origin "$BRANCH"
+            git reset --hard "origin/$BRANCH"
+
+            if [ -n "$ENV_FILE" ]; then
+              echo "==> Atualizando .env a partir do secret ENV_FILE..."
+              printf '%s\n' "$ENV_FILE" > .env
+            fi
+
+            echo "==> Fazendo build e subindo containers..."
+            docker compose up -d --build --remove-orphans
+            docker image prune -f
+
+            echo "==> Verificando saúde do backend..."
+            for i in $(seq 1 15); do
+              if curl -sf http://localhost:3000/health >/dev/null; then
+                echo "Deploy concluído com sucesso! /health OK"
+                exit 0
+              fi
+              sleep 2
+            done
+
+            echo "ERRO: backend não respondeu em /health após 30s"
+            docker compose logs --tail=50 backend
+            exit 1

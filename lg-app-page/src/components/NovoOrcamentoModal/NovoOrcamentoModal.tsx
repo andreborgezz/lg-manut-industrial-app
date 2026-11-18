@@ -6,6 +6,7 @@ import {
   type KeyboardEvent,
 } from 'react'
 import {
+  buscarProximoNumeroOrcamento,
   criarEmpresa,
   criarOrcamento,
   atualizarOrcamento,
@@ -21,7 +22,7 @@ import {
   type OrcamentoRecente,
   type Solicitante,
 } from '../../services/api'
-import { Minus, Plus } from 'lucide-react'
+import { Check, FileText, Minus, Plus } from 'lucide-react'
 import { Combobox, type OpcaoCombo } from '../Combobox/Combobox'
 import { EmpresaModal } from '../EmpresaModal/EmpresaModal'
 import './NovoOrcamentoModal.css'
@@ -70,6 +71,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   const [mecanicoId, setMecanicoId] = useState(
     inicial?.mecanicoId ? String(inicial.mecanicoId) : lerMecanicoLembrado()
   )
+  const [maquina, setMaquina] = useState(inicial?.maquina ?? '')
   const [titulo, setTitulo] = useState(inicial?.titulo ?? '')
   const [escopo, setEscopo] = useState(inicial?.escopo ?? '')
   const [valor, setValor] = useState(paraCentavos(inicial?.valor))
@@ -78,6 +80,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   )
   const [fimDeSemana, setFimDeSemana] = useState(inicial?.fimDeSemana ?? false)
   const [entradaEm, setEntradaEm] = useState(hoje())
+  const [proximoNumero, setProximoNumero] = useState<number | null>(editando?.numero ?? null)
 
   const [recentes, setRecentes] = useState<OrcamentoRecente[]>([])
   const [erros, setErros] = useState<Erros>({})
@@ -95,7 +98,13 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
         setMecanicos(mec)
       })
       .catch((e) => setErro(e.message))
-  }, [])
+
+    if (!editando) {
+      buscarProximoNumeroOrcamento()
+        .then((res) => setProximoNumero(res.numero))
+        .catch(() => { /* opcional */ })
+    }
+  }, [editando])
 
   // solicitantes e recentes da empresa selecionada
   useEffect(() => {
@@ -192,6 +201,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       empresaId: Number(empresaId),
       solicitanteId: solicitanteId ? Number(solicitanteId) : null,
       mecanicoId: mecanicoId ? Number(mecanicoId) : null,
+      maquina: maquina.trim() || null,
       titulo: titulo.trim() || null,
       escopo: escopo.trim() || null,
       valor: Number(valor) / 100,
@@ -266,6 +276,28 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       ? `Novo orçamento (cópia do nº ${copiaDe})`
       : 'Novo orçamento'
 
+  const empresaNome = empresas.find((e) => String(e.id) === empresaId)?.nome ?? ''
+  const solicitanteNome = solicitantes.find((s) => String(s.id) === solicitanteId)?.nome ?? ''
+  const numeroExibido = editando?.numero ?? proximoNumero
+
+  const dataExtensoPreview = (() => {
+    if (!entradaEm || !/^\d{4}-\d{2}-\d{2}$/.test(entradaEm)) return ''
+    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+    const [ano, mes, dia] = entradaEm.split('-').map(Number)
+    return `Sorocaba, ${dia} de ${meses[mes - 1]} ${ano}`
+  })()
+
+  const codigoArquivoPreview = (() => {
+    const num = numeroExibido ?? '---'
+    if (!titulo.trim()) return `ORÇAMENTO_${num}`
+    const limpo = titulo
+      .trim()
+      .toUpperCase()
+      .replace(/\s+/g, '_')
+      .replace(/[^A-ZÁÀÂÃÉÊÍÓÔÕÚÜÇÑ0-9_]/gi, '')
+    return `ORÇAMENTO_${num}_${limpo}`
+  })()
+
   return (
     <div
       className="modal-overlay"
@@ -273,7 +305,14 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
     >
       <div className="modal modal-orc" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
         <header className="modal-header">
-          <h2 id="modal-titulo">{tituloPrincipal}</h2>
+          <div className="modal-header-titulo-grupo">
+            <h2 id="modal-titulo">{tituloPrincipal}</h2>
+            {numeroExibido != null && !editando && (
+              <span className="modal-numero-badge tabular-nums" title="Número sequencial do orçamento">
+                Nº {numeroExibido}
+              </span>
+            )}
+          </div>
           <button type="button" className="modal-fechar" onClick={onFechar} disabled={salvando} aria-label="Fechar">×</button>
         </header>
 
@@ -341,9 +380,9 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                 </div>
               )}
 
-              {/* linha 2: título (campo principal, span total) */}
-              <div className="modal-linha">
-                <label className="modal-campo modal-campo-full">
+              {/* linha 2: título + máquina */}
+              <div className="modal-linha modal-linha-titulo-maquina">
+                <label className="modal-campo">
                   <span>Título *</span>
                   <input
                     value={titulo}
@@ -355,14 +394,27 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   />
                   {erros.titulo && <span className="modal-erro-campo" role="alert">{erros.titulo}</span>}
                 </label>
+
+                <label className="modal-campo">
+                  <span>Máquina / Equipamento</span>
+                  <input
+                    value={maquina}
+                    onChange={(e) => setMaquina(e.target.value)}
+                    placeholder="Ex: Prensa Hidráulica 02"
+                    disabled={salvando}
+                  />
+                </label>
               </div>
 
-              {/* linha 3: escopo (textarea, sem preview inline — fica na coluna direita) */}
+              {/* linha 3: escopo (textarea compacta, largura total) */}
               <div className="modal-linha">
                 <label className="modal-campo modal-campo-full">
-                  <span>Escopo <span className="modal-dica-tecla">Enter = nova linha · Ctrl+Enter = salvar</span></span>
+                  <span className="modal-campo-cabecalho">
+                    <span>Itens do serviço (Escopo)</span>
+                    <span className="modal-dica-tecla">Enter = nova linha · Ctrl+Enter = salvar</span>
+                  </span>
                   <textarea
-                    rows={4}
+                    rows={3}
                     value={escopo}
                     onChange={(e) => setEscopo(e.target.value)}
                     onKeyDown={(e) => {
@@ -478,25 +530,72 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   onClick={() => setFimDeSemana((v) => !v)}
                   disabled={salvando}
                   aria-pressed={fimDeSemana}
+                  title="Incluir adicional de sábado (50%) no orçamento"
                 >
-                  {fimDeSemana ? '✓ ' : ''}Fim de semana
+                  {fimDeSemana && <Check size={14} strokeWidth={2.5} />}
+                  <span>Fim de semana</span>
                 </button>
               </div>
 
               {erro && <p className="modal-erro">{erro}</p>}
             </div>
 
-            {/* coluna direita: preview do escopo */}
-            <aside className="modal-preview" aria-label="Preview do escopo no PDF">
-              <div className="modal-preview-topo">Preview PDF</div>
-              <div className="modal-preview-corpo">
-                {linhasEscopo.length > 0 ? (
-                  <ul className="modal-preview-lista">
-                    {linhasEscopo.map((l, i) => <li key={i}>{l}</li>)}
-                  </ul>
-                ) : (
-                  <p className="modal-preview-vazio">As linhas do escopo aparecerão aqui como itens do orçamento.</p>
+            {/* coluna direita: visualizador ao vivo do PDF */}
+            <aside className="modal-preview" aria-label="Visualizador do orçamento em PDF">
+              <div className="modal-preview-topo">
+                <span className="modal-preview-topo-titulo">
+                  <FileText size={13} />
+                  <span>Visualizador PDF</span>
+                </span>
+                {numeroExibido != null && (
+                  <span className="modal-preview-num tabular-nums">#{numeroExibido}</span>
                 )}
+              </div>
+              <div className="modal-preview-corpo">
+                <div className="pdf-folha">
+                  <div className="pdf-cabecalho">
+                    <div className="pdf-cab-empresa">L.G. MANUTENÇÃO<br />INDUSTRIAL</div>
+                    <div className="pdf-cab-meta">
+                      <span className="pdf-cab-arquivo">{codigoArquivoPreview}</span>
+                      {dataExtensoPreview && <span className="pdf-cab-data">{dataExtensoPreview}</span>}
+                    </div>
+                  </div>
+
+                  {(empresaNome || solicitanteNome || maquina.trim()) && (
+                    <div className="pdf-cliente">
+                      {empresaNome && <div><strong>Cliente:</strong> {empresaNome}</div>}
+                      {solicitanteNome && <div><strong>A/C:</strong> {solicitanteNome}</div>}
+                      {maquina.trim() && <div><strong>Máquina:</strong> {maquina.trim()}</div>}
+                    </div>
+                  )}
+
+                  <div className="pdf-titulo-servico">
+                    {titulo.trim() || <span className="pdf-placeholder">Título do orçamento...</span>}
+                  </div>
+
+                  {linhasEscopo.length > 0 || fimDeSemana || prazoDias !== '' ? (
+                    <ul className="modal-preview-lista">
+                      {linhasEscopo.map((l, i) => <li key={i}>{l}</li>)}
+                      {fimDeSemana && <li className="pdf-item-fds">1 – Sábado 50%</li>}
+                      {prazoDias !== '' && (
+                        <li className="pdf-item-prazo">
+                          Prazo {String(prazoDias).padStart(2, '0')} dias;
+                        </li>
+                      )}
+                    </ul>
+                  ) : (
+                    <p className="modal-preview-vazio">
+                      Preencha o escopo para visualizar os itens do serviço no documento.
+                    </p>
+                  )}
+
+                  <div className="pdf-valor-rodape">
+                    <span>Valor total</span>
+                    <strong className="tabular-nums">
+                      {valor !== '' ? `R$ ${formatarCentavos(valor)}` : 'R$ 0,00'}
+                    </strong>
+                  </div>
+                </div>
               </div>
             </aside>
           </div>
@@ -531,19 +630,16 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       {modalEmpresaAberto && (
         <EmpresaModal
           onFechar={() => setModalEmpresaAberto(false)}
-          onSalvo={() => {
+          onSalvo={(novaEmpresa) => {
             setModalEmpresaAberto(false)
             listarEmpresas()
               .then((lista) => {
                 setEmpresas(lista)
-                // Se a lista não estiver vazia, seleciona a última cadastrada criada recentemente
-                if (lista.length > 0) {
-                  const ultima = [...lista].sort((a, b) => b.id - a.id)[0]
-                  if (ultima) {
-                    setEmpresaId(String(ultima.id))
-                    setSolicitanteId('')
-                    limpar('empresa')
-                  }
+                const selecionada = novaEmpresa ?? [...lista].sort((a, b) => b.id - a.id)[0]
+                if (selecionada) {
+                  setEmpresaId(String(selecionada.id))
+                  setSolicitanteId('')
+                  limpar('empresa')
                 }
               })
               .catch((e) => setErro(e.message))

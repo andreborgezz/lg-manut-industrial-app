@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Layout } from '../components/Layout/Layout'
 import { NovoOrcamentoModal, type InicialOrcamento } from '../components/NovoOrcamentoModal/NovoOrcamentoModal'
 import { ToastProvider, useToast } from '../components/Toast/Toast'
-import { buscarEmpresaDetalhe, type EmpresaDetalhe, type Orcamento } from '../services/api'
+import { buscarEmpresaDetalhe, gerarPdfOrcamento, type EmpresaDetalhe, type Orcamento } from '../services/api'
 import './EmpresaDetalhe.css'
 
 function dataBR(d: string | null) {
@@ -40,14 +40,33 @@ function PaginaEmpresaDetalhe() {
       .catch((e) => { setErro(e.message); setCarregando(false) })
   }, [id])
 
-  function aoSalvar(orc: Orcamento) {
+  async function aoSalvar(orc: Orcamento, gerarPdf = false) {
     setModalAberto(false)
-    toast.mostrar({ tipo: 'sucesso', mensagem: `Orçamento nº ${orc.numero} criado.` })
-    // recarrega detalhe para atualizar a lista
     if (id) {
       buscarEmpresaDetalhe(Number(id))
         .then(setDetalhe)
         .catch(() => {/* silencia */})
+    }
+    if (gerarPdf) {
+      const toastId = toast.mostrar({ tipo: 'info', mensagem: 'Gerando PDF...', duracao: 30000 })
+      try {
+        const { url } = await gerarPdfOrcamento(orc.id)
+        toast.fechar(toastId)
+        const janela = window.open(url, '_blank')
+        if (!janela) {
+          toast.mostrar({
+            tipo: 'info',
+            mensagem: `PDF do orçamento ${orc.numero} gerado.`,
+            acaoLabel: 'Abrir PDF',
+            onAcao: () => window.open(url, '_blank'),
+          })
+        }
+      } catch {
+        toast.fechar(toastId)
+        toast.mostrar({ tipo: 'erro', mensagem: 'Não foi possível gerar o PDF.' })
+      }
+    } else {
+      toast.mostrar({ tipo: 'sucesso', mensagem: `Orçamento nº ${orc.numero} criado.` })
     }
   }
 

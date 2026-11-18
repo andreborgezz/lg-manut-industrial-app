@@ -17,6 +17,10 @@ export const listar = async (req: Request, res: Response): Promise<void> => {
   ))
 }
 
+export const proximoNumero = async (_req: Request, res: Response): Promise<void> => {
+  res.json({ numero: await service.proximoNumero() })
+}
+
 export const buscar = async (req: Request, res: Response): Promise<void> => {
   const item = await service.buscarPorId(idParam(req))
   if (!item) {

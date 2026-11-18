@@ -172,6 +172,9 @@ export const atualizarCttEmpresa = (id: number, patch: Partial<Omit<CttEmpresa, 
 
 export const buscarOrcamento = (id: number) => chamar<Orcamento>(`/orcamentos/${id}`)
 
+export const buscarProximoNumeroOrcamento = () =>
+  chamar<{ numero: number }>('/orcamentos/proximo-numero')
+
 // por padrão só ativos; incluirInativos traz todos
 export const listarMecanicos = (incluirInativos = false) =>
   chamar<Mecanico[]>(`/mecanicos${incluirInativos ? '?inativos=true' : ''}`)

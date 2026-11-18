@@ -86,6 +86,7 @@
 .orc-select-status {
   height: var(--altura-controle);
   padding: 0 12px;
+  line-height: var(--altura-controle);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio-controle);
   background-color: #f8fafc;
