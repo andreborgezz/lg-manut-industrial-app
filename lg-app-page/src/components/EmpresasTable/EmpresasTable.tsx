@@ -4,6 +4,7 @@ import { ExternalLink, Loader2, Pencil, Search } from "lucide-react";
 import { atualizarEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
 import { TelefonesSelect } from "./TelefonesSelect";
+import { normalizarTexto } from "../../utils/texto";
 import "./EmpresasTable.css";
 
 type Acao = 'editar';
@@ -162,13 +163,13 @@ export function EmpresasTable({
   }, [refresh])
 
   const linhas = useMemo(() => {
-    const q = busca.trim().toLowerCase()
+    const q = normalizarTexto(busca.trim())
     if (!q) return todasEmpresas
     return todasEmpresas.filter((d) =>
-      d.nome.toLowerCase().includes(q) ||
-      (d.cnpj ?? '').toLowerCase().includes(q) ||
-      (d.email ?? '').toLowerCase().includes(q) ||
-      (d.telefone ?? '').toLowerCase().includes(q) ||
+      normalizarTexto(d.nome).includes(q) ||
+      normalizarTexto(d.cnpj).includes(q) ||
+      normalizarTexto(d.email).includes(q) ||
+      normalizarTexto(d.telefone).includes(q) ||
       String(d.id).includes(q)
     )
   }, [todasEmpresas, busca])

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Loader2, Pencil, Search, UserCheck, UserX } from 'lucide-react'
 import { atualizarMecanico, listarMecanicos, type Mecanico } from '../../services/api'
 import { CelulaEditavel } from '../CelulaEditavel/CelulaEditavel'
+import { normalizarTexto } from '../../utils/texto'
 import '../Tabela/Tabela.css'
 
 type Props = {
@@ -39,11 +40,11 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
   }, [aviso])
 
   const linhas = useMemo(() => {
-    const q = busca.trim().toLowerCase()
+    const q = normalizarTexto(busca.trim())
     return q
       ? mecanicos.filter((m) =>
-          m.nome.toLowerCase().includes(q) ||
-          (m.telefone ?? '').toLowerCase().includes(q)
+          normalizarTexto(m.nome).includes(q) ||
+          normalizarTexto(m.telefone).includes(q)
         )
       : mecanicos
   }, [mecanicos, busca])

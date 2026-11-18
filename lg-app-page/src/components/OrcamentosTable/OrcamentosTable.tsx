@@ -34,6 +34,7 @@ import {
 import { CelulaEditavel, type Opcao } from '../CelulaEditavel/CelulaEditavel'
 import { EnviarEmailModal } from '../EnviarEmailModal/EnviarEmailModal'
 import { useToast } from '../Toast/Toast'
+import { normalizarTexto } from '../../utils/texto'
 import './OrcamentosTable.css'
 
 const statusOpcoes: Opcao[] = (['ABERTO', 'APROVADO', 'RECUSADO', 'ENTREGUE'] as Status[]).map((v) => ({
@@ -790,17 +791,17 @@ export function OrcamentosTable({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, dataInicio, dataFim, refresh])
 
-  // filtro instantâneo conforme os caracteres digitados
+  // filtro instantâneo conforme os caracteres digitados (ignora acentos)
   const linhas = useMemo(() => {
-    const termo = busca.trim().toLowerCase()
+    const termo = normalizarTexto(busca.trim())
     if (!termo) return todosOrcamentos
     const semHashtag = termo.startsWith('#') ? termo.slice(1) : termo
     return todosOrcamentos.filter((o) =>
-      o.empresa.toLowerCase().includes(termo) ||
-      (o.solicitante ?? '').toLowerCase().includes(termo) ||
-      (o.maquina ?? '').toLowerCase().includes(termo) ||
-      (o.mecanico ?? '').toLowerCase().includes(termo) ||
-      (o.numeroPedido ?? '').toLowerCase().includes(termo) ||
+      normalizarTexto(o.empresa).includes(termo) ||
+      normalizarTexto(o.solicitante).includes(termo) ||
+      normalizarTexto(o.maquina).includes(termo) ||
+      normalizarTexto(o.mecanico).includes(termo) ||
+      normalizarTexto(o.numeroPedido).includes(termo) ||
       String(o.numero).includes(semHashtag)
     )
   }, [todosOrcamentos, busca])

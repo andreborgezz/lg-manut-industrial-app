@@ -5,6 +5,7 @@ import {
   useState,
   type KeyboardEvent as KE,
 } from 'react'
+import { normalizarTexto } from '../../utils/texto'
 import './Combobox.css'
 
 export type OpcaoCombo = { valor: string; label: string }
@@ -52,12 +53,12 @@ export function Combobox({
   const labelAtual = opcoes.find((o) => o.valor === valor)?.label ?? ''
 
   const filtradas = busca.trim()
-    ? opcoes.filter((o) => o.label.toLowerCase().includes(busca.toLowerCase()))
+    ? opcoes.filter((o) => normalizarTexto(o.label).includes(normalizarTexto(busca.trim())))
     : opcoes
 
   // "Criar 'X'" quando há texto digitado sem match exato
   const textoBusca = busca.trim()
-  const matchExato = filtradas.some((o) => o.label.toLowerCase() === textoBusca.toLowerCase())
+  const matchExato = filtradas.some((o) => normalizarTexto(o.label) === normalizarTexto(textoBusca))
   const mostrarCriar = !!onCriar && textoBusca.length > 0 && !matchExato
   // "Cadastrar" fixo quando não há busca ou há match exato
   const mostrarAdicionar = !!labelAdicionar && !!onAdicionar && !disabled && !mostrarCriar
