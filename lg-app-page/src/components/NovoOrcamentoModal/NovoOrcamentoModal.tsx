@@ -15,6 +15,7 @@ import {
   listarMecanicos,
   listarOrcamentosRecentes,
   listarSolicitantes,
+  previewHtmlOrcamento,
   type Empresa,
   type Mecanico,
   type NovoOrcamentoBody,
@@ -28,7 +29,7 @@ import { EmpresaModal } from '../EmpresaModal/EmpresaModal'
 import './NovoOrcamentoModal.css'
 
 export type InicialOrcamento = Partial<
-  Pick<Orcamento, 'empresaId' | 'solicitanteId' | 'mecanicoId' | 'maquina' | 'titulo' | 'escopo' | 'valor' | 'prazoDias' | 'fimDeSemana'>
+  Pick<Orcamento, 'empresaId' | 'solicitanteId' | 'mecanicoId' | 'maquina' | 'titulo' | 'escopo' | 'valor' | 'prazoDias' | 'fimDeSemana' | 'entradaEm'>
 >
 
 type Props = {
@@ -79,8 +80,11 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
     inicial ? (inicial.prazoDias != null ? String(inicial.prazoDias) : '') : '1'
   )
   const [fimDeSemana, setFimDeSemana] = useState(inicial?.fimDeSemana ?? false)
-  const [entradaEm, setEntradaEm] = useState(hoje())
+  const [entradaEm, setEntradaEm] = useState(inicial?.entradaEm ? inicial.entradaEm.slice(0, 10) : hoje())
   const [proximoNumero, setProximoNumero] = useState<number | null>(editando?.numero ?? null)
+  const [htmlPreview, setHtmlPreview] = useState('')
+  const previewContainerRef = useRef<HTMLDivElement>(null)
+  const [escalaPreview, setEscalaPreview] = useState(0.42)
 
   const [recentes, setRecentes] = useState<OrcamentoRecente[]>([])
   const [erros, setErros] = useState<Erros>({})
@@ -256,9 +260,6 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
     .map((s) => ({ valor: String(s.id), label: s.nome }))
   const opcoesMecanico: OpcaoCombo[] = mecanicos.map((m) => ({ valor: String(m.id), label: m.nome }))
 
-  // preview das linhas de escopo como bullets
-  const linhasEscopo = escopo.split('\n').map((l) => l.trim()).filter(Boolean)
-
   // botão salvar desabilitado: explica o motivo
   const motivoBloqueio = salvando
     ? 'Salvando...'
@@ -276,27 +277,40 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       ? `Novo orçamento (cópia do nº ${copiaDe})`
       : 'Novo orçamento'
 
-  const empresaNome = empresas.find((e) => String(e.id) === empresaId)?.nome ?? ''
-  const solicitanteNome = solicitantes.find((s) => String(s.id) === solicitanteId)?.nome ?? ''
   const numeroExibido = editando?.numero ?? proximoNumero
 
-  const dataExtensoPreview = (() => {
-    if (!entradaEm || !/^\d{4}-\d{2}-\d{2}$/.test(entradaEm)) return ''
-    const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-    const [ano, mes, dia] = entradaEm.split('-').map(Number)
-    return `Sorocaba, ${dia} de ${meses[mes - 1]} ${ano}`
-  })()
+  // busca o HTML real do template oficial do PDF (com debounce curto ao digitar)
+  useEffect(() => {
+    let cancelado = false
+    const t = setTimeout(() => {
+      previewHtmlOrcamento({
+        numero: numeroExibido ?? 0,
+        titulo: titulo.trim() || null,
+        escopo: escopo || null,
+        valor: valor !== '' ? Number(valor) / 100 : null,
+        prazoDias: prazoDias !== '' ? Number(prazoDias) : null,
+        fimDeSemana,
+        entradaEm,
+      })
+        .then((res) => { if (!cancelado) setHtmlPreview(res.html) })
+        .catch(() => { /* silencia falha transitória de preview */ })
+    }, 180)
+    return () => { cancelado = true; clearTimeout(t) }
+  }, [numeroExibido, titulo, escopo, valor, prazoDias, fimDeSemana, entradaEm])
 
-  const codigoArquivoPreview = (() => {
-    const num = numeroExibido ?? '---'
-    if (!titulo.trim()) return `ORÇAMENTO_${num}`
-    const limpo = titulo
-      .trim()
-      .toUpperCase()
-      .replace(/\s+/g, '_')
-      .replace(/[^A-ZÁÀÂÃÉÊÍÓÔÕÚÜÇÑ0-9_]/gi, '')
-    return `ORÇAMENTO_${num}_${limpo}`
-  })()
+  // calcula escala proporcional da folha A4 (794px) para caber no painel lateral
+  useEffect(() => {
+    const el = previewContainerRef.current
+    if (!el) return
+    const atualizar = () => {
+      const largura = el.clientWidth - 20
+      if (largura > 0) setEscalaPreview(Math.min(1, largura / 794))
+    }
+    atualizar()
+    const obs = new ResizeObserver(atualizar)
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [])
 
   return (
     <div
@@ -540,7 +554,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
               {erro && <p className="modal-erro">{erro}</p>}
             </div>
 
-            {/* coluna direita: visualizador ao vivo do PDF */}
+            {/* coluna direita: visualizador real do PDF */}
             <aside className="modal-preview" aria-label="Visualizador do orçamento em PDF">
               <div className="modal-preview-topo">
                 <span className="modal-preview-topo-titulo">
@@ -551,51 +565,27 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   <span className="modal-preview-num tabular-nums">#{numeroExibido}</span>
                 )}
               </div>
-              <div className="modal-preview-corpo">
-                <div className="pdf-folha">
-                  <div className="pdf-cabecalho">
-                    <div className="pdf-cab-empresa">L.G. MANUTENÇÃO<br />INDUSTRIAL</div>
-                    <div className="pdf-cab-meta">
-                      <span className="pdf-cab-arquivo">{codigoArquivoPreview}</span>
-                      {dataExtensoPreview && <span className="pdf-cab-data">{dataExtensoPreview}</span>}
-                    </div>
+              <div className="modal-preview-corpo" ref={previewContainerRef}>
+                {htmlPreview ? (
+                  <div
+                    className="pdf-iframe-moldura"
+                    style={{
+                      width: `${Math.round(794 * escalaPreview)}px`,
+                      height: `${Math.round(2246 * escalaPreview)}px`,
+                    }}
+                  >
+                    <iframe
+                      title="Visualizador real do PDF do orçamento"
+                      srcDoc={htmlPreview}
+                      className="pdf-iframe-real"
+                      style={{
+                        transform: `scale(${escalaPreview})`,
+                      }}
+                    />
                   </div>
-
-                  {(empresaNome || solicitanteNome || maquina.trim()) && (
-                    <div className="pdf-cliente">
-                      {empresaNome && <div><strong>Cliente:</strong> {empresaNome}</div>}
-                      {solicitanteNome && <div><strong>A/C:</strong> {solicitanteNome}</div>}
-                      {maquina.trim() && <div><strong>Máquina:</strong> {maquina.trim()}</div>}
-                    </div>
-                  )}
-
-                  <div className="pdf-titulo-servico">
-                    {titulo.trim() || <span className="pdf-placeholder">Título do orçamento...</span>}
-                  </div>
-
-                  {linhasEscopo.length > 0 || fimDeSemana || prazoDias !== '' ? (
-                    <ul className="modal-preview-lista">
-                      {linhasEscopo.map((l, i) => <li key={i}>{l}</li>)}
-                      {fimDeSemana && <li className="pdf-item-fds">1 – Sábado 50%</li>}
-                      {prazoDias !== '' && (
-                        <li className="pdf-item-prazo">
-                          Prazo {String(prazoDias).padStart(2, '0')} dias;
-                        </li>
-                      )}
-                    </ul>
-                  ) : (
-                    <p className="modal-preview-vazio">
-                      Preencha o escopo para visualizar os itens do serviço no documento.
-                    </p>
-                  )}
-
-                  <div className="pdf-valor-rodape">
-                    <span>Valor total</span>
-                    <strong className="tabular-nums">
-                      {valor !== '' ? `R$ ${formatarCentavos(valor)}` : 'R$ 0,00'}
-                    </strong>
-                  </div>
-                </div>
+                ) : (
+                  <p className="modal-preview-vazio">Carregando visualização do PDF...</p>
+                )}
               </div>
             </aside>
           </div>

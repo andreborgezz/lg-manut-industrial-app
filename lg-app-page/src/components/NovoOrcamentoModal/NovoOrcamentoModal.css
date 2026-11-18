@@ -411,10 +411,33 @@
 
 .modal-preview-corpo {
   flex: 1;
-  padding: 14px;
+  padding: 10px;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+/* Moldura e iframe escalado do PDF oficial (A4 = 794px x 1123px * 2 páginas) */
+.pdf-iframe-moldura {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  flex-shrink: 0;
+}
+
+.pdf-iframe-real {
+  width: 794px;
+  height: 2246px;
+  border: none;
+  transform-origin: top left;
+  display: block;
+  background-color: #ffffff;
+  pointer-events: none;
 }
 
 /* Mini folha A4 do documento */

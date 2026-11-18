@@ -175,6 +175,20 @@ export const buscarOrcamento = (id: number) => chamar<Orcamento>(`/orcamentos/${
 export const buscarProximoNumeroOrcamento = () =>
   chamar<{ numero: number }>('/orcamentos/proximo-numero')
 
+export const previewHtmlOrcamento = (dados: {
+  numero?: number | null
+  titulo?: string | null
+  escopo?: string | null
+  valor?: number | null
+  prazoDias?: number | null
+  fimDeSemana?: boolean
+  entradaEm?: string | null
+}) =>
+  chamar<{ html: string }>('/orcamentos/preview-html', {
+    method: 'POST',
+    body: JSON.stringify(dados),
+  })
+
 // por padrão só ativos; incluirInativos traz todos
 export const listarMecanicos = (incluirInativos = false) =>
   chamar<Mecanico[]>(`/mecanicos${incluirInativos ? '?inativos=true' : ''}`)

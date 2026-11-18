@@ -24,6 +24,7 @@ const dadosIniciais = (o: Orcamento): InicialOrcamento => ({
   valor: o.valor,
   prazoDias: o.prazoDias,
   fimDeSemana: o.fimDeSemana,
+  entradaEm: o.entradaEm,
 })
 
 function PaginaOrcamentos() {

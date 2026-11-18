@@ -1,5 +1,6 @@
 import type { Request, Response } from 'express'
 import * as service from '../services/orcamento.service'
+import { gerarHtml } from '../pdf/orcamento.template'
 import { idParam, textoQuery } from '../utils/params'
 
 export const listar = async (req: Request, res: Response): Promise<void> => {
@@ -19,6 +20,20 @@ export const listar = async (req: Request, res: Response): Promise<void> => {
 
 export const proximoNumero = async (_req: Request, res: Response): Promise<void> => {
   res.json({ numero: await service.proximoNumero() })
+}
+
+export const previewHtml = async (req: Request, res: Response): Promise<void> => {
+  const { numero, titulo, escopo, valor, prazoDias, fimDeSemana, entradaEm } = req.body ?? {}
+  const html = gerarHtml({
+    numero: Number(numero) || 0,
+    titulo: typeof titulo === 'string' && titulo.trim() ? titulo.trim() : null,
+    escopo: typeof escopo === 'string' ? escopo : null,
+    valor: valor != null && valor !== '' ? String(valor) : null,
+    prazoDias: prazoDias != null && prazoDias !== '' ? Number(prazoDias) : null,
+    fimDeSemana: Boolean(fimDeSemana),
+    entradaEm: typeof entradaEm === 'string' && entradaEm ? entradaEm : null,
+  })
+  res.json({ html })
 }
 
 export const buscar = async (req: Request, res: Response): Promise<void> => {
