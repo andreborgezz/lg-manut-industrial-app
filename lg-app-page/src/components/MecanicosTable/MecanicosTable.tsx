@@ -40,7 +40,12 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
 
   const linhas = useMemo(() => {
     const q = busca.trim().toLowerCase()
-    return q ? mecanicos.filter((m) => m.nome.toLowerCase().includes(q)) : mecanicos
+    return q
+      ? mecanicos.filter((m) =>
+          m.nome.toLowerCase().includes(q) ||
+          (m.telefone ?? '').toLowerCase().includes(q)
+        )
+      : mecanicos
   }, [mecanicos, busca])
 
   async function salvarNome(m: Mecanico, nome: string) {

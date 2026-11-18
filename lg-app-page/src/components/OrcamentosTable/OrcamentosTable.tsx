@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import {
   Calendar,
@@ -515,7 +515,7 @@ export function OrcamentosTable({
   onEditar?: (original: Orcamento, numero: number) => void
 }) {
   const toast = useToast()
-  const [linhas, setLinhas] = useState<OrcamentoLinha[]>([])
+  const [todosOrcamentos, setTodosOrcamentos] = useState<OrcamentoLinha[]>([])
   const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
   const [status, setStatus] = useState('')
@@ -605,7 +605,7 @@ export function OrcamentosTable({
     const statusAnterior = o.status
     try {
       const nova = await atualizarOrcamento(o.id, patch)
-      setLinhas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
+      setTodosOrcamentos((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
       setAviso('')
 
       if (patch.status && patch.status !== statusAnterior) {
@@ -617,7 +617,7 @@ export function OrcamentosTable({
           onAcao: async () => {
             try {
               const revertida = await atualizarOrcamento(o.id, { status: statusAnterior })
-              setLinhas((ls) => ls.map((l) => (l.id === revertida.id ? revertida : l)))
+              setTodosOrcamentos((ls) => ls.map((l) => (l.id === revertida.id ? revertida : l)))
             } catch (e) {
               setAviso(`Não foi possível desfazer: ${e instanceof Error ? e.message : 'erro'}`)
             }
@@ -662,7 +662,7 @@ export function OrcamentosTable({
       } catch {
         const res = await gerarPdfOrcamento(o.id)
         url = res.url
-        setLinhas((anteriores) =>
+        setTodosOrcamentos((anteriores) =>
           anteriores.map((item) => (item.id === o.id ? { ...item, temPdf: true } : item))
         )
       }
@@ -689,7 +689,7 @@ export function OrcamentosTable({
       } catch {
         const res = await gerarPdfOrcamento(o.id)
         urlPdf = res.url
-        setLinhas((anteriores) =>
+        setTodosOrcamentos((anteriores) =>
           anteriores.map((item) => (item.id === o.id ? { ...item, temPdf: true } : item))
         )
       }
@@ -727,7 +727,6 @@ export function OrcamentosTable({
   )
 
   const filtro: FiltroPeriodo = {
-    busca,
     status,
     dataInicio,
     dataFim,
@@ -736,19 +735,32 @@ export function OrcamentosTable({
   useEffect(() => {
     let cancelado = false
     setCarregandoDados(true)
-    const t = setTimeout(() => {
-      listarOrcamentos(filtro)
-        .then((dados) => {
-          if (cancelado) return
-          setLinhas(dados)
-          setErro('')
-        })
-        .catch((e) => !cancelado && setErro(e.message))
-        .finally(() => !cancelado && setCarregandoDados(false))
-    }, 250)
-    return () => { cancelado = true; clearTimeout(t) }
+    listarOrcamentos(filtro)
+      .then((dados) => {
+        if (cancelado) return
+        setTodosOrcamentos(dados)
+        setErro('')
+      })
+      .catch((e) => !cancelado && setErro(e.message))
+      .finally(() => !cancelado && setCarregandoDados(false))
+    return () => { cancelado = true }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [busca, status, dataInicio, dataFim, refresh])
+  }, [status, dataInicio, dataFim, refresh])
+
+  // filtro instantâneo conforme os caracteres digitados
+  const linhas = useMemo(() => {
+    const termo = busca.trim().toLowerCase()
+    if (!termo) return todosOrcamentos
+    const semHashtag = termo.startsWith('#') ? termo.slice(1) : termo
+    return todosOrcamentos.filter((o) =>
+      o.empresa.toLowerCase().includes(termo) ||
+      (o.solicitante ?? '').toLowerCase().includes(termo) ||
+      (o.maquina ?? '').toLowerCase().includes(termo) ||
+      (o.mecanico ?? '').toLowerCase().includes(termo) ||
+      (o.numeroPedido ?? '').toLowerCase().includes(termo) ||
+      String(o.numero).includes(semHashtag)
+    )
+  }, [todosOrcamentos, busca])
 
   const totalFiltrado = linhas.reduce((acc, o) => acc + (o.valor ? Number(o.valor) : 0), 0)
 

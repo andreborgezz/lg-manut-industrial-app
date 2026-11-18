@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ExternalLink, Loader2, Pencil, Search } from "lucide-react";
 import { atualizarEmpresa, listarEmpresas, type Empresa } from "../../services/api";
@@ -111,7 +111,7 @@ export function EmpresasTable({
   onEditar?: (e: Empresa) => void;
 }) {
   const navigate = useNavigate()
-  const [linhas, setLinhas] = useState<Empresa[]>([])
+  const [todasEmpresas, setTodasEmpresas] = useState<Empresa[]>([])
   const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
   const [erro, setErro] = useState('')
@@ -126,7 +126,7 @@ export function EmpresasTable({
   async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) {
     try {
       const nova = await atualizarEmpresa(e.id, patch)
-      setLinhas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
+      setTodasEmpresas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
       setAviso('')
     } catch (err) {
       setAviso(`Empresa ${e.id}: ${err instanceof Error ? err.message : 'erro ao salvar'}`)
@@ -153,16 +153,25 @@ export function EmpresasTable({
     listarEmpresas()
       .then((dados) => {
         if (cancelado) return
-        const filtrados = busca
-          ? dados.filter(d => d.nome.toLowerCase().includes(busca.toLowerCase()))
-          : dados
-        setLinhas(filtrados)
+        setTodasEmpresas(dados)
         setErro('')
       })
       .catch((err) => !cancelado && setErro(err.message))
       .finally(() => !cancelado && setCarregandoDados(false))
     return () => { cancelado = true }
-  }, [refresh, busca])
+  }, [refresh])
+
+  const linhas = useMemo(() => {
+    const q = busca.trim().toLowerCase()
+    if (!q) return todasEmpresas
+    return todasEmpresas.filter((d) =>
+      d.nome.toLowerCase().includes(q) ||
+      (d.cnpj ?? '').toLowerCase().includes(q) ||
+      (d.email ?? '').toLowerCase().includes(q) ||
+      (d.telefone ?? '').toLowerCase().includes(q) ||
+      String(d.id).includes(q)
+    )
+  }, [todasEmpresas, busca])
 
   return (
     <section className="emp-table-container">
