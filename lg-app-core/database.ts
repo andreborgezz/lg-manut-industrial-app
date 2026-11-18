@@ -2,8 +2,18 @@ import { Pool } from 'pg';
 import dotenv from 'dotenv';
 dotenv.config();
 
+const connectionString = process.env.DATABASE_URL ?? '';
+const ehBancoLocal =
+  connectionString.includes('localhost') ||
+  connectionString.includes('127.0.0.1') ||
+  connectionString.includes('@postgres:');
+
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
+  ssl:
+    !ehBancoLocal && !connectionString.includes('sslmode=')
+      ? { rejectUnauthorized: false }
+      : undefined,
 });
 
 export async function connect() {
