@@ -69,12 +69,17 @@
   box-sizing: border-box;
 }
 
+.modal-campo input:hover:not(:disabled):not(:focus),
+.modal-campo select:hover:not(:disabled):not(:focus) {
+  border-color: var(--cor-borda-forte);
+}
+
 .modal-campo input:focus,
 .modal-campo select:focus {
   outline: none;
-  border-color: var(--cor-azul-acao);
+  border-color: #94a3b8;
   background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.07);
 }
 
 .modal-corpo {

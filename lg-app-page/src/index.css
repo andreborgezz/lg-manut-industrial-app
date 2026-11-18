@@ -232,14 +232,17 @@ button {
   cursor: not-allowed;
 }
 
-/* Foco visível corporativo */
+/* Foco visível discreto e uniforme */
 button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid #94a3b8 !important;
+  outline-offset: 1px !important;
+}
+
 input:focus-visible,
 select:focus-visible,
-textarea:focus-visible,
-[tabindex]:focus-visible {
-  outline: 2px solid var(--cor-azul-acao) !important;
-  outline-offset: 1px !important;
+textarea:focus-visible {
+  outline: none !important;
 }
 
 /* Dica de atalho de teclado discreta dentro de botões */

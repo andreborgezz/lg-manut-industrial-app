@@ -42,11 +42,16 @@
   box-sizing: border-box;
 }
 
+.combo-btn-valor:hover:not(:disabled):not(:focus),
+.combo-input:hover:not(:disabled):not(:focus) {
+  border-color: var(--cor-borda-forte);
+}
+
 .combo-btn-valor:focus,
 .combo-input:focus {
-  border-color: var(--cor-azul-acao);
+  border-color: #94a3b8;
   background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.1);
+  box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.07);
   outline: none;
 }
 
