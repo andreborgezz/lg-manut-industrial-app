@@ -52,15 +52,13 @@ function PaginaEmpresaDetalhe() {
       try {
         const { url } = await gerarPdfOrcamento(orc.id)
         toast.fechar(toastId)
-        const janela = window.open(url, '_blank')
-        if (!janela) {
-          toast.mostrar({
-            tipo: 'info',
-            mensagem: `PDF do orçamento ${orc.numero} gerado.`,
-            acaoLabel: 'Abrir PDF',
-            onAcao: () => window.open(url, '_blank'),
-          })
-        }
+        toast.mostrar({
+          tipo: 'sucesso',
+          mensagem: `PDF do orçamento nº ${orc.numero} gerado.`,
+          acaoLabel: 'Visualizar PDF',
+          duracao: 10000,
+          onAcao: () => window.open(url, '_blank'),
+        })
       } catch {
         toast.fechar(toastId)
         toast.mostrar({ tipo: 'erro', mensagem: 'Não foi possível gerar o PDF.' })

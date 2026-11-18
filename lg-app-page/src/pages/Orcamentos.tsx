@@ -75,15 +75,14 @@ function PaginaOrcamentos() {
     try {
       const { url } = await gerarPdfOrcamento(id)
       toast.fechar(toastId)
-      const janela = window.open(url, '_blank')
-      if (!janela) {
-        toast.mostrar({
-          tipo: 'info',
-          mensagem: `PDF do orçamento ${numero} gerado.`,
-          acaoLabel: 'Abrir PDF',
-          onAcao: () => window.open(url, '_blank'),
-        })
-      }
+      setRefresh((r) => r + 1)
+      toast.mostrar({
+        tipo: 'sucesso',
+        mensagem: `PDF do orçamento nº ${numero} gerado.`,
+        acaoLabel: 'Visualizar PDF',
+        duracao: 10000,
+        onAcao: () => window.open(url, '_blank'),
+      })
     } catch (e) {
       toast.fechar(toastId)
       toast.mostrar({
