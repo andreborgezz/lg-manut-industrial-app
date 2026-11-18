@@ -12,8 +12,8 @@ export function Sidebar({ aberta = true, onFechar }: SidebarProps) {
     <aside className={`sidebar ${aberta ? 'sidebar-aberta' : 'sidebar-colapsada'}`}>
       <div className="sidebar-topo">
         <div className="sidebar-marca-grupo">
-          <div className="sidebar-logo-badge">
-            <Wrench size={15} className="sidebar-logo-icone" />
+          <div className="sidebar-logo-badge" aria-hidden="true">
+            <span className="sidebar-logo-lg">L.G.</span>
           </div>
           <div className="sidebar-marca">
             <span className="sidebar-titulo">L.G. MANUTENÇÃO</span>

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Wrench, Shield, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Shield, ArrowRight, Eye, EyeOff, Loader2 } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import './Login.css'
 
@@ -36,12 +36,12 @@ export function Login({ aoLogar, erroSessao }: Props) {
         {/* Topo institucional com brasão industrial */}
         <header className="login-header">
           <div className="login-marca-insignia">
-            <div className="login-icone-anel">
-              <Wrench size={22} className="login-icone-ferramenta" />
+            <div className="login-icone-anel" aria-hidden="true">
+              <div className="login-logo-circulo">L.G.</div>
             </div>
             <div className="login-titulos">
               <span className="login-sigla">L.G. MANUTENÇÃO</span>
-              <span className="login-subsigla">SISTEMA INDUSTRIAL</span>
+              <span className="login-subsigla">MANUTENÇÃO INDUSTRIAL</span>
             </div>
           </div>
           <p className="login-boas-vindas">

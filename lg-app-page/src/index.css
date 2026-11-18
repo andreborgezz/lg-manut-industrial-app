@@ -21,13 +21,13 @@
   --cor-texto-suave: #64748b;     /* Slate 500: placeholders e metadados */
   --cor-texto-inverso: #ffffff;
 
-  /* Identidade Corporativa Industrial (Azul Marinho Executivo + Ouro/Âmbar Institucional) */
-  --cor-marinho: #0f2744;         /* Azul marinho profundo institucional */
-  --cor-marinho-hover: #1e3a8a;
-  --cor-azul-acao: #1d4ed8;       /* Azul técnico corporativo */
-  --cor-azul-acao-hover: #1e40af;
-  --cor-ambar: #d97706;          /* Âmbar industrial sólido / fosco */
-  --cor-ambar-hover: #b45309;
+  /* Identidade Corporativa L.G. Manutenção Industrial (Preto Executivo + Dourado/Âmbar #EE9C00) */
+  --cor-marinho: #111317;         /* Preto grafite institucional */
+  --cor-marinho-hover: #242933;
+  --cor-azul-acao: #b46900;       /* Dourado escuro para textos/ações */
+  --cor-azul-acao-hover: #8f5300;
+  --cor-ambar: #ee9c00;          /* Dourado oficial L.G. */
+  --cor-ambar-hover: #d18900;
   --cor-ambar-fundo: #fef3c7;
   --cor-ambar-borda: #fde68a;
 

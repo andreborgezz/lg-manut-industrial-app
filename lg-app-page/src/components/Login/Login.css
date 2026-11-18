@@ -46,20 +46,30 @@
 }
 
 .login-icone-anel {
-  width: 56px;
-  height: 56px;
-  border-radius: 14px;
-  background-color: #0f2744;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background-color: #000000;
+  border: 2px solid #ee9c00;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ffffff;
-  box-shadow: 0 6px 16px rgba(15, 39, 68, 0.22);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-.login-icone-ferramenta {
-  color: #f59e0b;
+.login-logo-circulo {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .login-titulos {
@@ -73,7 +83,7 @@
   font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.04em;
-  color: #0f2744;
+  color: #111317;
   text-transform: uppercase;
 }
 
@@ -81,7 +91,7 @@
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.14em;
-  color: #475569;
+  color: #b46900;
   text-transform: uppercase;
   margin-top: 3px;
 }
@@ -200,7 +210,7 @@
 /* Botão de Entrar */
 .login-botao-submeter {
   height: 44px;
-  background-color: #0f2744;
+  background-color: #111317;
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -211,15 +221,14 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 2px 8px rgba(15, 39, 68, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
   transition: all 0.15s ease;
   margin-top: 4px;
 }
 
 .login-botao-submeter:hover:not(:disabled) {
-  background-color: #1e3a8a;
-  border-color: #1e3a8a;
-  box-shadow: 0 4px 10px rgba(15, 39, 68, 0.3);
+  background-color: #242933;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.28);
   transform: translateY(-1px);
 }
 
