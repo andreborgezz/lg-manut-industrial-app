@@ -28,7 +28,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
           envs: APP_DIR,BRANCH,ENV_FILE
-          script_stop: true
           script: |
             set -e
             cd "$APP_DIR"
