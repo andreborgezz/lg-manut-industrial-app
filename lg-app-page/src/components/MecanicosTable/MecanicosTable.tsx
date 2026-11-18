@@ -44,7 +44,8 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
     return q
       ? mecanicos.filter((m) =>
           normalizarTexto(m.nome).includes(q) ||
-          normalizarTexto(m.telefone).includes(q)
+          normalizarTexto(m.telefone).includes(q) ||
+          normalizarTexto(m.descricao).includes(q)
         )
       : mecanicos
   }, [mecanicos, busca])
@@ -67,6 +68,17 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
   async function salvarTelefone(m: Mecanico, telefone: string) {
     try {
       const novo = await atualizarMecanico(m.id, { telefone: telefone.trim() || null })
+      setMecanicos((ls) => ls.map((l) => (l.id === novo.id ? novo : l)))
+      setAviso('')
+    } catch (e) {
+      setAviso(`${m.nome}: ${e instanceof Error ? e.message : 'erro ao salvar'}`)
+      throw e
+    }
+  }
+
+  async function salvarDescricao(m: Mecanico, descricao: string) {
+    try {
+      const novo = await atualizarMecanico(m.id, { descricao: descricao.trim() || null })
       setMecanicos((ls) => ls.map((l) => (l.id === novo.id ? novo : l)))
       setAviso('')
     } catch (e) {
@@ -130,6 +142,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
               <tr>
                 <th>NOME</th>
                 <th>TELEFONE</th>
+                <th>DESCRIÇÃO / ÁREA</th>
                 <th>STATUS</th>
                 <th style={{ textAlign: 'right' }}>AÇÕES</th>
               </tr>
@@ -151,6 +164,14 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                       rotulo={`Telefone de ${m.nome}`}
                       valor={m.telefone ?? ''}
                       onSalvar={(v) => salvarTelefone(m, v)}
+                    />
+                  </td>
+                  <td>
+                    <CelulaEditavel
+                      tipo="texto"
+                      rotulo={`Descrição de ${m.nome}`}
+                      valor={m.descricao ?? ''}
+                      onSalvar={(v) => salvarDescricao(m, v)}
                     />
                   </td>
                   <td>
@@ -192,7 +213,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
               ))}
               {carregandoDados && linhas.length === 0 ? (
                 <tr>
-                  <td colSpan={4}>
+                  <td colSpan={5}>
                     <div className="tabela-carregando">
                       <Loader2 size={20} className="spinner" />
                       <span>Carregando mecânicos...</span>
@@ -201,7 +222,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                 </tr>
               ) : linhas.length === 0 && !erro && (
                 <tr>
-                  <td colSpan={4} className="tabela-vazio">
+                  <td colSpan={5} className="tabela-vazio">
                     Nenhum mecânico encontrado.
                   </td>
                 </tr>

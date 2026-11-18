@@ -21,6 +21,7 @@ function formatarTelefone(valor: string): string {
 export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
   const [nome, setNome] = useState(editando?.nome ?? '')
   const [telefone, setTelefone] = useState(editando?.telefone ? formatarTelefone(editando.telefone) : '')
+  const [descricao, setDescricao] = useState(editando?.descricao ?? '')
   const [ativo, setAtivo] = useState(editando?.ativo ?? true)
   const [erroNome, setErroNome] = useState('')
   const [erro, setErro] = useState('')
@@ -46,10 +47,11 @@ export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
     setErro('')
     try {
       const tel = telefone.trim() || null
+      const desc = descricao.trim() || null
       if (editando) {
-        await atualizarMecanico(editando.id, { nome: nome.trim(), telefone: tel, ativo })
+        await atualizarMecanico(editando.id, { nome: nome.trim(), telefone: tel, descricao: desc, ativo })
       } else {
-        await criarMecanico({ nome: nome.trim(), telefone: tel })
+        await criarMecanico({ nome: nome.trim(), telefone: tel, descricao: desc })
       }
       onSalvo()
     } catch (e) {
@@ -92,6 +94,17 @@ export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
                 placeholder="(00) 00000-0000"
                 value={telefone}
                 onChange={(e) => setTelefone(formatarTelefone(e.target.value))}
+                disabled={salvando}
+              />
+            </label>
+
+            <label className="modal-campo">
+              <span>Descrição / Área</span>
+              <input
+                type="text"
+                placeholder="Ex: Hidráulica, Torno CNC, Solda..."
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
                 disabled={salvando}
               />
             </label>

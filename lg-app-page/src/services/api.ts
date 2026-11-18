@@ -50,7 +50,7 @@ export type Empresa = {
   observacoes: string | null
 }
 export type Solicitante = { id: number; empresaId: number; nome: string; email: string | null; telefone: string | null }
-export type Mecanico = { id: number; nome: string; telefone: string | null; ativo: boolean }
+export type Mecanico = { id: number; nome: string; telefone: string | null; descricao: string | null; ativo: boolean }
 
 export type Orcamento = {
   id: number
@@ -219,10 +219,10 @@ export const previewHtmlOrcamento = (dados: {
 export const listarMecanicos = (incluirInativos = false) =>
   chamar<Mecanico[]>(`/mecanicos${incluirInativos ? '?inativos=true' : ''}`)
 
-export const criarMecanico = (body: { nome: string; telefone?: string | null }) =>
+export const criarMecanico = (body: { nome: string; telefone?: string | null; descricao?: string | null }) =>
   chamar<Mecanico>('/mecanicos', { method: 'POST', body: JSON.stringify(body) })
 
-export const atualizarMecanico = (id: number, patch: { nome?: string; telefone?: string | null; ativo?: boolean }) =>
+export const atualizarMecanico = (id: number, patch: { nome?: string; telefone?: string | null; descricao?: string | null; ativo?: boolean }) =>
   chamar<Mecanico>(`/mecanicos/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
 
 export const criarOrcamento = (body: NovoOrcamentoBody) =>
