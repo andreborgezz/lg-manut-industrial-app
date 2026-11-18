@@ -112,6 +112,7 @@ export function EmpresasTable({
 }) {
   const navigate = useNavigate()
   const [linhas, setLinhas] = useState<Empresa[]>([])
+  const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
   const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
@@ -147,15 +148,20 @@ export function EmpresasTable({
   const colunas = montarColunas(salvar, abrir, carregando, (id) => navigate(`/empresas/${id}`))
 
   useEffect(() => {
+    let cancelado = false
+    setCarregandoDados(true)
     listarEmpresas()
       .then((dados) => {
-        const filtrados = busca 
+        if (cancelado) return
+        const filtrados = busca
           ? dados.filter(d => d.nome.toLowerCase().includes(busca.toLowerCase()))
           : dados
         setLinhas(filtrados)
         setErro('')
       })
-      .catch((err) => setErro(err.message))
+      .catch((err) => !cancelado && setErro(err.message))
+      .finally(() => !cancelado && setCarregandoDados(false))
+    return () => { cancelado = true }
   }, [refresh, busca])
 
   return (
@@ -199,7 +205,16 @@ export function EmpresasTable({
                   ))}
                 </tr>
               ))}
-              {linhas.length === 0 && !erro && (
+              {carregandoDados && linhas.length === 0 ? (
+                <tr>
+                  <td colSpan={colunas.length}>
+                    <div className="tabela-carregando">
+                      <Loader2 size={20} className="spinner" />
+                      <span>Carregando empresas...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : linhas.length === 0 && !erro && (
                 <tr>
                   <td colSpan={colunas.length} className="emp-table-vazio">
                     Nenhuma empresa encontrada.

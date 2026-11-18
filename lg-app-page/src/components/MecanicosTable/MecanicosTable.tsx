@@ -11,6 +11,7 @@ type Props = {
 
 export function MecanicosTable({ refresh = 0, onEditar }: Props) {
   const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
+  const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
   const [incluirInativos, setIncluirInativos] = useState(false)
   const [erro, setErro] = useState('')
@@ -18,12 +19,17 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
   const [trocandoId, setTrocandoId] = useState<number | null>(null)
 
   useEffect(() => {
+    let cancelado = false
+    setCarregandoDados(true)
     listarMecanicos(incluirInativos)
       .then((dados) => {
+        if (cancelado) return
         setMecanicos(dados)
         setErro('')
       })
-      .catch((e) => setErro(e.message))
+      .catch((e) => !cancelado && setErro(e.message))
+      .finally(() => !cancelado && setCarregandoDados(false))
+    return () => { cancelado = true }
   }, [incluirInativos, refresh])
 
   useEffect(() => {
@@ -178,7 +184,16 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                   </td>
                 </tr>
               ))}
-              {linhas.length === 0 && !erro && (
+              {carregandoDados && linhas.length === 0 ? (
+                <tr>
+                  <td colSpan={4}>
+                    <div className="tabela-carregando">
+                      <Loader2 size={20} className="spinner" />
+                      <span>Carregando mecânicos...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : linhas.length === 0 && !erro && (
                 <tr>
                   <td colSpan={4} className="tabela-vazio">
                     Nenhum mecânico encontrado.

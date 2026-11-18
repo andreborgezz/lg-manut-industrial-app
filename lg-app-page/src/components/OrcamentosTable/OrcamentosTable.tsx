@@ -516,6 +516,7 @@ export function OrcamentosTable({
 }) {
   const toast = useToast()
   const [linhas, setLinhas] = useState<OrcamentoLinha[]>([])
+  const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
   const [status, setStatus] = useState('')
   const [chipPeriodo, setChipPeriodo] = useState('')
@@ -727,15 +728,19 @@ export function OrcamentosTable({
   }
 
   useEffect(() => {
+    let cancelado = false
+    setCarregandoDados(true)
     const t = setTimeout(() => {
       listarOrcamentos(filtro)
         .then((dados) => {
+          if (cancelado) return
           setLinhas(dados)
           setErro('')
         })
-        .catch((e) => setErro(e.message))
+        .catch((e) => !cancelado && setErro(e.message))
+        .finally(() => !cancelado && setCarregandoDados(false))
     }, 250)
-    return () => clearTimeout(t)
+    return () => { cancelado = true; clearTimeout(t) }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busca, status, dataInicio, dataFim, refresh])
 
@@ -984,7 +989,16 @@ export function OrcamentosTable({
                   ))}
                 </tr>
               ))}
-              {linhas.length === 0 && !erro && (
+              {carregandoDados && linhas.length === 0 ? (
+                <tr>
+                  <td colSpan={colunas.length}>
+                    <div className="tabela-carregando">
+                      <Loader2 size={20} className="spinner" />
+                      <span>Carregando orçamentos...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : linhas.length === 0 && !erro && (
                 <tr>
                   <td colSpan={colunas.length} className="orc-table-vazio-td">
                     <div className="orc-estado-vazio">

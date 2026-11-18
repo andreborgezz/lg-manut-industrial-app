@@ -245,6 +245,28 @@ textarea:focus-visible {
   outline: none !important;
 }
 
+/* Estado de carregamento das tabelas */
+@keyframes lg-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  animation: lg-spin 0.8s linear infinite;
+}
+
+.tabela-carregando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 36px 16px;
+  color: var(--cor-texto-suave);
+  font-size: 13px;
+  font-weight: 500;
+}
+
 /* Dica de atalho de teclado discreta dentro de botões */
 .btn-atalho {
   display: inline-flex;
