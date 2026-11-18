@@ -1,8 +1,6 @@
 services:
   backend:
-    build:
-      context: ./lg-app-core
-      dockerfile: Dockerfile
+    image: ${BACKEND_IMAGE:-ghcr.io/andreborgezz/lg-manut-industrial-app-backend:latest}
     container_name: backend
     restart: unless-stopped
     ports:

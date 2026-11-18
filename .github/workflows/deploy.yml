@@ -6,36 +6,71 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 concurrency:
   group: deploy-producao
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Build e Deploy no Servidor
+  build:
+    name: Build e Push da Imagem (GHCR)
     runs-on: ubuntu-latest
 
     steps:
-      - name: Conectar via SSH e atualizar aplicação
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login no GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build e push da imagem do backend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./lg-app-core
+          file: ./lg-app-core/Dockerfile
+          push: true
+          tags: ghcr.io/andreborgezz/lg-manut-industrial-app-backend:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy na VM (e2-micro)
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Conectar via SSH e subir imagem pronta
         uses: appleboy/ssh-action@v1
         env:
           APP_DIR: ${{ vars.APP_DIR }}
           BRANCH: ${{ vars.BRANCH || 'main' }}
           ENV_FILE: ${{ secrets.ENV_FILE }}
+          GHCR_USER: ${{ github.actor }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
-          command_timeout: 25m
-          envs: APP_DIR,BRANCH,ENV_FILE
+          command_timeout: 10m
+          envs: APP_DIR,BRANCH,ENV_FILE,GHCR_USER,GHCR_TOKEN
           script: |
             set -e
             cd "$APP_DIR"
 
             git config --global --get-all safe.directory | grep -qxF "$APP_DIR" || git config --global --add safe.directory "$APP_DIR"
 
-            echo "==> Atualizando código ($BRANCH)..."
+            echo "==> Atualizando docker-compose ($BRANCH)..."
             git fetch origin "$BRANCH"
             git reset --hard "origin/$BRANCH"
 
@@ -44,8 +79,10 @@ jobs:
               printf '%s\n' "$ENV_FILE" > .env
             fi
 
-            echo "==> Fazendo build e subindo containers..."
-            docker compose up -d --build --remove-orphans
+            echo "==> Autenticando no GHCR e baixando imagem pronta..."
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+            docker compose pull
+            docker compose up -d --remove-orphans
             docker image prune -f
 
             echo "==> Verificando saúde do backend..."
