@@ -93,7 +93,7 @@ export function Combobox({
       if (e.key === 'Enter' || e.key === 'ArrowDown') { e.preventDefault(); abrir() }
       return
     }
-    if (e.key === 'Escape') { e.preventDefault(); fechar(); return }
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); fechar(); return }
     if (e.key === 'ArrowDown') {
       e.preventDefault()
       setCursor((c) => Math.min(c + 1, totalOpcoes - 1))
@@ -102,11 +102,17 @@ export function Combobox({
       setCursor((c) => Math.max(c - 1, 0))
     } else if (e.key === 'Enter') {
       e.preventDefault()
+      e.stopPropagation()
       if (cursor >= 0 && cursor < filtradas.length) {
         selecionar(filtradas[cursor].valor)
       } else if (cursor === idxEspecial) {
         if (mostrarCriar) { onCriar!(textoBusca); fechar() }
         else if (mostrarAdicionar) { onAdicionar!(); fechar() }
+      } else if (cursor === -1 && filtradas.length === 0 && mostrarCriar) {
+        onCriar!(textoBusca)
+        fechar()
+      } else if (cursor === -1 && filtradas.length === 1) {
+        selecionar(filtradas[0].valor)
       }
     }
   }
@@ -152,7 +158,7 @@ export function Combobox({
             autoFocus
             className="combo-input"
             value={busca}
-            placeholder="Filtrar ou digitar para criar..."
+            placeholder={onCriar ? 'Filtrar ou digitar para criar...' : 'Filtrar...'}
             onChange={(e) => setBusca(e.target.value)}
             onKeyDown={aoTeclar}
             aria-autocomplete="list"

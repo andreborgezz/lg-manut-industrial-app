@@ -50,6 +50,7 @@ function PaginaOrcamentos() {
   }, [])
 
   function aoSalvar(orc: Orcamento, gerarPdf = false) {
+    const eraEdicao = Boolean(modal?.editando)
     setModal(null)
     setRefresh((r) => r + 1)
     setNovoId(orc.id)
@@ -59,10 +60,10 @@ function PaginaOrcamentos() {
       // dispara PDF automaticamente e mostra toast
       gerarPdfToast(orc.id, orc.numero)
     } else {
-      // toast normal com ação "Gerar PDF"
+      // toast verde de sucesso com ação "Gerar PDF"
       toast.mostrar({
         tipo: 'sucesso',
-        mensagem: `Orçamento nº ${orc.numero} criado.`,
+        mensagem: `Orçamento nº ${orc.numero} ${eraEdicao ? 'atualizado' : 'criado'}.`,
         acaoLabel: 'Gerar PDF',
         onAcao: () => gerarPdfToast(orc.id, orc.numero),
       })

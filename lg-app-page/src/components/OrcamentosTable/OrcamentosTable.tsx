@@ -623,6 +623,12 @@ export function OrcamentosTable({
             }
           },
         })
+      } else {
+        toast.mostrar({
+          tipo: 'sucesso',
+          mensagem: `Orçamento nº ${o.numero} atualizado.`,
+          duracao: 3500,
+        })
       }
     } catch (e) {
       setAviso(`Orçamento ${o.numero}: ${e instanceof Error ? e.message : 'erro ao salvar'}`)

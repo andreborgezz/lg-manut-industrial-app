@@ -8,6 +8,7 @@ import {
 import {
   buscarProximoNumeroOrcamento,
   criarEmpresa,
+  criarMecanico,
   criarOrcamento,
   atualizarOrcamento,
   criarSolicitante,
@@ -190,6 +191,18 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       limpar('solicitante')
     } catch (e) {
       setErro(e instanceof Error ? e.message : 'erro ao criar solicitante')
+    }
+  }
+
+  // cria mecânico inline via "Criar 'X'" no combobox
+  async function criarMecanicoRapido(nome: string) {
+    try {
+      const novo = await criarMecanico({ nome })
+      setMecanicos((l) => [...l, novo].sort((a, b) => a.nome.localeCompare(b.nome)))
+      setMecanicoId(String(novo.id))
+      lembrarMecanico(String(novo.id))
+    } catch (e) {
+      setErro(e instanceof Error ? e.message : 'erro ao criar mecânico')
     }
   }
 
@@ -587,6 +600,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   valor={mecanicoId}
                   opcoes={opcoesMecanico}
                   onChange={(v) => { setMecanicoId(v); if (v) lembrarMecanico(v) }}
+                  onCriar={criarMecanicoRapido}
                   placeholder="Nenhum"
                   disabled={salvando}
                 />
