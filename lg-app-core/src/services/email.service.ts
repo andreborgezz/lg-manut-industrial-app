@@ -4,6 +4,7 @@ import pool from '../../database'
 import { AppError } from '../utils/errors'
 import { buscarPorId } from './orcamento.service'
 import { gerarPdfOrcamento } from './pdf.service'
+import { nomeArquivoDownload } from '../pdf/orcamento.template'
 import { enviarPdf } from './storage.service'
 
 function obterResend() {
@@ -261,7 +262,7 @@ export async function enviarEmailOrcamento(
     html,
     attachments: [
       {
-        filename: `orcamento-${orc.numero}.pdf`,
+        filename: `${nomeArquivoDownload(orc.numero, orc.titulo)}.pdf`,
         content: pdfBuffer,
       },
     ],

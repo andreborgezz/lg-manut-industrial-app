@@ -380,6 +380,8 @@
   flex-direction: column;
   background-color: #f1f5f9;
   overflow: hidden;
+  position: relative;
+  min-height: 0;
 }
 
 .modal-preview-topo {
@@ -410,7 +412,11 @@
 }
 
 .modal-preview-corpo {
-  flex: 1;
+  position: absolute;
+  top: 38px;
+  left: 0;
+  right: 0;
+  bottom: 0;
   padding: 10px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -593,6 +599,12 @@
 
   .modal-preview {
     overflow: visible;
+    position: static;
+  }
+
+  .modal-preview-corpo {
+    position: static;
+    max-height: 420px;
   }
 }
 

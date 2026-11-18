@@ -32,6 +32,21 @@ function nomeArquivo(numero: number, titulo: string | null): string {
   return `ORÇAMENTO_${numero}_${limpo}`
 }
 
+// nome do arquivo para download/anexo: numero_titulo (ASCII seguro para header HTTP)
+export function nomeArquivoDownload(numero: number, titulo: string | null): string {
+  if (!titulo || !titulo.trim()) return `${numero}`
+  const limpo = titulo
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toUpperCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^A-Z0-9_]/g, '')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
+  return limpo ? `${numero}_${limpo}` : `${numero}`
+}
+
 // formata valor BRL sem espaço após R$ (ex: "R$2.025,00")
 function formatarValor(valor: string | null): string {
   if (!valor) return 'R$0,00'

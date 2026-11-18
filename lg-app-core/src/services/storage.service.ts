@@ -30,10 +30,14 @@ export async function enviarPdf(chave: string, buffer: Buffer): Promise<void> {
 }
 
 // gera URL assinada para acesso temporário — bucket é privado, nunca expor URL direta
-export async function urlAssinada(chave: string, segundos = 300): Promise<string> {
+export async function urlAssinada(chave: string, segundos = 300, nomeDownload?: string): Promise<string> {
   return getSignedUrl(
     s3,
-    new GetObjectCommand({ Bucket: bucket(), Key: chave }),
+    new GetObjectCommand({
+      Bucket: bucket(),
+      Key: chave,
+      ...(nomeDownload ? { ResponseContentDisposition: `inline; filename="${nomeDownload}.pdf"` } : {}),
+    }),
     { expiresIn: segundos }
   )
 }
