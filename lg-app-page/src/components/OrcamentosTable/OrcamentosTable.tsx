@@ -37,7 +37,7 @@ import { useToast } from '../Toast/Toast'
 import { normalizarTexto } from '../../utils/texto'
 import './OrcamentosTable.css'
 
-const statusOpcoes: Opcao[] = (['ABERTO', 'APROVADO', 'RECUSADO', 'ENTREGUE'] as Status[]).map((v) => ({
+const statusOpcoes: Opcao[] = (['ABERTO', 'APROVADO', 'RECUSADO'] as Status[]).map((v) => ({
   valor: v,
   label: v,
 }))
@@ -861,7 +861,6 @@ export function OrcamentosTable({
             <option value="ABERTO">Aberto</option>
             <option value="APROVADO">Aprovado</option>
             <option value="RECUSADO">Recusado</option>
-            <option value="ENTREGUE">Entregue</option>
           </select>
 
           {/* Seletor de Período unificado com Popover */}

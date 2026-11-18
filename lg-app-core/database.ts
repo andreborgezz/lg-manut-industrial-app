@@ -22,6 +22,9 @@ export async function connect() {
     await pool.query(
       'ALTER TABLE empresas ADD COLUMN IF NOT EXISTS endereco text, ADD COLUMN IF NOT EXISTS observacoes text'
     );
+    await pool.query(
+      "UPDATE orcamentos SET status = 'APROVADO' WHERE status = 'ENTREGUE'"
+    );
     console.log('Banco de dados conectado');
   } catch (error) {
     console.error('Erro ao conectar ao banco de dados:', error);

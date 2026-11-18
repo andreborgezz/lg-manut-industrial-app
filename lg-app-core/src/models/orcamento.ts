@@ -1,4 +1,4 @@
-export type Status = 'ABERTO' | 'APROVADO' | 'RECUSADO' | 'ENTREGUE'
+export type Status = 'ABERTO' | 'APROVADO' | 'RECUSADO'
 
 // datas como 'YYYY-MM-DD', valor como string (numeric do pg)
 export type Orcamento = {

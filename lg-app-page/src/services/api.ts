@@ -1,6 +1,6 @@
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
-export type Status = 'ABERTO' | 'APROVADO' | 'RECUSADO' | 'ENTREGUE'
+export type Status = 'ABERTO' | 'APROVADO' | 'RECUSADO'
 
 export type OrcamentoLinha = {
   id: number

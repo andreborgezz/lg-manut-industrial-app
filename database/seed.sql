@@ -44,11 +44,11 @@ INSERT INTO solicitantes (empresa_id, nome, email, telefone) VALUES
 INSERT INTO orcamentos (empresa_id, solicitante_id, mecanico_id, maquina, titulo, escopo, valor, prazo_dias, fim_de_semana, status, entrada_em, numero_pedido, inicio_em, entrega_em) VALUES
   (1, 1, 1, 'Torno CNC Romi GL 240', 'Revisão Torno CNC',
    'Substituição de rolamentos do eixo principal\nLimpeza e lubrificação do cabeçote\nCalibração do encoder de posicionamento\nTeste de ciclo completo',
-   4800.00, 5, false, 'ENTREGUE', '2026-08-10', 'PO-2026-0041', '2026-08-12', '2026-08-17'),
+   4800.00, 5, false, 'APROVADO', '2026-08-10', 'PO-2026-0041', '2026-08-12', '2026-08-17'),
 
   (2, 3, 2, 'Prensa Hidráulica 200T', 'Manutenção Prensa Hidráulica',
    'Troca de vedações do cilindro principal\nSubstituição do fluido hidráulico\nAjuste da válvula de alívio\nVerificação do sistema elétrico de comando',
-   7200.00, 7, true, 'ENTREGUE', '2026-08-20', 'PO-2026-0055', '2026-08-22', '2026-08-29'),
+   7200.00, 7, true, 'APROVADO', '2026-08-20', 'PO-2026-0055', '2026-08-22', '2026-08-29'),
 
   (3, 4, 3, 'Injetora de Plástico 500T', 'Corretiva Injetora',
    'Diagnóstico de falha no sistema de injeção\nSubstituição da bomba de óleo\nAlinhamento do molde\nParametrização do CLP',
@@ -60,7 +60,7 @@ INSERT INTO orcamentos (empresa_id, solicitante_id, mecanico_id, maquina, titulo
 
   (4, 5, 2, 'Caminhão Volvo FH 460 - Placa ABC-1234', 'Manutenção Preventiva Frota',
    'Troca de óleo e filtros\nVerificação do sistema de freios\nInspeção da suspensão\nDiagnóstico eletrônico OBD',
-   2100.00, 3, false, 'ENTREGUE', '2026-09-18', null, '2026-09-19', '2026-09-22'),
+   2100.00, 3, false, 'APROVADO', '2026-09-18', null, '2026-09-19', '2026-09-22'),
 
   (5, 6, 3, 'Câmara Fria Carrier 40TR', 'Revisão Sistema de Refrigeração',
    'Recarga de gás R-404A\nLimpeza do condensador\nVerificação do compressor\nCalibração do termostato',

@@ -62,7 +62,7 @@ const campos = {
   entregaEm: data,
 }
 
-export const statusSchema = z.enum(['ABERTO', 'APROVADO', 'RECUSADO', 'ENTREGUE'])
+export const statusSchema = z.enum(['ABERTO', 'APROVADO', 'RECUSADO'])
 
 type Datas = { inicioEm?: string | null; entregaEm?: string | null }
 

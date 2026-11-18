@@ -58,7 +58,7 @@ create table orcamentos (
   prazo_dias int,
   fim_de_semana boolean not null default false,
   status text not null default 'ABERTO'
-    check (status in ('ABERTO', 'APROVADO', 'RECUSADO', 'ENTREGUE')),
+    check (status in ('ABERTO', 'APROVADO', 'RECUSADO')),
   entrada_em date not null default current_date,
   numero_pedido text,
   inicio_em date,

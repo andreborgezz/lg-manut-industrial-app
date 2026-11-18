@@ -21,7 +21,6 @@ const BADGE: Record<string, string> = {
   ABERTO: 'badge-aberto',
   APROVADO: 'badge-aprovado',
   RECUSADO: 'badge-recusado',
-  ENTREGUE: 'badge-entregue',
 }
 
 function PaginaEmpresaDetalhe() {
