@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { asyncHandler as h } from '../utils/asyncHandler'
 import { AppError } from '../utils/errors'
-import { buscarPorId } from '../services/orcamento.service'
+import { buscarLinha, buscarPorId } from '../services/orcamento.service'
 import { gerarPdfOrcamento } from '../services/pdf.service'
 import { nomeArquivoDownload } from '../pdf/orcamento.template'
 import { enviarPdf, urlAssinada } from '../services/storage.service'
@@ -49,7 +49,8 @@ pdfRoutes.post('/:id/pdf', h(async (req, res) => {
   // grava o caminho no banco
   await pool.query('UPDATE orcamentos SET pdf_path = $2 WHERE id = $1', [id, chave])
 
-  const url = await urlAssinada(chave, 300, nomeArquivoDownload(orc.numero, orc.titulo))
+  const linha = await buscarLinha(id)
+  const url = await urlAssinada(chave, 300, nomeArquivoDownload(orc.numero, orc.titulo, linha?.empresa))
   res.json({ url })
 }))
 
@@ -63,6 +64,7 @@ pdfRoutes.get('/:id/pdf', h(async (req, res) => {
 
   if (!orc.pdfPath) throw new AppError('PDF ainda não gerado para este orçamento', 404)
 
-  const url = await urlAssinada(orc.pdfPath, 300, nomeArquivoDownload(orc.numero, orc.titulo))
+  const linha = await buscarLinha(id)
+  const url = await urlAssinada(orc.pdfPath, 300, nomeArquivoDownload(orc.numero, orc.titulo, linha?.empresa))
   res.json({ url })
 }))

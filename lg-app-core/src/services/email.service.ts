@@ -262,7 +262,7 @@ export async function enviarEmailOrcamento(
     html,
     attachments: [
       {
-        filename: `${nomeArquivoDownload(orc.numero, orc.titulo)}.pdf`,
+        filename: `${nomeArquivoDownload(orc.numero, orc.titulo, info.empresaNome)}.pdf`,
         content: pdfBuffer,
       },
     ],

@@ -32,10 +32,9 @@ function nomeArquivo(numero: number, titulo: string | null): string {
   return `ORÇAMENTO_${numero}_${limpo}`
 }
 
-// nome do arquivo para download/anexo: numero_titulo (ASCII seguro para header HTTP)
-export function nomeArquivoDownload(numero: number, titulo: string | null): string {
-  if (!titulo || !titulo.trim()) return `${numero}`
-  const limpo = titulo
+function limparParteArquivo(texto?: string | null): string {
+  if (!texto || !texto.trim()) return ''
+  return texto
     .trim()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -44,7 +43,12 @@ export function nomeArquivoDownload(numero: number, titulo: string | null): stri
     .replace(/[^A-Z0-9_]/g, '')
     .replace(/_+/g, '_')
     .replace(/^_|_$/g, '')
-  return limpo ? `${numero}_${limpo}` : `${numero}`
+}
+
+// nome do arquivo para download/anexo: numero_titulo_empresa (ASCII seguro para header HTTP)
+export function nomeArquivoDownload(numero: number, titulo: string | null, empresaNome?: string | null): string {
+  const partes = [String(numero), limparParteArquivo(titulo), limparParteArquivo(empresaNome)].filter(Boolean)
+  return partes.join('_')
 }
 
 // formata valor BRL sem espaço após R$ (ex: "R$2.025,00")
