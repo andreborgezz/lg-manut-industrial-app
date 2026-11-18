@@ -33,6 +33,8 @@ jobs:
             set -e
             cd "$APP_DIR"
 
+            git config --global --get-all safe.directory | grep -qxF "$APP_DIR" || git config --global --add safe.directory "$APP_DIR"
+
             echo "==> Atualizando código ($BRANCH)..."
             git fetch origin "$BRANCH"
             git reset --hard "origin/$BRANCH"
