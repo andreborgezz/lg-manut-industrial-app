@@ -187,3 +187,8 @@ export const atualizar = async (id: number, body: unknown): Promise<OrcamentoLin
   await pool.query(`update orcamentos set ${sets.join(', ')} where id = $1`, [id, ...valores])
   return buscarLinha(id)
 }
+
+export const remover = async (id: number): Promise<boolean> => {
+  const { rowCount } = await pool.query('delete from orcamentos where id = $1', [id])
+  return (rowCount ?? 0) > 0
+}

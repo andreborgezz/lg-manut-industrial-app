@@ -13,12 +13,14 @@ import {
   MessageCircle,
   Pencil,
   Search,
+  Trash2,
   X,
 } from 'lucide-react'
 import {
   atualizarOrcamento,
   buscarOrcamento,
   buscarUrlPdfOrcamento,
+  excluirOrcamento,
   gerarPdfOrcamento,
   listarMecanicos,
   listarOrcamentos,
@@ -130,6 +132,7 @@ interface MenuAcoesProps {
   compartilharWhatsapp: (o: OrcamentoLinha) => void
   compartilhando: number | null
   abrirEmail: (o: OrcamentoLinha) => void
+  confirmarExclusao: (o: OrcamentoLinha) => void
 }
 
 function MenuAcoes({
@@ -144,6 +147,7 @@ function MenuAcoes({
   compartilharWhatsapp,
   compartilhando,
   abrirEmail,
+  confirmarExclusao,
 }: MenuAcoesProps) {
   const triggerRef = useRef<HTMLButtonElement>(null)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -165,7 +169,7 @@ function MenuAcoes({
       if (!triggerRef.current) return
       const rect = triggerRef.current.getBoundingClientRect()
       const menuWidth = 185
-      const menuHeight = 205
+      const menuHeight = 245
       const espacoAbaixo = window.innerHeight - rect.bottom
       const abrirParaCima = espacoAbaixo < menuHeight && rect.top > menuHeight
 
@@ -331,6 +335,20 @@ function MenuAcoes({
               <Mail size={14} />
               <span>Enviar por E-mail</span>
             </button>
+
+            <div className="orc-dropdown-divisor" />
+
+            <button
+              type="button"
+              className="orc-dropdown-item orc-item-excluir"
+              onClick={() => {
+                onFechar()
+                confirmarExclusao(o)
+              }}
+            >
+              <Trash2 size={14} />
+              <span>Excluir</span>
+            </button>
           </div>,
           document.body,
         )}
@@ -348,6 +366,7 @@ function montarColunas(
   compartilharWhatsapp: (o: OrcamentoLinha) => void,
   compartilhando: number | null,
   abrirEmail: (o: OrcamentoLinha) => void,
+  confirmarExclusao: (o: OrcamentoLinha) => void,
   menuAbertoId: number | null,
   setMenuAbertoId: React.Dispatch<React.SetStateAction<number | null>>,
 ): Coluna[] {
@@ -497,6 +516,7 @@ function montarColunas(
           compartilharWhatsapp={compartilharWhatsapp}
           compartilhando={compartilhando}
           abrirEmail={abrirEmail}
+          confirmarExclusao={confirmarExclusao}
         />
       ),
     },
@@ -530,6 +550,8 @@ export function OrcamentosTable({
   const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
   const [urlPdfBloqueado, setUrlPdfBloqueado] = useState<string | null>(null)
   const [orcamentoParaEmail, setOrcamentoParaEmail] = useState<OrcamentoLinha | null>(null)
+  const [orcamentoParaExcluir, setOrcamentoParaExcluir] = useState<OrcamentoLinha | null>(null)
+  const [excluindo, setExcluindo] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -712,6 +734,26 @@ export function OrcamentosTable({
 
   const [menuAbertoId, setMenuAbertoId] = useState<number | null>(null)
 
+  async function confirmarExclusaoOrcamento() {
+    if (!orcamentoParaExcluir) return
+    const alvo = orcamentoParaExcluir
+    setExcluindo(true)
+    try {
+      await excluirOrcamento(alvo.id)
+      setTodosOrcamentos((ls) => ls.filter((l) => l.id !== alvo.id))
+      setOrcamentoParaExcluir(null)
+      toast.mostrar({
+        tipo: 'sucesso',
+        mensagem: `Orçamento nº ${alvo.numero} excluído.`,
+      })
+    } catch (e) {
+      setAviso(`Orçamento ${alvo.numero}: ${e instanceof Error ? e.message : 'erro ao excluir'}`)
+      setOrcamentoParaExcluir(null)
+    } finally {
+      setExcluindo(false)
+    }
+  }
+
   const colunas = montarColunas(
     mecanicos,
     salvar,
@@ -722,6 +764,7 @@ export function OrcamentosTable({
     compartilharWhatsapp,
     compartilhando,
     (o) => setOrcamentoParaEmail(o),
+    (o) => setOrcamentoParaExcluir(o),
     menuAbertoId,
     setMenuAbertoId,
   )
@@ -1060,6 +1103,42 @@ export function OrcamentosTable({
             })
           }}
         />
+      )}
+
+      {orcamentoParaExcluir && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !excluindo) setOrcamentoParaExcluir(null)
+          }}
+        >
+          <div className="orc-modal-excluir" role="dialog" aria-modal="true" aria-labelledby="excluir-titulo">
+            <h3 id="excluir-titulo">Excluir orçamento nº {orcamentoParaExcluir.numero}?</h3>
+            <p>
+              Empresa: <strong>{orcamentoParaExcluir.empresa}</strong>
+              {orcamentoParaExcluir.maquina ? ` · ${orcamentoParaExcluir.maquina}` : ''}
+            </p>
+            <p className="orc-modal-excluir-aviso">Essa ação não pode ser desfeita.</p>
+            <div className="orc-modal-excluir-acoes">
+              <button
+                type="button"
+                className="btn-secundario"
+                onClick={() => setOrcamentoParaExcluir(null)}
+                disabled={excluindo}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="orc-btn-confirmar-excluir"
+                onClick={confirmarExclusaoOrcamento}
+                disabled={excluindo}
+              >
+                {excluindo ? 'Excluindo...' : 'Excluir orçamento'}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </section>
   )

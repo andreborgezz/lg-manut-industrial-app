@@ -678,3 +678,75 @@ th.col-fixa-acoes {
   display: flex;
   align-items: center;
 }
+
+
+/* Ação Excluir no dropdown e modal de confirmação */
+.orc-item-excluir {
+  color: #dc2626;
+}
+
+.orc-item-excluir:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.orc-modal-excluir {
+  width: min(400px, 100% - 32px);
+  background-color: #ffffff;
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-modal);
+  padding: 20px 22px;
+  box-shadow: 0 24px 60px -12px rgba(15, 23, 42, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orc-modal-excluir h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.orc-modal-excluir p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--cor-texto-secundario);
+  line-height: 1.45;
+}
+
+.orc-modal-excluir-aviso {
+  font-size: 12px !important;
+  color: #b91c1c !important;
+}
+
+.orc-modal-excluir-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.orc-btn-confirmar-excluir {
+  height: var(--altura-controle);
+  padding: 0 16px;
+  border-radius: var(--raio-controle);
+  border: 1px solid #dc2626;
+  background-color: #dc2626;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.orc-btn-confirmar-excluir:hover:not(:disabled) {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.orc-btn-confirmar-excluir:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

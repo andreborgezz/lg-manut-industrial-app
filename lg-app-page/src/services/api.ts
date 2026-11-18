@@ -206,6 +206,9 @@ export const criarOrcamento = (body: NovoOrcamentoBody) =>
 export const atualizarOrcamento = (id: number, patch: AtualizarOrcamentoBody) =>
   chamar<OrcamentoLinha>(`/orcamentos/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
 
+export const excluirOrcamento = (id: number) =>
+  chamar<{ ok: boolean }>(`/orcamentos/${id}`, { method: 'DELETE' })
+
 export const gerarPdfOrcamento = (id: number) =>
   chamar<{ url: string }>(`/orcamentos/${id}/pdf`, { method: 'POST' })
 
