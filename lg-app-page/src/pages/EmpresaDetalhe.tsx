@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, Building2, Mail, MapPin, Pencil, Phone, Users } from 'lucide-react'
+import { ArrowLeft, Building2, Mail, Pencil, Phone } from 'lucide-react'
 import { Layout } from '../components/Layout/Layout'
 import { EmpresaModal } from '../components/EmpresaModal/EmpresaModal'
 import { NovoOrcamentoModal, type InicialOrcamento } from '../components/NovoOrcamentoModal/NovoOrcamentoModal'
@@ -78,7 +78,7 @@ function PaginaEmpresaDetalhe() {
   if (carregando) return <Layout><p className="emp-detalhe-carregando">Carregando ficha da empresa...</p></Layout>
   if (erro || !detalhe) return <Layout><p className="emp-detalhe-erro">{erro || 'Empresa não encontrada.'}</p></Layout>
 
-  const { empresa, solicitantes, contatos = [], orcamentos, totalAcumulado } = detalhe
+  const { empresa, solicitantes, orcamentos, totalAcumulado } = detalhe
 
   return (
     <Layout>
@@ -126,61 +126,12 @@ function PaginaEmpresaDetalhe() {
               {empresa.email ? <a href={`mailto:${empresa.email}`}>{empresa.email}</a> : '-'}
             </span>
           </div>
-          <div className="emp-ficha-campo emp-ficha-span-2">
-            <span className="emp-ficha-rotulo">
-              <MapPin size={11} /> Endereço
-            </span>
-            <span className="emp-ficha-valor">{empresa.endereco || '-'}</span>
-          </div>
-          {empresa.observacoes && (
-            <div className="emp-ficha-campo emp-ficha-span-full">
-              <span className="emp-ficha-rotulo">Observações</span>
-              <span className="emp-ficha-valor">{empresa.observacoes}</span>
-            </div>
-          )}
         </div>
       </section>
 
       <div className="emp-detalhe-grade">
-        {/* Coluna esquerda: Contatos e Solicitantes */}
+        {/* Coluna esquerda: Solicitantes */}
         <div className="emp-detalhe-lateral">
-          <section className="emp-detalhe-card">
-            <div className="emp-card-topo">
-              <span className="emp-card-topo-titulo">
-                <Users size={14} />
-                <span>Contatos ({contatos.length})</span>
-              </span>
-            </div>
-            {contatos.length === 0 ? (
-              <p className="emp-detalhe-vazio">Nenhum contato cadastrado.</p>
-            ) : (
-              <ul className="emp-sol-lista">
-                {contatos.map((c) => (
-                  <li key={c.id} className="emp-sol-item">
-                    <div className="emp-sol-cabecalho">
-                      <span className="emp-sol-nome">{c.nome}</span>
-                      {c.cargo && <span className="emp-sol-cargo">{c.cargo}</span>}
-                    </div>
-                    <div className="emp-sol-contato">
-                      {c.telefone && (
-                        <span className="emp-sol-dado">
-                          <Phone size={12} />
-                          <span className="tabular-nums">{c.telefone}</span>
-                        </span>
-                      )}
-                      {c.email && (
-                        <a href={`mailto:${c.email}`} className="emp-sol-dado">
-                          <Mail size={12} />
-                          <span>{c.email}</span>
-                        </a>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-
           <section className="emp-detalhe-card">
             <div className="emp-card-topo">
               <span className="emp-card-topo-titulo">

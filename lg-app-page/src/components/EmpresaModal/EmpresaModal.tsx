@@ -3,12 +3,9 @@ import { Plus, Trash2 } from 'lucide-react'
 import {
   atualizarEmpresa,
   criarEmpresa,
-  criarCttEmpresa,
   criarSolicitante,
-  listarCttEmpresas,
   listarSolicitantes,
   type Empresa,
-  type CttEmpresa,
   type Solicitante,
 } from '../../services/api'
 import './EmpresaModal.css'
@@ -20,13 +17,11 @@ type Props = {
   editando?: Empresa
 }
 
-type ContatoRascunho = {
+type SolicitanteRascunho = {
   tempId: number
   nome: string
   telefone: string
   email: string
-  cargo: string
-  tambemSolicitante: boolean
 }
 
 function formatarCnpj(valor: string): string {
@@ -52,28 +47,23 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
   const [email, setEmail] = useState(editando?.email ?? '')
   const [cnpj, setCnpj] = useState(editando?.cnpj ? formatarCnpj(editando.cnpj) : '')
   const [telefone, setTelefone] = useState(editando?.telefone ? formatarTelefone(editando.telefone) : '')
-  const [endereco, setEndereco] = useState(editando?.endereco ?? '')
-  const [observacoes, setObservacoes] = useState(editando?.observacoes ?? '')
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
 
-  // Contatos & solicitantes existentes (modo edição)
-  const [contatos, setContatos] = useState<CttEmpresa[]>([])
+  // Solicitantes existentes (modo edição)
   const [solicitantes, setSolicitantes] = useState<Solicitante[]>([])
-  const [carregandoContatos, setCarregandoContatos] = useState(!!editando)
+  const [carregandoSolicitantes, setCarregandoSolicitantes] = useState(!!editando)
 
   // Rascunhos (modo criação — salvos junto com a empresa)
-  const [rascunhos, setRascunhos] = useState<ContatoRascunho[]>([])
+  const [rascunhos, setRascunhos] = useState<SolicitanteRascunho[]>([])
 
-  // Campos para novo contato/solicitante
-  const [addContato, setAddContato] = useState(false)
-  const [cttNome, setCttNome] = useState('')
-  const [cttTelefone, setCttTelefone] = useState('')
-  const [cttEmail, setCttEmail] = useState('')
-  const [cttCargo, setCttCargo] = useState('')
-  const [cttTambemSolicitante, setCttTambemSolicitante] = useState(true)
-  const [cttErro, setCttErro] = useState('')
-  const [salvandoCtt, setSalvandoCtt] = useState(false)
+  // Campos para novo solicitante
+  const [addSolicitante, setAddSolicitante] = useState(false)
+  const [solNome, setSolNome] = useState('')
+  const [solTelefone, setSolTelefone] = useState('')
+  const [solEmail, setSolEmail] = useState('')
+  const [solErro, setSolErro] = useState('')
+  const [salvandoSol, setSalvandoSol] = useState(false)
 
   const nomeRef = useRef<HTMLInputElement>(null)
 
@@ -83,13 +73,10 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
 
   useEffect(() => {
     if (!editando) return
-    Promise.all([listarCttEmpresas(editando.id), listarSolicitantes(editando.id)])
-      .then(([ctts, sols]) => {
-        setContatos(ctts)
-        setSolicitantes(sols)
-      })
-      .catch(() => setErro('Erro ao carregar contatos'))
-      .finally(() => setCarregandoContatos(false))
+    listarSolicitantes(editando.id)
+      .then(setSolicitantes)
+      .catch(() => setErro('Erro ao carregar solicitantes'))
+      .finally(() => setCarregandoSolicitantes(false))
   }, [editando])
 
   // fecha com esc
@@ -99,14 +86,12 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [onFechar, salvando])
 
-  function limparFormContato() {
-    setAddContato(false)
-    setCttNome('')
-    setCttTelefone('')
-    setCttEmail('')
-    setCttCargo('')
-    setCttTambemSolicitante(true)
-    setCttErro('')
+  function limparFormSolicitante() {
+    setAddSolicitante(false)
+    setSolNome('')
+    setSolTelefone('')
+    setSolEmail('')
+    setSolErro('')
   }
 
   async function enviar(ev: FormEvent) {
@@ -116,64 +101,40 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
     setSalvando(true)
     setErro('')
     try {
+      const dados = {
+        nome: nome.trim(),
+        email: email.trim() || null,
+        cnpj: cnpj.trim() || null,
+        telefone: telefone.trim() || null,
+      }
       let salva: Empresa
       if (editando) {
-        salva = await atualizarEmpresa(editando.id, {
-          nome: nome.trim(),
-          email: email.trim() || null,
-          cnpj: cnpj.trim() || null,
-          telefone: telefone.trim() || null,
-          endereco: endereco.trim() || null,
-          observacoes: observacoes.trim() || null,
-        })
+        salva = await atualizarEmpresa(editando.id, dados)
       } else {
-        salva = await criarEmpresa({
-          nome: nome.trim(),
-          email: email.trim() || null,
-          cnpj: cnpj.trim() || null,
-          telefone: telefone.trim() || null,
-          endereco: endereco.trim() || null,
-          observacoes: observacoes.trim() || null,
-        })
+        salva = await criarEmpresa(dados)
 
-        // Se houver contatos/solicitantes adicionados durante a criação, grava todos junto
+        // Solicitantes adicionados durante a criação são gravados junto
         const pendentes = [...rascunhos]
-        // Se o usuário preencheu o mini-form de contato mas esqueceu de clicar "Adicionar", inclui automaticamente
-        if (addContato && cttNome.trim()) {
+        // Se o mini-form foi preenchido mas o usuário esqueceu de clicar "Adicionar", inclui automaticamente
+        if (addSolicitante && solNome.trim()) {
           pendentes.push({
             tempId: Date.now(),
-            nome: cttNome.trim(),
-            telefone: cttTelefone.trim(),
-            email: cttEmail.trim(),
-            cargo: cttCargo.trim(),
-            tambemSolicitante: cttTambemSolicitante,
+            nome: solNome.trim(),
+            telefone: solTelefone.trim(),
+            email: solEmail.trim(),
           })
         }
 
         if (pendentes.length > 0) {
           await Promise.all(
-            pendentes.flatMap((c) => {
-              const chamadas: Promise<unknown>[] = [
-                criarCttEmpresa({
-                  empresaId: salva.id,
-                  nome: c.nome,
-                  telefone: c.telefone || null,
-                  email: c.email || null,
-                  cargo: c.cargo || null,
-                }),
-              ]
-              if (c.tambemSolicitante) {
-                chamadas.push(
-                  criarSolicitante({
-                    empresaId: salva.id,
-                    nome: c.nome,
-                    telefone: c.telefone || null,
-                    email: c.email || null,
-                  })
-                )
-              }
-              return chamadas
-            })
+            pendentes.map((s) =>
+              criarSolicitante({
+                empresaId: salva.id,
+                nome: s.nome,
+                telefone: s.telefone || null,
+                email: s.email || null,
+              })
+            )
           )
         }
       }
@@ -184,57 +145,33 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
     }
   }
 
-  async function salvarContato() {
-    if (!cttNome.trim()) return setCttErro('Nome do contato é obrigatório')
+  async function salvarSolicitante() {
+    if (!solNome.trim()) return setSolErro('Nome do solicitante é obrigatório')
 
     if (!editando) {
       setRascunhos((lista) => [
         ...lista,
-        {
-          tempId: Date.now(),
-          nome: cttNome.trim(),
-          telefone: cttTelefone.trim(),
-          email: cttEmail.trim(),
-          cargo: cttCargo.trim(),
-          tambemSolicitante: cttTambemSolicitante,
-        },
+        { tempId: Date.now(), nome: solNome.trim(), telefone: solTelefone.trim(), email: solEmail.trim() },
       ])
-      limparFormContato()
+      limparFormSolicitante()
       return
     }
 
-    setSalvandoCtt(true)
-    setCttErro('')
+    setSalvandoSol(true)
+    setSolErro('')
     try {
-      const novo = await criarCttEmpresa({
+      const novo = await criarSolicitante({
         empresaId: editando.id,
-        nome: cttNome.trim(),
-        telefone: cttTelefone.trim() || null,
-        email: cttEmail.trim() || null,
-        cargo: cttCargo.trim() || null,
+        nome: solNome.trim(),
+        telefone: solTelefone.trim() || null,
+        email: solEmail.trim() || null,
       })
-      setContatos((lista) => [...lista, novo])
-
-      if (cttTambemSolicitante) {
-        const jaExiste = solicitantes.some(
-          (s) => s.nome.toLowerCase() === cttNome.trim().toLowerCase()
-        )
-        if (!jaExiste) {
-          const novoSol = await criarSolicitante({
-            empresaId: editando.id,
-            nome: cttNome.trim(),
-            telefone: cttTelefone.trim() || null,
-            email: cttEmail.trim() || null,
-          })
-          setSolicitantes((lista) => [...lista, novoSol])
-        }
-      }
-
-      limparFormContato()
+      setSolicitantes((lista) => [...lista, novo])
+      limparFormSolicitante()
     } catch (e) {
-      setCttErro(e instanceof Error ? e.message : 'Erro ao adicionar contato')
+      setSolErro(e instanceof Error ? e.message : 'Erro ao adicionar solicitante')
     } finally {
-      setSalvandoCtt(false)
+      setSalvandoSol(false)
     }
   }
 
@@ -300,79 +237,54 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
                     disabled={salvando}
                   />
                 </label>
-                <label className="modal-campo modal-span-2">
-                  <span>Endereço</span>
-                  <input
-                    value={endereco}
-                    placeholder="Rua, número, bairro, cidade - UF"
-                    onChange={(e) => setEndereco(e.target.value)}
-                    disabled={salvando}
-                  />
-                </label>
-                <label className="modal-campo modal-span-2">
-                  <span>Observações</span>
-                  <input
-                    value={observacoes}
-                    placeholder="Ex: Condição de pagamento, horário de recebimento..."
-                    onChange={(e) => setObservacoes(e.target.value)}
-                    disabled={salvando}
-                  />
-                </label>
               </div>
             </section>
 
             <section className="modal-bloco">
               <h3 className="modal-bloco-titulo emp-bloco-topo">
-                <span>Contatos & Solicitantes</span>
-                {!addContato && (
-                  <button type="button" className="btn-texto" onClick={() => setAddContato(true)} disabled={salvando}>
+                <span>Solicitantes</span>
+                {!addSolicitante && (
+                  <button type="button" className="btn-texto" onClick={() => setAddSolicitante(true)} disabled={salvando}>
                     <Plus size={14} />
-                    <span>Adicionar pessoa</span>
+                    <span>Adicionar solicitante</span>
                   </button>
                 )}
               </h3>
 
-              {carregandoContatos && <p className="emp-ctt-vazio">Carregando contatos...</p>}
+              {carregandoSolicitantes && <p className="emp-ctt-vazio">Carregando solicitantes...</p>}
 
-              {editando && !carregandoContatos && contatos.length > 0 && (
+              {editando && !carregandoSolicitantes && solicitantes.length > 0 && (
                 <ul className="emp-ctt-lista">
-                  {contatos.map((c) => {
-                    const ehSolicitante = solicitantes.some(
-                      (s) => s.nome.toLowerCase() === c.nome.toLowerCase()
-                    )
-                    return (
-                      <li key={c.id} className="emp-ctt-item">
-                        <div>
-                          <strong>{c.nome}</strong> {c.cargo && <span className="emp-ctt-cargo">({c.cargo})</span>}
-                          {ehSolicitante && <span className="emp-ctt-badge">Solicitante</span>}
-                          <div className="emp-ctt-detalhes">
-                            {c.telefone && <span>{c.telefone}</span>}
-                            {c.email && <span>{c.email}</span>}
-                          </div>
+                  {solicitantes.map((s) => (
+                    <li key={s.id} className="emp-ctt-item">
+                      <div>
+                        <strong>{s.nome}</strong>
+                        <div className="emp-ctt-detalhes">
+                          {s.telefone && <span>{s.telefone}</span>}
+                          {s.email && <span>{s.email}</span>}
                         </div>
-                      </li>
-                    )
-                  })}
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               )}
 
               {!editando && rascunhos.length > 0 && (
                 <ul className="emp-ctt-lista">
-                  {rascunhos.map((c) => (
-                    <li key={c.tempId} className="emp-ctt-item">
+                  {rascunhos.map((s) => (
+                    <li key={s.tempId} className="emp-ctt-item">
                       <div>
-                        <strong>{c.nome}</strong> {c.cargo && <span className="emp-ctt-cargo">({c.cargo})</span>}
-                        {c.tambemSolicitante && <span className="emp-ctt-badge">Solicitante</span>}
+                        <strong>{s.nome}</strong>
                         <div className="emp-ctt-detalhes">
-                          {c.telefone && <span>{c.telefone}</span>}
-                          {c.email && <span>{c.email}</span>}
+                          {s.telefone && <span>{s.telefone}</span>}
+                          {s.email && <span>{s.email}</span>}
                         </div>
                       </div>
                       <button
                         type="button"
                         className="emp-ctt-remover"
-                        onClick={() => setRascunhos((l) => l.filter((x) => x.tempId !== c.tempId))}
-                        aria-label={`Remover ${c.nome}`}
+                        onClick={() => setRascunhos((l) => l.filter((x) => x.tempId !== s.tempId))}
+                        aria-label={`Remover ${s.nome}`}
                         title="Remover"
                       >
                         <Trash2 size={14} />
@@ -382,78 +294,57 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
                 </ul>
               )}
 
-              {!carregandoContatos &&
-                ((editando && contatos.length === 0) || (!editando && rascunhos.length === 0)) &&
-                !addContato && (
+              {!carregandoSolicitantes &&
+                ((editando && solicitantes.length === 0) || (!editando && rascunhos.length === 0)) &&
+                !addSolicitante && (
                   <p className="emp-ctt-vazio">
-                    Nenhum contato adicionado. Você já pode cadastrar aqui antes mesmo de salvar.
+                    Nenhum solicitante adicionado. Você já pode cadastrar aqui antes mesmo de salvar.
                   </p>
                 )}
 
-              {addContato && (
+              {addSolicitante && (
                 <div className="modal-mini-form">
                   <label className="modal-campo">
-                    <span>Nome do contato *</span>
+                    <span>Nome do solicitante *</span>
                     <input
-                      value={cttNome}
+                      value={solNome}
                       placeholder="Ex: Paulo Henrique"
                       onChange={(e) => {
-                        setCttNome(e.target.value)
-                        setCttErro('')
+                        setSolNome(e.target.value)
+                        setSolErro('')
                       }}
                     />
                   </label>
                   <label className="modal-campo">
-                    <span>Telefone / WhatsApp</span>
+                    <span>Telefone</span>
                     <input
                       type="tel"
                       placeholder="(00) 00000-0000"
-                      value={cttTelefone}
-                      onChange={(e) => setCttTelefone(formatarTelefone(e.target.value))}
+                      value={solTelefone}
+                      onChange={(e) => setSolTelefone(formatarTelefone(e.target.value))}
                     />
                   </label>
-                  <label className="modal-campo">
+                  <label className="modal-campo modal-span-2">
                     <span>E-mail</span>
                     <input
                       type="email"
                       placeholder="nome@empresa.com.br"
-                      value={cttEmail}
-                      onChange={(e) => setCttEmail(e.target.value)}
-                    />
-                  </label>
-                  <label className="modal-campo">
-                    <span>Cargo</span>
-                    <input
-                      value={cttCargo}
-                      placeholder="Ex: Comprador / Manutenção"
-                      onChange={(e) => setCttCargo(e.target.value)}
+                      value={solEmail}
+                      onChange={(e) => setSolEmail(e.target.value)}
                     />
                   </label>
 
-                  <label className="emp-ctt-check modal-span-2">
-                    <input
-                      type="checkbox"
-                      checked={cttTambemSolicitante}
-                      onChange={(e) => setCttTambemSolicitante(e.target.checked)}
-                    />
-                    <span>Também cadastrar como solicitante de orçamentos</span>
-                  </label>
-
-                  {cttErro && <p className="modal-erro modal-span-2">{cttErro}</p>}
+                  {solErro && <p className="modal-erro modal-span-2">{solErro}</p>}
                   <div className="emp-mini-acoes">
                     <button
                       type="button"
                       className="btn-primario"
-                      onClick={salvarContato}
-                      disabled={salvandoCtt}
+                      onClick={salvarSolicitante}
+                      disabled={salvandoSol}
                     >
-                      {salvandoCtt ? 'Salvando...' : editando ? 'Salvar contato' : 'Adicionar na lista'}
+                      {salvandoSol ? 'Salvando...' : editando ? 'Salvar solicitante' : 'Adicionar na lista'}
                     </button>
-                    <button
-                      type="button"
-                      className="modal-cancelar"
-                      onClick={limparFormContato}
-                    >
+                    <button type="button" className="modal-cancelar" onClick={limparFormSolicitante}>
                       Cancelar
                     </button>
                   </div>

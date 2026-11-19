@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { ExternalLink, Loader2, Pencil, Search, Trash2 } from "lucide-react";
 import { atualizarEmpresa, excluirEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
-import { TelefonesSelect } from "./TelefonesSelect";
 import { useToast } from "../Toast/Toast";
 import { normalizarTexto } from "../../utils/texto";
 import "./EmpresasTable.css";
@@ -13,7 +12,7 @@ type Acao = 'editar';
 type Coluna = { titulo: string; classeColuna?: string; render: (e: Empresa) => React.ReactNode };
 
 function montarColunas(
-  salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null; endereco?: string | null }) => Promise<void>,
+  salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) => Promise<void>,
   abrir: (e: Empresa, acao: Acao) => void,
   carregando: { id: number; acao: Acao } | null,
   navegar: (id: number) => void,
@@ -63,25 +62,6 @@ function montarColunas(
           onSalvar={(v) => salvar(e, { telefone: v.trim() || null })}
         />
       ),
-    },
-    {
-      titulo: 'ENDEREÇO',
-      render: (e) => (
-        <CelulaEditavel
-          tipo="texto"
-          rotulo={`Endereço da empresa ${e.id}`}
-          valor={e.endereco ?? ''}
-          onSalvar={(v) => salvar(e, { endereco: v.trim() || null })}
-        />
-      ),
-    },
-    {
-      titulo: 'CONTATOS',
-      render: (e) => (
-        <TelefonesSelect 
-          empresaId={e.id} 
-        />
-      )
     },
     {
       titulo: 'AÇÕES',
@@ -150,7 +130,7 @@ export function EmpresasTable({
     return () => clearTimeout(t)
   }, [aviso])
 
-  async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null; endereco?: string | null }) {
+  async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) {
     try {
       const nova = await atualizarEmpresa(e.id, patch)
       setTodasEmpresas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
@@ -219,7 +199,6 @@ export function EmpresasTable({
       normalizarTexto(d.cnpj).includes(q) ||
       normalizarTexto(d.email).includes(q) ||
       normalizarTexto(d.telefone).includes(q) ||
-      normalizarTexto(d.endereco).includes(q) ||
       String(d.id).includes(q)
     )
   }, [todasEmpresas, busca])
@@ -298,7 +277,7 @@ export function EmpresasTable({
         >
           <div className="emp-modal-excluir" role="dialog" aria-modal="true" aria-labelledby="emp-excluir-titulo">
             <h3 id="emp-excluir-titulo">Excluir empresa "{empresaParaExcluir.nome}"?</h3>
-            <p>Os contatos e solicitantes vinculados também serão removidos.</p>
+            <p>Os solicitantes vinculados também serão removidos.</p>
             <div className="emp-modal-excluir-acoes">
               <button
                 type="button"

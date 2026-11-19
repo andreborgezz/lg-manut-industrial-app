@@ -552,11 +552,6 @@ th.col-fixa-acoes {
   color: #1d4ed8;
 }
 
-.orc-dropdown-item.orc-item-wa:hover:not(:disabled) {
-  background-color: #f0fdf4;
-  color: #15803d;
-}
-
 .orc-dropdown-item.orc-item-email:hover:not(:disabled) {
   background-color: #f8fafc;
   color: #0369a1;

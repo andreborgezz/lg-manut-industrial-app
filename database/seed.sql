@@ -22,15 +22,6 @@ INSERT INTO empresas (nome, cnpj, email) VALUES
   ('Transportadora Rota Sul', '77.888.999/0001-44', 'frota@rotasul.com.br'),
   ('Frigorífico Central Carnes', '33.444.555/0001-55', 'ti@centralcarnes.com.br');
 
--- Contatos das empresas
-INSERT INTO ctt_empresas (empresa_id, nome, email, cargo, telefone) VALUES
-  (1, 'Marcos Pereira', 'marcos@metalvega.com.br', 'Gerente de Manutenção', '(11) 98001-1111'),
-  (1, 'Juliana Costa', 'juliana@metalvega.com.br', 'Assistente Técnica', '(11) 98001-2222'),
-  (2, 'Paulo Henrique', 'paulo@ferroforte.com.br', 'Supervisor Industrial', '(11) 97002-3333'),
-  (3, 'Fernanda Alves', 'fernanda@plasticosomega.com.br', 'Coordenadora de Planta', '(11) 96003-4444'),
-  (4, 'Roberto Dias', 'roberto@rotasul.com.br', 'Chefe de Frota', '(11) 95004-5555'),
-  (5, 'Aline Mendes', 'aline@centralcarnes.com.br', 'Técnica de Manutenção', '(11) 94005-6666');
-
 -- Solicitantes
 INSERT INTO solicitantes (empresa_id, nome, email, telefone) VALUES
   (1, 'Marcos Pereira', 'marcos@metalvega.com.br', '(11) 98001-1111'),

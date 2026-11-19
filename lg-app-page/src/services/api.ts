@@ -46,8 +46,6 @@ export type Empresa = {
   cnpj: string | null
   email: string | null
   telefone: string | null
-  endereco: string | null
-  observacoes: string | null
 }
 export type Solicitante = { id: number; empresaId: number; nome: string; email: string | null; telefone: string | null }
 export type Mecanico = { id: number; nome: string; telefone: string | null; descricao: string | null; ativo: boolean }
@@ -146,8 +144,6 @@ export const criarEmpresa = (body: {
   email?: string | null
   cnpj?: string | null
   telefone?: string | null
-  endereco?: string | null
-  observacoes?: string | null
 }) => chamar<Empresa>('/empresas', { method: 'POST', body: JSON.stringify(body) })
 
 export const atualizarEmpresa = (
@@ -157,8 +153,6 @@ export const atualizarEmpresa = (
     email?: string | null
     cnpj?: string | null
     telefone?: string | null
-    endereco?: string | null
-    observacoes?: string | null
   }
 ) => chamar<Empresa>(`/empresas/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
 
@@ -175,27 +169,15 @@ export const criarSolicitante = (body: {
   telefone: string | null
 }) => chamar<Solicitante>('/solicitantes', { method: 'POST', body: JSON.stringify(body) })
 
-export type CttEmpresa = { id: number; empresaId: number; nome: string; email: string | null; cargo: string | null; telefone: string | null }
-
 export type EmpresaDetalhe = {
   empresa: Empresa
   solicitantes: Solicitante[]
-  contatos?: Omit<CttEmpresa, 'empresaId'>[]
   orcamentos: { id: number; numero: number; titulo: string | null; status: Status; valor: string | null; entradaEm: string }[]
   totalAcumulado: string
 }
 
 export const buscarEmpresaDetalhe = (id: number) =>
   chamar<EmpresaDetalhe>(`/empresas/${id}?detalhe=1`)
-
-export const listarCttEmpresas = (empresaId: number) =>
-  chamar<CttEmpresa[]>(`/ctt-empresas?empresaId=${empresaId}`)
-
-export const criarCttEmpresa = (body: Omit<CttEmpresa, 'id'>) =>
-  chamar<CttEmpresa>('/ctt-empresas', { method: 'POST', body: JSON.stringify(body) })
-
-export const atualizarCttEmpresa = (id: number, patch: Partial<Omit<CttEmpresa, 'id' | 'empresaId'>>) =>
-  chamar<CttEmpresa>(`/ctt-empresas/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
 
 export const buscarOrcamento = (id: number) => chamar<Orcamento>(`/orcamentos/${id}`)
 

@@ -4,7 +4,7 @@ import { empresaPatchSchema, empresaSchema } from '../models/cadastros.schema'
 import { AppError } from '../utils/errors'
 import { montarSet } from '../utils/patch'
 
-const colsEmpresa = 'id, nome, cnpj, email, telefone, endereco, observacoes'
+const colsEmpresa = 'id, nome, cnpj, email, telefone'
 
 export const listar = async (busca = ''): Promise<Empresa[]> => {
   const { rows } = await pool.query(
@@ -31,11 +31,6 @@ export const buscarDetalhe = async (id: number) => {
     [id]
   )
 
-  const { rows: contatos } = await pool.query(
-    'select id, nome, email, cargo, telefone from ctt_empresas where empresa_id = $1 order by nome',
-    [id]
-  )
-
   const { rows: orcamentos } = await pool.query(
     `select o.id, o.numero, o.titulo, o.status, o.valor::text,
             to_char(o.entrada_em, 'YYYY-MM-DD') as "entradaEm"
@@ -51,15 +46,15 @@ export const buscarDetalhe = async (id: number) => {
     [id]
   )
 
-  return { empresa, solicitantes, contatos, orcamentos, totalAcumulado: total }
+  return { empresa, solicitantes, orcamentos, totalAcumulado: total }
 }
 
 export const criar = async (body: unknown): Promise<Empresa> => {
   const d = empresaSchema.parse(body)
   const { rows } = await pool.query(
-    `insert into empresas (nome, cnpj, email, telefone, endereco, observacoes)
-     values ($1, $2, $3, $4, $5, $6) returning ${colsEmpresa}`,
-    [d.nome, d.cnpj ?? null, d.email ?? null, d.telefone ?? null, d.endereco ?? null, d.observacoes ?? null]
+    `insert into empresas (nome, cnpj, email, telefone)
+     values ($1, $2, $3, $4) returning ${colsEmpresa}`,
+    [d.nome, d.cnpj ?? null, d.email ?? null, d.telefone ?? null]
   )
   return rows[0]
 }
@@ -67,9 +62,9 @@ export const criar = async (body: unknown): Promise<Empresa> => {
 export const atualizar = async (id: number, body: unknown): Promise<Empresa | undefined> => {
   const d = empresaSchema.parse(body)
   const { rows } = await pool.query(
-    `update empresas set nome = $2, cnpj = $3, email = $4, telefone = $5, endereco = $6, observacoes = $7
+    `update empresas set nome = $2, cnpj = $3, email = $4, telefone = $5
      where id = $1 returning ${colsEmpresa}`,
-    [id, d.nome, d.cnpj ?? null, d.email ?? null, d.telefone ?? null, d.endereco ?? null, d.observacoes ?? null]
+    [id, d.nome, d.cnpj ?? null, d.email ?? null, d.telefone ?? null]
   )
   return rows[0]
 }
@@ -82,8 +77,6 @@ export const atualizarParcial = async (id: number, body: unknown): Promise<Empre
     cnpj: 'cnpj',
     email: 'email',
     telefone: 'telefone',
-    endereco: 'endereco',
-    observacoes: 'observacoes',
   })
   if (vazio) return buscarPorId(id)
 
@@ -103,7 +96,6 @@ export const remover = async (id: number): Promise<boolean> => {
   const client = await pool.connect()
   try {
     await client.query('BEGIN')
-    await client.query('delete from ctt_empresas where empresa_id = $1', [id])
     await client.query('delete from solicitantes where empresa_id = $1', [id])
     const { rowCount } = await client.query('delete from empresas where id = $1', [id])
     await client.query('COMMIT')

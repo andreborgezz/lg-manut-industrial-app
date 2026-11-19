@@ -10,7 +10,6 @@ import {
   FileText,
   Loader2,
   Mail,
-  MessageCircle,
   Pencil,
   Search,
   Trash2,
@@ -130,8 +129,6 @@ interface MenuAcoesProps {
   carregando: { id: number; acao: Acao } | null
   gerandoPdf: number | null
   gerarPdf: (o: OrcamentoLinha) => void
-  compartilharWhatsapp: (o: OrcamentoLinha) => void
-  compartilhando: number | null
   abrirEmail: (o: OrcamentoLinha) => void
   confirmarExclusao: (o: OrcamentoLinha) => void
 }
@@ -145,8 +142,6 @@ function MenuAcoes({
   carregando,
   gerandoPdf,
   gerarPdf,
-  compartilharWhatsapp,
-  compartilhando,
   abrirEmail,
   confirmarExclusao,
 }: MenuAcoesProps) {
@@ -160,8 +155,7 @@ function MenuAcoes({
 
   const girando = (acao: Acao) => carregando?.id === o.id && carregando.acao === acao
   const carregandoPdf = gerandoPdf === o.id
-  const carregandoWa = compartilhando === o.id
-  const qualquerCarregando = carregando?.id === o.id || carregandoPdf || carregandoWa
+  const qualquerCarregando = carregando?.id === o.id || carregandoPdf
 
   useEffect(() => {
     if (!aberto || !triggerRef.current) return
@@ -311,22 +305,6 @@ function MenuAcoes({
 
             <button
               type="button"
-              className="orc-dropdown-item orc-item-wa"
-              onClick={() => {
-                onFechar()
-                compartilharWhatsapp(o)
-              }}
-            >
-              {carregandoWa ? (
-                <Loader2 size={14} className="orc-spin" />
-              ) : (
-                <MessageCircle size={14} />
-              )}
-              <span>Enviar WhatsApp</span>
-            </button>
-
-            <button
-              type="button"
               className="orc-dropdown-item orc-item-email"
               onClick={() => {
                 onFechar()
@@ -364,8 +342,6 @@ function montarColunas(
   carregando: { id: number; acao: Acao } | null,
   gerandoPdf: number | null,
   gerarPdf: (o: OrcamentoLinha) => void,
-  compartilharWhatsapp: (o: OrcamentoLinha) => void,
-  compartilhando: number | null,
   abrirEmail: (o: OrcamentoLinha) => void,
   confirmarExclusao: (o: OrcamentoLinha) => void,
   menuAbertoId: number | null,
@@ -514,8 +490,6 @@ function montarColunas(
           carregando={carregando}
           gerandoPdf={gerandoPdf}
           gerarPdf={gerarPdf}
-          compartilharWhatsapp={compartilharWhatsapp}
-          compartilhando={compartilhando}
           abrirEmail={abrirEmail}
           confirmarExclusao={confirmarExclusao}
         />
@@ -706,38 +680,6 @@ export function OrcamentosTable({
     }
   }
 
-  const [compartilhando, setCompartilhando] = useState<number | null>(null)
-  async function compartilharWhatsapp(o: OrcamentoLinha) {
-    setCompartilhando(o.id)
-    try {
-      let urlPdf: string
-      try {
-        const res = await buscarUrlPdfOrcamento(o.id)
-        urlPdf = res.url
-      } catch {
-        const res = await gerarPdfOrcamento(o.id)
-        urlPdf = res.url
-        setTodosOrcamentos((anteriores) =>
-          anteriores.map((item) => (item.id === o.id ? { ...item, temPdf: true } : item))
-        )
-      }
-      const desc = o.maquina ? `${o.maquina}` : `orçamento nº ${o.numero}`
-      const texto = `Olá, segue o orçamento nº ${o.numero} – ${desc}. ${urlPdf}`
-      const telefone = o.solicitanteTelefone ? o.solicitanteTelefone.replace(/\D/g, '') : ''
-      const waUrl = `https://wa.me/${telefone}?text=${encodeURIComponent(texto)}`
-      window.open(waUrl, '_blank')
-      toast.mostrar({
-        tipo: 'info',
-        mensagem: 'Link do WhatsApp aberto. O PDF expira em 5 minutos — envie agora.',
-        duracao: 8000,
-      })
-    } catch (e) {
-      setAviso(`Orçamento ${o.numero}: ${e instanceof Error ? e.message : 'erro ao buscar PDF'}`)
-    } finally {
-      setCompartilhando(null)
-    }
-  }
-
   const [menuAbertoId, setMenuAbertoId] = useState<number | null>(null)
 
   async function confirmarExclusaoOrcamento() {
@@ -767,8 +709,6 @@ export function OrcamentosTable({
     carregandoAcao,
     gerandoPdf,
     gerarPdf,
-    compartilharWhatsapp,
-    compartilhando,
     (o) => setOrcamentoParaEmail(o),
     (o) => setOrcamentoParaExcluir(o),
     menuAbertoId,

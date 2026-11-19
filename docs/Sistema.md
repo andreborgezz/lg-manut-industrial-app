@@ -21,7 +21,6 @@ O objetivo é trocar a planilha por um sistema web onde ele cria o orçamento em
 - Duplicar orçamento: abre o modal com os dados copiados.
 - Editar orçamento: abre o modal preenchido.
 - Exportar CSV: gera `.csv` com BOM UTF-8 e separador `;` (abre corretamente no Excel BR), respeitando os filtros ativos.
-- Compartilhar por WhatsApp: busca a URL do PDF (assinada, expira em 5 min) e abre `wa.me` com o telefone do solicitante e o texto já preenchido.
 
 ### Modal de novo orçamento
 - Empresa (combobox com criação inline), Solicitante (combobox, carrega após empresa, criação inline), Título, Escopo (textarea, uma linha por item), Valor (máscara BRL centavos), Prazo (stepper − / input / +, 1–365 dias), Mecânico, Data de entrada, Fim de semana.
@@ -40,7 +39,6 @@ O objetivo é trocar a planilha por um sistema web onde ele cria o orçamento em
 
 ### Empresas
 - Tabela com edição inline de nome, CNPJ, e-mail, telefone.
-- Contatos adicionais (ctt-empresas) por empresa.
 - Página de detalhe da empresa (`/empresas/:id`): lista de solicitantes, últimos 10 orçamentos e total acumulado. Botão "Novo orçamento" com empresa já pré-selecionada.
 
 ### Mecânicos
@@ -123,7 +121,7 @@ O modelo original do Leonardo tinha essas linhas em alguns orçamentos. Ainda n�
 O modelo original escreve "Atensiosamente". O sistema está igual ao modelo hoje. Vale avisar o Leonardo para ele decidir se corrige.
 
 **URL do PDF expira em 5 minutos**
-A URL assinada do R2 tem TTL de 300 segundos. Para o compartilhamento por WhatsApp isso significa que o solicitante tem 5 minutos para abrir o link. Se o Leonardo precisar de mais tempo, é só aumentar o parâmetro `segundos` em `storage.service.ts` — mas URLs mais longas ficam acessíveis sem autenticação por mais tempo.
+A URL assinada do R2 tem TTL de 300 segundos e serve para abrir o PDF no navegador. Se for preciso mais tempo, é só aumentar o parâmetro `segundos` em `storage.service.ts` — mas URLs mais longas ficam acessíveis sem autenticação por mais tempo.
 
 **Token do R2**
 O token atual tem acesso amplo. Antes de ir a produção: criar um token restrito ao bucket de PDFs e outro ao bucket de backups.

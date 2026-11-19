@@ -17,8 +17,6 @@ export const empresaSchema = z.object({
   cnpj: textoOpcional,
   email,
   telefone: textoOpcional,
-  endereco: textoOpcional,
-  observacoes: textoOpcional,
 })
 
 // patch: todos os campos opcionais, só o que vier é alterado
@@ -39,13 +37,3 @@ export const mecanicoAtualizarSchema = z.object({ nome, telefone: textoOpcional,
 
 // patch: nome, telefone e/ou ativo
 export const mecanicoPatchSchema = mecanicoAtualizarSchema.partial()
-
-export const cttEmpresaCriarSchema = z.object({
-  empresaId: z.number().int().positive(),
-  nome,
-  email,
-  cargo: textoOpcional,
-  telefone: textoOpcional,
-})
-
-export const cttEmpresaAtualizarSchema = cttEmpresaCriarSchema.omit({ empresaId: true }).partial()

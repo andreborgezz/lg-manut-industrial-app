@@ -3,7 +3,6 @@ import { empresaRoutes } from './empresa.routes'
 import { mecanicoRoutes } from './mecanico.routes'
 import { orcamentoRoutes } from './orcamento.routes'
 import { solicitanteRoutes } from './solicitante.routes'
-import { cttEmpresaRoutes } from './cttEmpresa.routes'
 import { pdfRoutes } from './pdf.routes'
 import { authRoutes } from './auth.routes'
 import { autenticar } from '../middlewares/autenticar'
@@ -21,4 +20,3 @@ routes.use('/solicitantes', solicitanteRoutes)
 routes.use('/mecanicos', mecanicoRoutes)
 routes.use('/orcamentos', orcamentoRoutes)
 routes.use('/orcamentos', pdfRoutes)
-routes.use('/ctt-empresas', cttEmpresaRoutes)

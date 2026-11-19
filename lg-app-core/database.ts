@@ -19,8 +19,9 @@ const pool = new Pool({
 export async function connect() {
   try {
     await pool.query('SELECT 1');
+    await pool.query('DROP TABLE IF EXISTS ctt_empresas');
     await pool.query(
-      'ALTER TABLE empresas ADD COLUMN IF NOT EXISTS endereco text, ADD COLUMN IF NOT EXISTS observacoes text'
+      'ALTER TABLE empresas DROP COLUMN IF EXISTS endereco, DROP COLUMN IF EXISTS observacoes'
     );
     await pool.query(
       'ALTER TABLE mecanicos ADD COLUMN IF NOT EXISTS descricao text'
