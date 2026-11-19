@@ -709,6 +709,30 @@
   }
 }
 
+/* Resumo automático dos dados do contato selecionado */
+.orc-contato-resumo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 6px 10px;
+  background-color: #f8fafc;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--cor-texto-secundario);
+}
+
+.orc-contato-resumo-cargo {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
 /* Formulário inline de criação rápida de contato em Orçamentos */
 .orc-novo-contato-box {
   display: flex;

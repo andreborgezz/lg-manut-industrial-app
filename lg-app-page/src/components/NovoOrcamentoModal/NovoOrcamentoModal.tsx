@@ -324,9 +324,10 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   }
 
   const opcoesEmpresa: OpcaoCombo[] = empresas.map((e) => ({ valor: String(e.id), label: e.nome }))
-  const opcoesSolicitante: OpcaoCombo[] = solicitantes
-    .filter((s) => s.empresaId === Number(empresaId))
-    .map((s) => ({ valor: String(s.id), label: s.cargo ? `${s.nome} (${s.cargo})` : s.nome }))
+  const solicitantesDaEmpresa = solicitantes.filter((s) => s.empresaId === Number(empresaId))
+  const opcoesSolicitante: OpcaoCombo[] = solicitantesDaEmpresa
+    .map((s) => ({ valor: String(s.id), label: s.cargo ? `${s.nome} — ${s.cargo}` : s.nome }))
+  const contatoSelecionado = solicitantesDaEmpresa.find((s) => String(s.id) === solicitanteId)
   const opcoesMecanico: OpcaoCombo[] = mecanicos.map((m) => ({ valor: String(m.id), label: m.nome }))
 
   // botão salvar desabilitado: explica o motivo
@@ -443,6 +444,14 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   erro={erros.solicitante}
                 />
               </div>
+
+              {contatoSelecionado && (contatoSelecionado.cargo || contatoSelecionado.telefone || contatoSelecionado.email) && (
+                <div className="orc-contato-resumo">
+                  {contatoSelecionado.cargo && <span className="orc-contato-resumo-cargo">{contatoSelecionado.cargo}</span>}
+                  {contatoSelecionado.telefone && <span>{contatoSelecionado.telefone}</span>}
+                  {contatoSelecionado.email && <span>{contatoSelecionado.email}</span>}
+                </div>
+              )}
 
               {empresaEscolhida && criandoContato && (
                 <div className="orc-novo-contato-box">

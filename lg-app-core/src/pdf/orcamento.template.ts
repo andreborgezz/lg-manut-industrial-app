@@ -99,13 +99,11 @@ const WHATSAPP_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24
 function htmlCabecalho(arquivoEscapado: string, pg: 1 | 2): string {
   const leftInfo = pg === 1 ? '48pt' : '27.6pt'
   return `<div class="cab">
-  <div class="cab-fundo">
-    <div class="cab-nome">L.G. MANUTENÇÃO<br>INDUSTRIAL</div>
-    <div class="cab-info" style="left:${leftInfo}">
-      <div class="cab-cnpj">${esc(CNPJ)}</div>
-      <div class="cab-arquivo">${arquivoEscapado}</div>
-    </div>
-    <div class="cab-logo"><span class="cab-logo-texto">L.G.</span></div>
+  <div class="cab-nome">L.G. MANUTENÇÃO<br>INDUSTRIAL</div>
+  <div class="cab-logo"><span class="cab-logo-texto">L.G.</span></div>
+  <div class="cab-info" style="padding-left:${leftInfo}">
+    <div class="cab-cnpj">${esc(CNPJ)}</div>
+    <div class="cab-arquivo">${arquivoEscapado}</div>
   </div>
 </div>`
 }
@@ -190,16 +188,11 @@ html, body {
 }
 .pagina:last-child { page-break-after: auto; }
 
-/* ── cabeçalho ── */
+/* ── cabeçalho (cresce automaticamente quando o título quebra linhas) ── */
 .cab {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 128.5pt;
-}
-
-.cab-fundo {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  width: 100%;
+  min-height: 128.5pt;
   background: #000000;
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
@@ -222,12 +215,11 @@ html, body {
   print-color-adjust: exact;
 }
 
-/* CNPJ e nome do arquivo */
+/* CNPJ e nome do arquivo em fluxo para expandir a faixa preta se necessário */
 .cab-info {
-  position: absolute;
-  top: 92pt;
-  right: 140pt; /* impede sobreposição com o logo */
-  overflow: hidden;
+  padding-top: 92pt;
+  padding-right: 140pt; /* impede sobreposição com o logo */
+  padding-bottom: 9pt;
 }
 
 .cab-cnpj {
@@ -250,6 +242,7 @@ html, body {
   text-transform: uppercase;
   line-height: 13pt;
   margin-top: 2pt;
+  overflow-wrap: anywhere;
   word-break: break-all;
 }
 
@@ -280,9 +273,7 @@ html, body {
 
 /* ── título ORÇAMENTO ── */
 .titulo-orcamento {
-  position: absolute;
-  top: 134pt;
-  left: 0; right: 0;
+  margin-top: 5.5pt;
   text-align: center;
   font-family: 'Open Sans', Arial, sans-serif;
   font-weight: 700;
@@ -294,8 +285,7 @@ html, body {
 
 /* linha laranja */
 .linha-laranja {
-  position: absolute;
-  left: 31pt; right: 21.5pt;
+  margin: 4pt 21.5pt 0 31pt;
   height: 4.5pt;
   background: #EE9C00;
   -webkit-print-color-adjust: exact;
@@ -304,9 +294,7 @@ html, body {
 
 /* ── lista de bullets ── */
 .escopo-lista {
-  position: absolute;
-  top: 181pt;
-  left: 31pt; right: 27pt;
+  margin: 18pt 27pt 0 31pt;
   list-style: disc;
   padding-left: 9pt;
 }
@@ -397,9 +385,7 @@ html, body {
 
 /* ── página 2: termos ── */
 .termos-area {
-  position: absolute;
-  top: 178pt;
-  left: 27pt; right: 17.5pt;
+  margin: 49.5pt 17.5pt 0 27pt;
 }
 
 .termo-bloco { /* espaço gerenciado pelo termo-texto margin-bottom */ }
@@ -455,7 +441,7 @@ html, body {
   ${cab1}
 
   <div class="titulo-orcamento">ORÇAMENTO</div>
-  <div class="linha-laranja" style="top:158pt"></div>
+  <div class="linha-laranja"></div>
 
   <ul class="escopo-lista">
     ${bulletsEscopo}

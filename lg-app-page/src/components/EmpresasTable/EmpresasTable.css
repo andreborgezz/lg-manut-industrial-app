@@ -238,19 +238,27 @@
 }
 
 
-.emp-contatos-pilha {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 2px 0;
-}
-
-.emp-contato-linha {
-  min-height: 26px;
-  display: flex;
+.emp-contatos-qtd {
+  display: inline-flex;
   align-items: center;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background-color: #f1f5f9;
+  border: 1px solid var(--cor-borda);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cor-texto);
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
 }
 
-.emp-contato-vazio {
+.emp-contatos-qtd:hover {
+  background-color: #e2e8f0;
+  border-color: var(--cor-borda-forte);
+}
+
+.emp-contatos-qtd-zero {
   color: var(--cor-texto-suave);
+  font-weight: 500;
 }
