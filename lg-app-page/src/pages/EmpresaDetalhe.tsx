@@ -227,6 +227,7 @@ function PaginaEmpresaDetalhe() {
         <EmpresaModal
           editando={{ ...empresa, contatos }}
           onFechar={() => setModalEditarAberto(false)}
+          onContatoAlterado={recarregar}
           onSalvo={() => {
             setModalEditarAberto(false)
             recarregar()

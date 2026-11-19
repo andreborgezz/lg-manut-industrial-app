@@ -66,6 +66,7 @@ function PaginaEmpresas() {
         <EmpresaModal
           editando={empresaEditando}
           onFechar={() => setModalAberto(false)}
+          onContatoAlterado={() => setRefresh((r) => r + 1)}
           onSalvo={aoSalvarEmpresa}
         />
       )}

@@ -7,8 +7,6 @@ import {
 } from 'react'
 import {
   buscarProximoNumeroOrcamento,
-  criarEmpresa,
-  criarMecanico,
   criarOrcamento,
   atualizarOrcamento,
   criarSolicitante,
@@ -26,7 +24,6 @@ import {
 } from '../../services/api'
 import { Check, FileText, Minus, Plus, Trash2 } from 'lucide-react'
 import { Combobox, type OpcaoCombo } from '../Combobox/Combobox'
-import { EmpresaModal } from '../EmpresaModal/EmpresaModal'
 import './NovoOrcamentoModal.css'
 
 export type InicialOrcamento = Partial<
@@ -70,6 +67,15 @@ function parsearEscopo(texto?: string | null): string[] {
   return itens.length > 0 ? itens : ['']
 }
 
+const formatarTelefone = (valor: string): string => {
+  const d = valor.replace(/\D/g, '').slice(0, 11)
+  if (d.length === 0) return ''
+  if (d.length <= 2) return `(${d}`
+  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`
+  if (d.length <= 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`
+  return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
+}
+
 type Erros = Partial<Record<'empresa' | 'solicitante' | 'titulo' | 'valor' | 'prazoDias', string>>
 
 export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editando }: Props) {
@@ -103,7 +109,15 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   const [erros, setErros] = useState<Erros>({})
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
-  const [modalEmpresaAberto, setModalEmpresaAberto] = useState(false)
+
+  // Criação inline de contato após selecionar a empresa
+  const [criandoContato, setCriandoContato] = useState(false)
+  const [cttNome, setCttNome] = useState('')
+  const [cttCargo, setCttCargo] = useState('')
+  const [cttTelefone, setCttTelefone] = useState('')
+  const [cttEmail, setCttEmail] = useState('')
+  const [cttErro, setCttErro] = useState('')
+  const [salvandoCtt, setSalvandoCtt] = useState(false)
 
   const empresaEscolhida = empresaId !== ''
 
@@ -169,20 +183,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
 
   const limpar = (campo: keyof Erros) => setErros((x) => ({ ...x, [campo]: undefined }))
 
-  // cria empresa inline via "Criar 'X'" no combobox
-  async function criarEmpresaRapido(nome: string) {
-    try {
-      const nova = await criarEmpresa({ nome })
-      setEmpresas((l) => [...l, nova].sort((a, b) => a.nome.localeCompare(b.nome)))
-      setEmpresaId(String(nova.id))
-      setSolicitanteId('')
-      limpar('empresa')
-    } catch (e) {
-      setErro(e instanceof Error ? e.message : 'erro ao criar empresa')
-    }
-  }
-
-  // cria solicitante inline via "Criar 'X'" no combobox
+  // cria contato inline via "Criar 'X'" no combobox (após selecionar empresa)
   async function criarSolicitanteRapido(nome: string) {
     try {
       const novo = await criarSolicitante({ empresaId: Number(empresaId), nome, email: null, telefone: null })
@@ -190,19 +191,39 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
       setSolicitanteId(String(novo.id))
       limpar('solicitante')
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'erro ao criar solicitante')
+      setErro(e instanceof Error ? e.message : 'erro ao criar contato')
     }
   }
 
-  // cria mecânico inline via "Criar 'X'" no combobox
-  async function criarMecanicoRapido(nome: string) {
+  function abrirNovoContato() {
+    setCttNome('')
+    setCttCargo('')
+    setCttTelefone('')
+    setCttEmail('')
+    setCttErro('')
+    setCriandoContato(true)
+  }
+
+  async function salvarNovoContato() {
+    if (!cttNome.trim()) return setCttErro('Nome do contato é obrigatório')
+    setSalvandoCtt(true)
+    setCttErro('')
     try {
-      const novo = await criarMecanico({ nome })
-      setMecanicos((l) => [...l, novo].sort((a, b) => a.nome.localeCompare(b.nome)))
-      setMecanicoId(String(novo.id))
-      lembrarMecanico(String(novo.id))
+      const novo = await criarSolicitante({
+        empresaId: Number(empresaId),
+        nome: cttNome.trim(),
+        cargo: cttCargo.trim() || null,
+        telefone: cttTelefone.trim() || null,
+        email: cttEmail.trim() || null,
+      })
+      setSolicitantes((l) => [...l, novo].sort((a, b) => a.nome.localeCompare(b.nome)))
+      setSolicitanteId(String(novo.id))
+      limpar('solicitante')
+      setCriandoContato(false)
     } catch (e) {
-      setErro(e instanceof Error ? e.message : 'erro ao criar mecânico')
+      setCttErro(e instanceof Error ? e.message : 'Erro ao salvar contato')
+    } finally {
+      setSalvandoCtt(false)
     }
   }
 
@@ -390,7 +411,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
             {/* coluna esquerda: campos */}
             <div className="modal-campos" onKeyDown={aoEnterAvanca}>
 
-              {/* linha 1: empresa + solicitante */}
+              {/* linha 1: empresa + contato */}
               <div className="modal-linha">
                 <Combobox
                   label="Empresa *"
@@ -401,11 +422,9 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   onChange={(v) => {
                     setEmpresaId(v)
                     setSolicitanteId('')
+                    setCriandoContato(false)
                     limpar('empresa')
                   }}
-                  onCriar={criarEmpresaRapido}
-                  labelAdicionar="+ Cadastrar nova empresa"
-                  onAdicionar={() => setModalEmpresaAberto(true)}
                   placeholder="Buscar empresa..."
                   disabled={salvando}
                   erro={erros.empresa}
@@ -417,11 +436,70 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   opcoes={opcoesSolicitante}
                   onChange={(v) => { setSolicitanteId(v); limpar('solicitante') }}
                   onCriar={empresaEscolhida ? criarSolicitanteRapido : undefined}
-                  placeholder={empresaEscolhida ? 'Buscar contato...' : 'Escolha a empresa primeiro'}
+                  labelAdicionar={empresaEscolhida ? '+ Novo contato' : undefined}
+                  onAdicionar={empresaEscolhida ? abrirNovoContato : undefined}
+                  placeholder={empresaEscolhida ? 'Buscar ou criar contato...' : 'Escolha a empresa primeiro'}
                   disabled={!empresaEscolhida || salvando}
                   erro={erros.solicitante}
                 />
               </div>
+
+              {empresaEscolhida && criandoContato && (
+                <div className="orc-novo-contato-box">
+                  <div className="orc-novo-contato-topo">
+                    <span>Novo contato para esta empresa</span>
+                  </div>
+                  <div className="orc-novo-contato-grade">
+                    <label className="modal-campo">
+                      <span>Nome *</span>
+                      <input
+                        value={cttNome}
+                        placeholder="Ex: Paulo Henrique"
+                        onChange={(e) => { setCttNome(e.target.value); setCttErro('') }}
+                        disabled={salvandoCtt}
+                      />
+                    </label>
+                    <label className="modal-campo">
+                      <span>Cargo</span>
+                      <input
+                        value={cttCargo}
+                        placeholder="Ex: Comprador"
+                        onChange={(e) => setCttCargo(e.target.value)}
+                        disabled={salvandoCtt}
+                      />
+                    </label>
+                    <label className="modal-campo">
+                      <span>Telefone</span>
+                      <input
+                        type="tel"
+                        placeholder="(00) 00000-0000"
+                        value={cttTelefone}
+                        onChange={(e) => setCttTelefone(formatarTelefone(e.target.value))}
+                        disabled={salvandoCtt}
+                      />
+                    </label>
+                    <label className="modal-campo">
+                      <span>E-mail</span>
+                      <input
+                        type="email"
+                        placeholder="nome@empresa.com.br"
+                        value={cttEmail}
+                        onChange={(e) => setCttEmail(e.target.value)}
+                        disabled={salvandoCtt}
+                      />
+                    </label>
+                  </div>
+                  {cttErro && <p className="modal-erro">{cttErro}</p>}
+                  <div className="orc-novo-contato-acoes">
+                    <button type="button" className="btn-secundario" onClick={() => setCriandoContato(false)} disabled={salvandoCtt}>
+                      Cancelar
+                    </button>
+                    <button type="button" className="btn-primario" onClick={salvarNovoContato} disabled={salvandoCtt}>
+                      {salvandoCtt ? 'Salvando...' : 'Salvar contato'}
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {/* recentes da empresa: reutilizar título/escopo/valor com 1 clique */}
               {!editando && recentes.length > 0 && (
@@ -600,8 +678,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                   valor={mecanicoId}
                   opcoes={opcoesMecanico}
                   onChange={(v) => { setMecanicoId(v); if (v) lembrarMecanico(v) }}
-                  onCriar={criarMecanicoRapido}
-                  placeholder="Nenhum"
+                  placeholder="Selecionar mecânico..."
                   disabled={salvando}
                 />
 
@@ -693,26 +770,6 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
           </footer>
         </form>
       </div>
-
-      {modalEmpresaAberto && (
-        <EmpresaModal
-          onFechar={() => setModalEmpresaAberto(false)}
-          onSalvo={(novaEmpresa) => {
-            setModalEmpresaAberto(false)
-            listarEmpresas()
-              .then((lista) => {
-                setEmpresas(lista)
-                const selecionada = novaEmpresa ?? [...lista].sort((a, b) => b.id - a.id)[0]
-                if (selecionada) {
-                  setEmpresaId(String(selecionada.id))
-                  setSolicitanteId('')
-                  limpar('empresa')
-                }
-              })
-              .catch((e) => setErro(e.message))
-          }}
-        />
-      )}
     </div>
   )
 }

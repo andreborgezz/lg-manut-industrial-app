@@ -203,6 +203,16 @@ export const criarSolicitante = (body: {
   telefone: string | null
 }) => chamar<Solicitante>('/solicitantes', { method: 'POST', body: JSON.stringify(body) })
 
+export const atualizarSolicitante = (
+  id: number,
+  body: {
+    nome: string
+    cargo?: string | null
+    email?: string | null
+    telefone?: string | null
+  }
+) => chamar<Solicitante>(`/solicitantes/${id}`, { method: 'PUT', body: JSON.stringify(body) })
+
 export const excluirSolicitante = (id: number) =>
   chamar<{ ok: boolean }>(`/solicitantes/${id}`, { method: 'DELETE' })
 

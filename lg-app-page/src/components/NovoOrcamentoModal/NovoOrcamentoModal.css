@@ -703,7 +703,39 @@
 @media (max-width: 560px) {
   .modal-linha,
   .modal-linha-titulo-maquina,
-  .modal-linha-rodape {
+  .modal-linha-rodape,
+  .orc-novo-contato-grade {
     grid-template-columns: 1fr;
   }
+}
+
+/* Formulário inline de criação rápida de contato em Orçamentos */
+.orc-novo-contato-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  background-color: #f8fafc;
+  border: 1px solid var(--cor-borda-forte);
+  border-radius: 10px;
+}
+
+.orc-novo-contato-topo {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--cor-texto-secundario);
+}
+
+.orc-novo-contato-grade {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.orc-novo-contato-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }

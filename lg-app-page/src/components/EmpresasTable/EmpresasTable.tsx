@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ExternalLink, Loader2, Pencil, Search, Trash2 } from "lucide-react";
-import { atualizarEmpresa, excluirEmpresa, listarEmpresas, type Empresa } from "../../services/api";
+import { atualizarEmpresa, atualizarSolicitante, excluirEmpresa, listarEmpresas, type Empresa, type EmpresaContato } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
 import { useToast } from "../Toast/Toast";
 import { normalizarTexto } from "../../utils/texto";
@@ -13,6 +13,7 @@ type Coluna = { titulo: string; classeColuna?: string; render: (e: Empresa) => R
 
 function montarColunas(
   salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) => Promise<void>,
+  salvarContato: (empresaId: number, c: EmpresaContato, patch: { nome?: string; cargo?: string | null }) => Promise<void>,
   abrir: (e: Empresa, acao: Acao) => void,
   carregando: { id: number; acao: Acao } | null,
   solicitarExclusao: (e: Empresa) => void,
@@ -68,12 +69,37 @@ function montarColunas(
         const contatos = e.contatos ?? []
         if (contatos.length === 0) return <span className="emp-contato-vazio">-</span>
         return (
-          <div className="emp-contatos-celula">
+          <div className="emp-contatos-pilha">
             {contatos.map((c) => (
-              <span key={c.id} className="emp-contato-tag" title={[c.telefone, c.email].filter(Boolean).join(' · ')}>
-                <strong>{c.nome}</strong>
-                {c.cargo && <span className="emp-contato-cargo"> · {c.cargo}</span>}
-              </span>
+              <div key={c.id} className="emp-contato-linha" title={[c.telefone, c.email].filter(Boolean).join(' · ') || undefined}>
+                <CelulaEditavel
+                  tipo="texto"
+                  rotulo={`Nome do contato ${c.nome}`}
+                  valor={c.nome}
+                  onSalvar={(v) => salvarContato(e.id, c, { nome: v.trim() || c.nome })}
+                />
+              </div>
+            ))}
+          </div>
+        )
+      },
+    },
+    {
+      titulo: 'CARGO',
+      render: (e) => {
+        const contatos = e.contatos ?? []
+        if (contatos.length === 0) return <span className="emp-contato-vazio">-</span>
+        return (
+          <div className="emp-contatos-pilha">
+            {contatos.map((c) => (
+              <div key={c.id} className="emp-contato-linha">
+                <CelulaEditavel
+                  tipo="texto"
+                  rotulo={`Cargo de ${c.nome}`}
+                  valor={c.cargo ?? ''}
+                  onSalvar={(v) => salvarContato(e.id, c, { cargo: v.trim() || null })}
+                />
+              </div>
             ))}
           </div>
         )
@@ -158,6 +184,39 @@ export function EmpresasTable({
     }
   }
 
+  async function salvarContato(
+    empresaId: number,
+    c: EmpresaContato,
+    patch: { nome?: string; cargo?: string | null },
+  ) {
+    try {
+      const atualizado = await atualizarSolicitante(c.id, {
+        nome: patch.nome !== undefined ? patch.nome : c.nome,
+        cargo: patch.cargo !== undefined ? patch.cargo : c.cargo,
+        telefone: c.telefone,
+        email: c.email,
+      })
+      setTodasEmpresas((ls) =>
+        ls.map((emp) =>
+          emp.id !== empresaId
+            ? emp
+            : {
+                ...emp,
+                contatos: (emp.contatos ?? []).map((item) =>
+                  item.id === c.id
+                    ? { ...item, nome: atualizado.nome, cargo: atualizado.cargo }
+                    : item
+                ),
+              }
+        )
+      )
+      setAviso('')
+    } catch (err) {
+      setAviso(`${c.nome}: ${err instanceof Error ? err.message : 'erro ao salvar contato'}`)
+      throw err
+    }
+  }
+
   async function confirmarExclusao() {
     if (!empresaParaExcluir) return
     const alvo = empresaParaExcluir
@@ -192,6 +251,7 @@ export function EmpresasTable({
 
   const colunas = montarColunas(
     salvar,
+    salvarContato,
     abrir,
     carregando,
     (e) => setEmpresaParaExcluir(e),
