@@ -180,6 +180,7 @@ export type CttEmpresa = { id: number; empresaId: number; nome: string; email: s
 export type EmpresaDetalhe = {
   empresa: Empresa
   solicitantes: Solicitante[]
+  contatos?: Omit<CttEmpresa, 'empresaId'>[]
   orcamentos: { id: number; numero: number; titulo: string | null; status: Status; valor: string | null; entradaEm: string }[]
   totalAcumulado: string
 }

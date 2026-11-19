@@ -31,6 +31,11 @@ export const buscarDetalhe = async (id: number) => {
     [id]
   )
 
+  const { rows: contatos } = await pool.query(
+    'select id, nome, email, cargo, telefone from ctt_empresas where empresa_id = $1 order by nome',
+    [id]
+  )
+
   const { rows: orcamentos } = await pool.query(
     `select o.id, o.numero, o.titulo, o.status, o.valor::text,
             to_char(o.entrada_em, 'YYYY-MM-DD') as "entradaEm"
@@ -46,7 +51,7 @@ export const buscarDetalhe = async (id: number) => {
     [id]
   )
 
-  return { empresa, solicitantes, orcamentos, totalAcumulado: total }
+  return { empresa, solicitantes, contatos, orcamentos, totalAcumulado: total }
 }
 
 export const criar = async (body: unknown): Promise<Empresa> => {
