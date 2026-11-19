@@ -152,3 +152,48 @@
   font-size: 12px;
   color: var(--cor-texto-secundario);
 }
+
+
+/* Botões de ação da tabela (Mecânicos) */
+.emp-acao-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.emp-acao-btn:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  border-color: var(--cor-borda-forte);
+  color: var(--cor-texto);
+}
+
+.emp-acao-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Coluna AÇÕES fixa à direita */
+.emp-col-fixa-acoes {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background-color: #ffffff;
+  box-shadow: -4px 0 10px rgba(15, 23, 42, 0.05);
+}
+
+.tabela-scroll thead th.emp-col-fixa-acoes {
+  background-color: var(--cor-cabecalho-tabela);
+  z-index: 3;
+}
+
+.tabela-scroll tbody tr:hover td.emp-col-fixa-acoes {
+  background-color: #f8fafc;
+}
