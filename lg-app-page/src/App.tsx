@@ -3,7 +3,6 @@ import { type ReactNode, useEffect } from 'react'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { registrarRedirecionamentoLogin } from './services/api'
 import Orcamentos from './pages/Orcamentos'
-import Empresas from './pages/Empresas'
 import Mecanicos from './pages/Mecanicos'
 import LoginPage from './pages/loginPage'
 
@@ -39,8 +38,8 @@ export default function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<Protegida><Navigate to="/orcamentos" replace /></Protegida>} />
           <Route path="/orcamentos" element={<Protegida><Orcamentos /></Protegida>} />
-          <Route path="/empresas" element={<Protegida><Empresas /></Protegida>} />
           <Route path="/mecanicos" element={<Protegida><Mecanicos /></Protegida>} />
+          <Route path="*" element={<Protegida><Navigate to="/orcamentos" replace /></Protegida>} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
