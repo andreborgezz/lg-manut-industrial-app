@@ -8,7 +8,7 @@ const colsEmpresa = 'id, nome, cnpj, email, telefone, endereco, observacoes'
 
 export const listar = async (busca = ''): Promise<Empresa[]> => {
   const { rows } = await pool.query(
-    `select ${colsEmpresa} from empresas where nome ilike $1 order by nome`,
+    `select ${colsEmpresa} from empresas where nome ilike $1 order by id desc`,
     [`%${busca}%`]
   )
   return rows

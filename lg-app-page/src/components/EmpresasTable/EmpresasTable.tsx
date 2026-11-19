@@ -20,7 +20,6 @@ function montarColunas(
   solicitarExclusao: (e: Empresa) => void,
 ): Coluna[] {
   return [
-    { titulo: 'ID', render: (e) => <span className="tabular-nums">#{e.id}</span> },
     {
       titulo: 'NOME',
       render: (e) => (
