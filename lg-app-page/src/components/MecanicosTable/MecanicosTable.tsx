@@ -144,7 +144,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                 <th>TELEFONE</th>
                 <th>DESCRIÇÃO / ÁREA</th>
                 <th>STATUS</th>
-                <th style={{ textAlign: 'right' }}>AÇÕES</th>
+                <th className="emp-col-fixa-acoes" style={{ textAlign: 'right' }}>AÇÕES</th>
               </tr>
             </thead>
             <tbody>
@@ -179,7 +179,7 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                       {m.ativo ? 'Ativo' : 'Inativo'}
                     </span>
                   </td>
-                  <td>
+                  <td className="emp-col-fixa-acoes">
                     <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '2px' }}>
                       <button
                         type="button"

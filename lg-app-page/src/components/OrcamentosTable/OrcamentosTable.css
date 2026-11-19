@@ -750,3 +750,7 @@ th.col-fixa-acoes {
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.orc-popover-status {
+  min-width: 170px;
+}

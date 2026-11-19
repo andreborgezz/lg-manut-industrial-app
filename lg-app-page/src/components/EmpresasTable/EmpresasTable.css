@@ -218,3 +218,21 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+/* Coluna AÇÕES fixa à direita */
+.emp-col-fixa-acoes {
+  position: sticky;
+  right: 0;
+  z-index: 2;
+  background-color: #ffffff;
+  box-shadow: -4px 0 10px rgba(15, 23, 42, 0.05);
+}
+
+.emp-table-scroll thead th.emp-col-fixa-acoes {
+  background-color: var(--cor-cabecalho-tabela);
+  z-index: 3;
+}
+
+.emp-table-scroll tbody tr:hover td.emp-col-fixa-acoes {
+  background-color: var(--cor-superficie-subtil);
+}

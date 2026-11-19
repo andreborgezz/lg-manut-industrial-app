@@ -10,7 +10,7 @@ import "./EmpresasTable.css";
 
 type Acao = 'editar';
 
-type Coluna = { titulo: string; render: (e: Empresa) => React.ReactNode };
+type Coluna = { titulo: string; classeColuna?: string; render: (e: Empresa) => React.ReactNode };
 
 function montarColunas(
   salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null; endereco?: string | null }) => Promise<void>,
@@ -85,6 +85,7 @@ function montarColunas(
     },
     {
       titulo: 'AÇÕES',
+      classeColuna: 'emp-col-fixa-acoes',
       render: (e) => {
         const girando = (acao: Acao) => carregando?.id === e.id && carregando.acao === acao
         const qualquerCarregando = carregando !== null
@@ -252,7 +253,7 @@ export function EmpresasTable({
             <thead>
               <tr>
                 {colunas.map((c) => (
-                  <th key={c.titulo}>{c.titulo}</th>
+                  <th key={c.titulo} className={c.classeColuna}>{c.titulo}</th>
                 ))}
               </tr>
             </thead>
@@ -260,7 +261,7 @@ export function EmpresasTable({
               {linhas.map((e) => (
                 <tr key={e.id}>
                   {colunas.map((c) => (
-                    <td key={c.titulo}>{c.render(e)}</td>
+                    <td key={c.titulo} className={c.classeColuna}>{c.render(e)}</td>
                   ))}
                 </tr>
               ))}

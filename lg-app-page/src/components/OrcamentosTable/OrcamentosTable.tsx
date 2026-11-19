@@ -546,6 +546,7 @@ export function OrcamentosTable({
   const [tempInicio, setTempInicio] = useState('')
   const [tempFim, setTempFim] = useState('')
   const [popoverPeriodoAberto, setPopoverPeriodoAberto] = useState(false)
+  const [popoverStatusAberto, setPopoverStatusAberto] = useState(false)
   const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
   const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
@@ -554,6 +555,7 @@ export function OrcamentosTable({
   const [orcamentoParaExcluir, setOrcamentoParaExcluir] = useState<OrcamentoLinha | null>(null)
   const [excluindo, setExcluindo] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
+  const popoverStatusRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     listarMecanicos()
@@ -567,18 +569,21 @@ export function OrcamentosTable({
     return () => clearTimeout(t)
   }, [aviso])
 
-  // Fecha popover ao clicar fora
+  // Fecha popovers ao clicar fora
   useEffect(() => {
     function cliqueFora(e: MouseEvent) {
       if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
         setPopoverPeriodoAberto(false)
       }
+      if (popoverStatusRef.current && !popoverStatusRef.current.contains(e.target as Node)) {
+        setPopoverStatusAberto(false)
+      }
     }
-    if (popoverPeriodoAberto) {
+    if (popoverPeriodoAberto || popoverStatusAberto) {
       document.addEventListener('mousedown', cliqueFora)
     }
     return () => document.removeEventListener('mousedown', cliqueFora)
-  }, [popoverPeriodoAberto])
+  }, [popoverPeriodoAberto, popoverStatusAberto])
 
   function selecionarPreset(chave: string) {
     if (chave === 'todos') {
@@ -851,17 +856,61 @@ export function OrcamentosTable({
             )}
           </div>
 
-          {/* Select de Status */}
-          <select
-            className="orc-select-status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="">Status: Todos</option>
-            <option value="ABERTO">Aberto</option>
-            <option value="APROVADO">Aprovado</option>
-            <option value="RECUSADO">Recusado</option>
-          </select>
+          {/* Seletor de Status com Popover (igual ao Período) */}
+          <div className="orc-popover-wrapper" ref={popoverStatusRef}>
+            <button
+              type="button"
+              className={`btn-secundario orc-btn-periodo ${status ? 'orc-btn-periodo-ativo' : ''}`}
+              onClick={() => {
+                setPopoverStatusAberto((v) => !v)
+                setPopoverPeriodoAberto(false)
+              }}
+              aria-expanded={popoverStatusAberto}
+            >
+              <span>
+                {status === 'ABERTO'
+                  ? 'Status: Aberto'
+                  : status === 'APROVADO'
+                    ? 'Status: Aprovado'
+                    : status === 'RECUSADO'
+                      ? 'Status: Recusado'
+                      : 'Status: Todos'}
+              </span>
+              <ChevronDown size={12} />
+            </button>
+
+            {popoverStatusAberto && (
+              <div className="orc-popover-painel orc-popover-status">
+                <div className="orc-popover-secao">
+                  <span className="orc-popover-rotulo">Filtrar por status</span>
+                  <div className="orc-popover-opcoes">
+                    {[
+                      { valor: '', label: 'Todos' },
+                      { valor: 'ABERTO', label: 'Aberto' },
+                      { valor: 'APROVADO', label: 'Aprovado' },
+                      { valor: 'RECUSADO', label: 'Recusado' },
+                    ].map(({ valor, label }) => {
+                      const ativo = status === valor
+                      return (
+                        <button
+                          key={valor || 'todos'}
+                          type="button"
+                          className={`orc-popover-item ${ativo ? 'ativo' : ''}`}
+                          onClick={() => {
+                            setStatus(valor)
+                            setPopoverStatusAberto(false)
+                          }}
+                        >
+                          <span>{label}</span>
+                          {ativo && <Check size={14} />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Seletor de Período unificado com Popover */}
           <div className="orc-popover-wrapper" ref={popoverRef}>

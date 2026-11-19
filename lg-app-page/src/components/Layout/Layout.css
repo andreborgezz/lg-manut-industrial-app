@@ -1,10 +1,10 @@
-/* Container global do layout */
+/* Container global do layout (sidebar fixa, rolagem só no conteúdo) */
 .layout {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   background-color: var(--cor-fundo);
   position: relative;
-  overflow-x: hidden;
+  overflow: hidden;
   background-image: none;
 }
 
@@ -13,6 +13,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  height: 100%;
+  overflow: hidden;
   transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -189,6 +191,8 @@
    ========================================================================== */
 .layout-conteudo {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   padding: 20px 24px;
   min-width: 0;
 }

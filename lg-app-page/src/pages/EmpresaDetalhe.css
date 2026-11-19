@@ -62,14 +62,24 @@
   color: #ee9c00;
 }
 
-/* Ficha cadastral da empresa */
+/* Ficha cadastral cinza da empresa */
 .emp-ficha-card {
-  background: var(--cor-superficie);
-  border: 1px solid var(--cor-borda);
+  background-color: #f4f6f9;
+  border: 1px solid var(--cor-borda-forte);
   border-radius: var(--raio-card);
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
   margin-bottom: 18px;
+}
+
+.emp-ficha-card .emp-card-topo {
+  background-color: #e9edf3;
+  border-bottom: 1px solid var(--cor-borda-forte);
+  color: #0f172a;
+}
+
+.emp-ficha-card .emp-card-topo-titulo svg {
+  color: #475569;
 }
 
 .emp-ficha-grade {
