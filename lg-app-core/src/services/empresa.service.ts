@@ -8,7 +8,19 @@ const colsEmpresa = 'id, nome, cnpj, email, telefone'
 
 export const listar = async (busca = ''): Promise<Empresa[]> => {
   const { rows } = await pool.query(
-    `select ${colsEmpresa} from empresas where nome ilike $1 order by id desc`,
+    `select e.id, e.nome, e.cnpj, e.email, e.telefone,
+       coalesce(
+         json_agg(
+           json_build_object('id', s.id, 'nome', s.nome, 'cargo', s.cargo, 'telefone', s.telefone, 'email', s.email)
+           order by s.nome
+         ) filter (where s.id is not null),
+         '[]'::json
+       ) as contatos
+     from empresas e
+     left join solicitantes s on s.empresa_id = e.id
+     where e.nome ilike $1
+     group by e.id
+     order by e.id desc`,
     [`%${busca}%`]
   )
   return rows

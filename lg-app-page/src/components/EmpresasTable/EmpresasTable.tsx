@@ -62,6 +62,23 @@ function montarColunas(
       ),
     },
     {
+      titulo: 'CONTATO',
+      render: (e) => {
+        const contatos = e.contatos ?? []
+        if (contatos.length === 0) return <span className="emp-contato-vazio">-</span>
+        return (
+          <div className="emp-contatos-celula">
+            {contatos.map((c) => (
+              <span key={c.id} className="emp-contato-tag" title={[c.telefone, c.email].filter(Boolean).join(' · ')}>
+                <strong>{c.nome}</strong>
+                {c.cargo && <span className="emp-contato-cargo"> · {c.cargo}</span>}
+              </span>
+            ))}
+          </div>
+        )
+      },
+    },
+    {
       titulo: 'AÇÕES',
       classeColuna: 'emp-col-fixa-acoes',
       render: (e) => {
@@ -121,7 +138,7 @@ export function EmpresasTable({
   async function salvar(e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) {
     try {
       const nova = await atualizarEmpresa(e.id, patch)
-      setTodasEmpresas((ls) => ls.map((l) => (l.id === nova.id ? nova : l)))
+      setTodasEmpresas((ls) => ls.map((l) => (l.id === nova.id ? { ...nova, contatos: l.contatos } : l)))
       setAviso('')
     } catch (err) {
       setAviso(`Empresa ${e.id}: ${err instanceof Error ? err.message : 'erro ao salvar'}`)
@@ -186,6 +203,9 @@ export function EmpresasTable({
       normalizarTexto(d.cnpj).includes(q) ||
       normalizarTexto(d.email).includes(q) ||
       normalizarTexto(d.telefone).includes(q) ||
+      (d.contatos ?? []).some((c) =>
+        normalizarTexto(c.nome).includes(q) || normalizarTexto(c.cargo).includes(q)
+      ) ||
       String(d.id).includes(q)
     )
   }, [todasEmpresas, busca])
@@ -264,7 +284,7 @@ export function EmpresasTable({
         >
           <div className="emp-modal-excluir" role="dialog" aria-modal="true" aria-labelledby="emp-excluir-titulo">
             <h3 id="emp-excluir-titulo">Excluir empresa "{empresaParaExcluir.nome}"?</h3>
-            <p>Os solicitantes vinculados também serão removidos.</p>
+            <p>Os contatos vinculados também serão removidos.</p>
             <div className="emp-modal-excluir-acoes">
               <button
                 type="button"

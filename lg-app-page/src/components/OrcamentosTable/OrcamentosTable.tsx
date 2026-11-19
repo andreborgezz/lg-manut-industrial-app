@@ -373,7 +373,7 @@ function montarColunas(
       ),
     },
     {
-      titulo: 'SOLICITANTE',
+      titulo: 'CONTATO',
       largura: '120px',
       alinhamento: 'left',
       render: (o) => (

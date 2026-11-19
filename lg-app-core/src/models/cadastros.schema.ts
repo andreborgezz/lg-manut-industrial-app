@@ -25,6 +25,7 @@ export const empresaPatchSchema = empresaSchema.partial()
 export const solicitanteCriarSchema = z.object({
   empresaId: z.number().int().positive(),
   nome,
+  cargo: textoOpcional,
   email,
   telefone: textoOpcional,
 })

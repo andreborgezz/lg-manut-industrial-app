@@ -40,14 +40,30 @@ export async function listarOrcamentos(filtro: FiltroPeriodo): Promise<Orcamento
   return res.json()
 }
 
+export type EmpresaContato = {
+  id: number
+  nome: string
+  cargo: string | null
+  telefone: string | null
+  email: string | null
+}
+
 export type Empresa = {
   id: number
   nome: string
   cnpj: string | null
   email: string | null
   telefone: string | null
+  contatos?: EmpresaContato[]
 }
-export type Solicitante = { id: number; empresaId: number; nome: string; email: string | null; telefone: string | null }
+export type Solicitante = {
+  id: number
+  empresaId: number
+  nome: string
+  cargo: string | null
+  email: string | null
+  telefone: string | null
+}
 export type Mecanico = { id: number; nome: string; telefone: string | null; descricao: string | null; ativo: boolean }
 
 export type Orcamento = {
@@ -165,9 +181,13 @@ export const listarSolicitantes = (empresaId: number) =>
 export const criarSolicitante = (body: {
   empresaId: number
   nome: string
+  cargo?: string | null
   email: string | null
   telefone: string | null
 }) => chamar<Solicitante>('/solicitantes', { method: 'POST', body: JSON.stringify(body) })
+
+export const excluirSolicitante = (id: number) =>
+  chamar<{ ok: boolean }>(`/solicitantes/${id}`, { method: 'DELETE' })
 
 export const buscarOrcamento = (id: number) => chamar<Orcamento>(`/orcamentos/${id}`)
 

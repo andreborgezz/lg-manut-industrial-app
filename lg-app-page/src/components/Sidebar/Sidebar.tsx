@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { FileText, Wrench, X } from 'lucide-react'
+import { FileText, Building2, Wrench, X } from 'lucide-react'
 import './Sidebar.css'
 
 type SidebarProps = {
@@ -49,6 +49,14 @@ export function Sidebar({ aberta = true, onFechar }: SidebarProps) {
 
         <div className="sidebar-secao">
           <span className="sidebar-secao-rotulo">Cadastros</span>
+          <NavLink 
+            to="/empresas" 
+            className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}
+            title="Empresas"
+          >
+            <Building2 size={16} />
+            <span className="sidebar-item-texto">Empresas</span>
+          </NavLink>
           <NavLink 
             to="/mecanicos" 
             className={({ isActive }) => `sidebar-item ${isActive ? 'active' : ''}`}

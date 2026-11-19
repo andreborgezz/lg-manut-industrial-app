@@ -305,7 +305,7 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
   const opcoesEmpresa: OpcaoCombo[] = empresas.map((e) => ({ valor: String(e.id), label: e.nome }))
   const opcoesSolicitante: OpcaoCombo[] = solicitantes
     .filter((s) => s.empresaId === Number(empresaId))
-    .map((s) => ({ valor: String(s.id), label: s.nome }))
+    .map((s) => ({ valor: String(s.id), label: s.cargo ? `${s.nome} (${s.cargo})` : s.nome }))
   const opcoesMecanico: OpcaoCombo[] = mecanicos.map((m) => ({ valor: String(m.id), label: m.nome }))
 
   // botão salvar desabilitado: explica o motivo
@@ -412,12 +412,12 @@ export function NovoOrcamentoModal({ onFechar, onSalvo, inicial, copiaDe, editan
                 />
 
                 <Combobox
-                  label="Solicitante"
+                  label="Contato"
                   valor={solicitanteId}
                   opcoes={opcoesSolicitante}
                   onChange={(v) => { setSolicitanteId(v); limpar('solicitante') }}
                   onCriar={empresaEscolhida ? criarSolicitanteRapido : undefined}
-                  placeholder={empresaEscolhida ? 'Buscar solicitante...' : 'Escolha a empresa primeiro'}
+                  placeholder={empresaEscolhida ? 'Buscar contato...' : 'Escolha a empresa primeiro'}
                   disabled={!empresaEscolhida || salvando}
                   erro={erros.solicitante}
                 />

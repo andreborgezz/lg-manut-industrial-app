@@ -13,8 +13,17 @@ export const criar = async (req: Request, res: Response): Promise<void> => {
 export const atualizar = async (req: Request, res: Response): Promise<void> => {
   const item = await service.atualizar(idParam(req), req.body)
   if (!item) {
-    res.status(404).json({ message: 'Solicitante não encontrado' })
+    res.status(404).json({ message: 'Contato não encontrado' })
     return
   }
   res.json(item)
+}
+
+export const remover = async (req: Request, res: Response): Promise<void> => {
+  const removido = await service.remover(idParam(req))
+  if (!removido) {
+    res.status(404).json({ message: 'Contato não encontrado' })
+    return
+  }
+  res.json({ ok: true })
 }

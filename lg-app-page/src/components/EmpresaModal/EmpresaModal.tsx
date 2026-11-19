@@ -4,6 +4,7 @@ import {
   atualizarEmpresa,
   criarEmpresa,
   criarSolicitante,
+  excluirSolicitante,
   listarSolicitantes,
   type Empresa,
   type Solicitante,
@@ -17,9 +18,10 @@ type Props = {
   editando?: Empresa
 }
 
-type SolicitanteRascunho = {
+type ContatoRascunho = {
   tempId: number
   nome: string
+  cargo: string
   telefone: string
   email: string
 }
@@ -50,20 +52,21 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
 
-  // Solicitantes existentes (modo edição)
-  const [solicitantes, setSolicitantes] = useState<Solicitante[]>([])
-  const [carregandoSolicitantes, setCarregandoSolicitantes] = useState(!!editando)
+  // Contatos existentes (modo edição)
+  const [contatos, setContatos] = useState<Solicitante[]>([])
+  const [carregandoContatos, setCarregandoContatos] = useState(!!editando)
 
   // Rascunhos (modo criação — salvos junto com a empresa)
-  const [rascunhos, setRascunhos] = useState<SolicitanteRascunho[]>([])
+  const [rascunhos, setRascunhos] = useState<ContatoRascunho[]>([])
 
-  // Campos para novo solicitante
-  const [addSolicitante, setAddSolicitante] = useState(false)
-  const [solNome, setSolNome] = useState('')
-  const [solTelefone, setSolTelefone] = useState('')
-  const [solEmail, setSolEmail] = useState('')
-  const [solErro, setSolErro] = useState('')
-  const [salvandoSol, setSalvandoSol] = useState(false)
+  // Campos para novo contato
+  const [addContato, setAddContato] = useState(false)
+  const [cttNome, setCttNome] = useState('')
+  const [cttCargo, setCttCargo] = useState('')
+  const [cttTelefone, setCttTelefone] = useState('')
+  const [cttEmail, setCttEmail] = useState('')
+  const [cttErro, setCttErro] = useState('')
+  const [salvandoCtt, setSalvandoCtt] = useState(false)
 
   const nomeRef = useRef<HTMLInputElement>(null)
 
@@ -74,9 +77,9 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
   useEffect(() => {
     if (!editando) return
     listarSolicitantes(editando.id)
-      .then(setSolicitantes)
-      .catch(() => setErro('Erro ao carregar solicitantes'))
-      .finally(() => setCarregandoSolicitantes(false))
+      .then(setContatos)
+      .catch(() => setErro('Erro ao carregar contatos'))
+      .finally(() => setCarregandoContatos(false))
   }, [editando])
 
   // fecha com esc
@@ -86,12 +89,13 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [onFechar, salvando])
 
-  function limparFormSolicitante() {
-    setAddSolicitante(false)
-    setSolNome('')
-    setSolTelefone('')
-    setSolEmail('')
-    setSolErro('')
+  function limparFormContato() {
+    setAddContato(false)
+    setCttNome('')
+    setCttCargo('')
+    setCttTelefone('')
+    setCttEmail('')
+    setCttErro('')
   }
 
   async function enviar(ev: FormEvent) {
@@ -113,26 +117,27 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
       } else {
         salva = await criarEmpresa(dados)
 
-        // Solicitantes adicionados durante a criação são gravados junto
+        // Contatos adicionados durante a criação são gravados junto
         const pendentes = [...rascunhos]
-        // Se o mini-form foi preenchido mas o usuário esqueceu de clicar "Adicionar", inclui automaticamente
-        if (addSolicitante && solNome.trim()) {
+        if (addContato && cttNome.trim()) {
           pendentes.push({
             tempId: Date.now(),
-            nome: solNome.trim(),
-            telefone: solTelefone.trim(),
-            email: solEmail.trim(),
+            nome: cttNome.trim(),
+            cargo: cttCargo.trim(),
+            telefone: cttTelefone.trim(),
+            email: cttEmail.trim(),
           })
         }
 
         if (pendentes.length > 0) {
           await Promise.all(
-            pendentes.map((s) =>
+            pendentes.map((c) =>
               criarSolicitante({
                 empresaId: salva.id,
-                nome: s.nome,
-                telefone: s.telefone || null,
-                email: s.email || null,
+                nome: c.nome,
+                cargo: c.cargo || null,
+                telefone: c.telefone || null,
+                email: c.email || null,
               })
             )
           )
@@ -145,33 +150,49 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
     }
   }
 
-  async function salvarSolicitante() {
-    if (!solNome.trim()) return setSolErro('Nome do solicitante é obrigatório')
+  async function salvarContato() {
+    if (!cttNome.trim()) return setCttErro('Nome do contato é obrigatório')
 
     if (!editando) {
       setRascunhos((lista) => [
         ...lista,
-        { tempId: Date.now(), nome: solNome.trim(), telefone: solTelefone.trim(), email: solEmail.trim() },
+        {
+          tempId: Date.now(),
+          nome: cttNome.trim(),
+          cargo: cttCargo.trim(),
+          telefone: cttTelefone.trim(),
+          email: cttEmail.trim(),
+        },
       ])
-      limparFormSolicitante()
+      limparFormContato()
       return
     }
 
-    setSalvandoSol(true)
-    setSolErro('')
+    setSalvandoCtt(true)
+    setCttErro('')
     try {
       const novo = await criarSolicitante({
         empresaId: editando.id,
-        nome: solNome.trim(),
-        telefone: solTelefone.trim() || null,
-        email: solEmail.trim() || null,
+        nome: cttNome.trim(),
+        cargo: cttCargo.trim() || null,
+        telefone: cttTelefone.trim() || null,
+        email: cttEmail.trim() || null,
       })
-      setSolicitantes((lista) => [...lista, novo])
-      limparFormSolicitante()
+      setContatos((lista) => [...lista, novo])
+      limparFormContato()
     } catch (e) {
-      setSolErro(e instanceof Error ? e.message : 'Erro ao adicionar solicitante')
+      setCttErro(e instanceof Error ? e.message : 'Erro ao adicionar contato')
     } finally {
-      setSalvandoSol(false)
+      setSalvandoCtt(false)
+    }
+  }
+
+  async function removerContatoExistente(contatoId: number) {
+    try {
+      await excluirSolicitante(contatoId)
+      setContatos((lista) => lista.filter((c) => c.id !== contatoId))
+    } catch (e) {
+      setCttErro(e instanceof Error ? e.message : 'Erro ao remover contato')
     }
   }
 
@@ -242,28 +263,38 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
 
             <section className="modal-bloco">
               <h3 className="modal-bloco-titulo emp-bloco-topo">
-                <span>Solicitantes</span>
-                {!addSolicitante && (
-                  <button type="button" className="btn-texto" onClick={() => setAddSolicitante(true)} disabled={salvando}>
+                <span>Contatos</span>
+                {!addContato && (
+                  <button type="button" className="btn-texto" onClick={() => setAddContato(true)} disabled={salvando}>
                     <Plus size={14} />
-                    <span>Adicionar solicitante</span>
+                    <span>Adicionar contato</span>
                   </button>
                 )}
               </h3>
 
-              {carregandoSolicitantes && <p className="emp-ctt-vazio">Carregando solicitantes...</p>}
+              {carregandoContatos && <p className="emp-ctt-vazio">Carregando contatos...</p>}
 
-              {editando && !carregandoSolicitantes && solicitantes.length > 0 && (
+              {editando && !carregandoContatos && contatos.length > 0 && (
                 <ul className="emp-ctt-lista">
-                  {solicitantes.map((s) => (
-                    <li key={s.id} className="emp-ctt-item">
+                  {contatos.map((c) => (
+                    <li key={c.id} className="emp-ctt-item">
                       <div>
-                        <strong>{s.nome}</strong>
+                        <strong>{c.nome}</strong>
+                        {c.cargo && <span className="emp-ctt-cargo">{c.cargo}</span>}
                         <div className="emp-ctt-detalhes">
-                          {s.telefone && <span>{s.telefone}</span>}
-                          {s.email && <span>{s.email}</span>}
+                          {c.telefone && <span>{c.telefone}</span>}
+                          {c.email && <span>{c.email}</span>}
                         </div>
                       </div>
+                      <button
+                        type="button"
+                        className="emp-ctt-remover"
+                        onClick={() => removerContatoExistente(c.id)}
+                        aria-label={`Remover ${c.nome}`}
+                        title="Remover contato"
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -271,20 +302,21 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
 
               {!editando && rascunhos.length > 0 && (
                 <ul className="emp-ctt-lista">
-                  {rascunhos.map((s) => (
-                    <li key={s.tempId} className="emp-ctt-item">
+                  {rascunhos.map((c) => (
+                    <li key={c.tempId} className="emp-ctt-item">
                       <div>
-                        <strong>{s.nome}</strong>
+                        <strong>{c.nome}</strong>
+                        {c.cargo && <span className="emp-ctt-cargo">{c.cargo}</span>}
                         <div className="emp-ctt-detalhes">
-                          {s.telefone && <span>{s.telefone}</span>}
-                          {s.email && <span>{s.email}</span>}
+                          {c.telefone && <span>{c.telefone}</span>}
+                          {c.email && <span>{c.email}</span>}
                         </div>
                       </div>
                       <button
                         type="button"
                         className="emp-ctt-remover"
-                        onClick={() => setRascunhos((l) => l.filter((x) => x.tempId !== s.tempId))}
-                        aria-label={`Remover ${s.nome}`}
+                        onClick={() => setRascunhos((l) => l.filter((x) => x.tempId !== c.tempId))}
+                        aria-label={`Remover ${c.nome}`}
                         title="Remover"
                       >
                         <Trash2 size={14} />
@@ -294,25 +326,33 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
                 </ul>
               )}
 
-              {!carregandoSolicitantes &&
-                ((editando && solicitantes.length === 0) || (!editando && rascunhos.length === 0)) &&
-                !addSolicitante && (
+              {!carregandoContatos &&
+                ((editando && contatos.length === 0) || (!editando && rascunhos.length === 0)) &&
+                !addContato && (
                   <p className="emp-ctt-vazio">
-                    Nenhum solicitante adicionado. Você já pode cadastrar aqui antes mesmo de salvar.
+                    Nenhum contato cadastrado. Adicione o nome da pessoa e o cargo dela na empresa.
                   </p>
                 )}
 
-              {addSolicitante && (
+              {addContato && (
                 <div className="modal-mini-form">
                   <label className="modal-campo">
-                    <span>Nome do solicitante *</span>
+                    <span>Nome *</span>
                     <input
-                      value={solNome}
+                      value={cttNome}
                       placeholder="Ex: Paulo Henrique"
                       onChange={(e) => {
-                        setSolNome(e.target.value)
-                        setSolErro('')
+                        setCttNome(e.target.value)
+                        setCttErro('')
                       }}
+                    />
+                  </label>
+                  <label className="modal-campo">
+                    <span>Cargo</span>
+                    <input
+                      value={cttCargo}
+                      placeholder="Ex: Comprador / Manutenção"
+                      onChange={(e) => setCttCargo(e.target.value)}
                     />
                   </label>
                   <label className="modal-campo">
@@ -320,31 +360,31 @@ export function EmpresaModal({ onFechar, onSalvo, editando }: Props) {
                     <input
                       type="tel"
                       placeholder="(00) 00000-0000"
-                      value={solTelefone}
-                      onChange={(e) => setSolTelefone(formatarTelefone(e.target.value))}
+                      value={cttTelefone}
+                      onChange={(e) => setCttTelefone(formatarTelefone(e.target.value))}
                     />
                   </label>
-                  <label className="modal-campo modal-span-2">
+                  <label className="modal-campo">
                     <span>E-mail</span>
                     <input
                       type="email"
                       placeholder="nome@empresa.com.br"
-                      value={solEmail}
-                      onChange={(e) => setSolEmail(e.target.value)}
+                      value={cttEmail}
+                      onChange={(e) => setCttEmail(e.target.value)}
                     />
                   </label>
 
-                  {solErro && <p className="modal-erro modal-span-2">{solErro}</p>}
+                  {cttErro && <p className="modal-erro modal-span-2">{cttErro}</p>}
                   <div className="emp-mini-acoes">
                     <button
                       type="button"
                       className="btn-primario"
-                      onClick={salvarSolicitante}
-                      disabled={salvandoSol}
+                      onClick={salvarContato}
+                      disabled={salvandoCtt}
                     >
-                      {salvandoSol ? 'Salvando...' : editando ? 'Salvar solicitante' : 'Adicionar na lista'}
+                      {salvandoCtt ? 'Salvando...' : editando ? 'Salvar contato' : 'Adicionar na lista'}
                     </button>
-                    <button type="button" className="modal-cancelar" onClick={limparFormSolicitante}>
+                    <button type="button" className="modal-cancelar" onClick={limparFormContato}>
                       Cancelar
                     </button>
                   </div>

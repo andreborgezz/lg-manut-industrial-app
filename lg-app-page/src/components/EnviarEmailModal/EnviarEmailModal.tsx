@@ -76,7 +76,7 @@ export function EnviarEmailModal({ orcamento, onFechar, onEnviado }: Props) {
               </div>
               {orcamento.solicitante && (
                 <div className="email-detalhe-item">
-                  <span className="email-detalhe-rotulo">Solicitante:</span>
+                  <span className="email-detalhe-rotulo">Contato:</span>
                   <span>{orcamento.solicitante}</span>
                 </div>
               )}

@@ -20,6 +20,7 @@ create table solicitantes (
   id serial primary key,
   empresa_id int not null references empresas(id),
   nome text not null,
+  cargo text,
   email text,
   telefone text
 );

@@ -2,7 +2,7 @@ import pool from '../../database'
 import type { Solicitante } from '../models/solicitante'
 import { solicitanteAtualizarSchema, solicitanteCriarSchema } from '../models/cadastros.schema'
 
-const cols = 'id, empresa_id as "empresaId", nome, email, telefone'
+const cols = 'id, empresa_id as "empresaId", nome, cargo, email, telefone'
 
 export const listarPorEmpresa = async (empresaId: number): Promise<Solicitante[]> => {
   const { rows } = await pool.query(
@@ -15,9 +15,9 @@ export const listarPorEmpresa = async (empresaId: number): Promise<Solicitante[]
 export const criar = async (body: unknown): Promise<Solicitante> => {
   const d = solicitanteCriarSchema.parse(body)
   const { rows } = await pool.query(
-    `insert into solicitantes (empresa_id, nome, email, telefone)
-     values ($1, $2, $3, $4) returning ${cols}`,
-    [d.empresaId, d.nome, d.email ?? null, d.telefone ?? null]
+    `insert into solicitantes (empresa_id, nome, cargo, email, telefone)
+     values ($1, $2, $3, $4, $5) returning ${cols}`,
+    [d.empresaId, d.nome, d.cargo ?? null, d.email ?? null, d.telefone ?? null]
   )
   return rows[0]
 }
@@ -25,9 +25,25 @@ export const criar = async (body: unknown): Promise<Solicitante> => {
 export const atualizar = async (id: number, body: unknown): Promise<Solicitante | undefined> => {
   const d = solicitanteAtualizarSchema.parse(body)
   const { rows } = await pool.query(
-    `update solicitantes set nome = $2, email = $3, telefone = $4
+    `update solicitantes set nome = $2, cargo = $3, email = $4, telefone = $5
      where id = $1 returning ${cols}`,
-    [id, d.nome, d.email ?? null, d.telefone ?? null]
+    [id, d.nome, d.cargo ?? null, d.email ?? null, d.telefone ?? null]
   )
   return rows[0]
+}
+
+export const remover = async (id: number): Promise<boolean> => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    await client.query('update orcamentos set solicitante_id = null where solicitante_id = $1', [id])
+    const { rowCount } = await client.query('delete from solicitantes where id = $1', [id])
+    await client.query('COMMIT')
+    return (rowCount ?? 0) > 0
+  } catch (err) {
+    await client.query('ROLLBACK')
+    throw err
+  } finally {
+    client.release()
+  }
 }

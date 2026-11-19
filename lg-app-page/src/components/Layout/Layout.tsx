@@ -7,6 +7,7 @@ import './Layout.css'
 
 function obterBreadcrumb(pathname: string): string {
   if (pathname.startsWith('/orcamentos')) return 'Orçamentos'
+  if (pathname.startsWith('/empresas')) return 'Empresas'
   if (pathname.startsWith('/mecanicos')) return 'Mecânicos'
   return 'Painel'
 }
