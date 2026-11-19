@@ -68,15 +68,11 @@ function montarColunas(
       titulo: 'CONTATOS',
       render: (e) => {
         const qtd = (e.contatos ?? []).length
+        const texto = `${qtd} ${qtd === 1 ? 'contato' : 'contatos'}`
         return (
-          <button
-            type="button"
-            className={`emp-contatos-qtd ${qtd === 0 ? 'emp-contatos-qtd-zero' : ''}`}
-            title="Ver contatos da empresa"
-            onClick={() => abrirContatos(e)}
-          >
-            {qtd} {qtd === 1 ? 'contato' : 'contatos'}
-          </button>
+          <span className={`emp-contatos-qtd ${qtd === 0 ? 'emp-contatos-qtd-zero' : ''}`}>
+            {texto}
+          </span>
         )
       },
     },
