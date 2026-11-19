@@ -39,7 +39,6 @@ O objetivo é trocar a planilha por um sistema web onde ele cria o orçamento em
 
 ### Empresas
 - Tabela com edição inline de nome, CNPJ, e-mail, telefone.
-- Página de detalhe da empresa (`/empresas/:id`): lista de solicitantes, últimos 10 orçamentos e total acumulado. Botão "Novo orçamento" com empresa já pré-selecionada.
 
 ### Mecânicos
 - Tabela com edição inline de nome, telefone e status ativo/inativo.

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ExternalLink, Loader2, Pencil, Search, Trash2 } from "lucide-react";
+import { Loader2, Pencil, Search, Trash2 } from "lucide-react";
 import { atualizarEmpresa, excluirEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
 import { useToast } from "../Toast/Toast";
@@ -15,7 +14,6 @@ function montarColunas(
   salvar: (e: Empresa, patch: { nome?: string; email?: string | null; cnpj?: string | null; telefone?: string | null }) => Promise<void>,
   abrir: (e: Empresa, acao: Acao) => void,
   carregando: { id: number; acao: Acao } | null,
-  navegar: (id: number) => void,
   solicitarExclusao: (e: Empresa) => void,
 ): Coluna[] {
   return [
@@ -83,15 +81,6 @@ function montarColunas(
             </button>
             <button
               type="button"
-              className="emp-acao-btn"
-              title="Ver detalhes da empresa"
-              aria-label={`Ver detalhes da empresa ${e.nome}`}
-              onClick={() => navegar(e.id)}
-            >
-              <ExternalLink size={15} />
-            </button>
-            <button
-              type="button"
               className="emp-acao-btn emp-acao-excluir"
               title="Excluir empresa"
               aria-label={`Excluir empresa ${e.nome}`}
@@ -114,7 +103,6 @@ export function EmpresasTable({
   refresh?: number;
   onEditar?: (e: Empresa) => void;
 }) {
-  const navigate = useNavigate()
   const toast = useToast()
   const [todasEmpresas, setTodasEmpresas] = useState<Empresa[]>([])
   const [carregandoDados, setCarregandoDados] = useState(true)
@@ -173,7 +161,6 @@ export function EmpresasTable({
     salvar,
     abrir,
     carregando,
-    (id) => navigate(`/empresas/${id}`),
     (e) => setEmpresaParaExcluir(e),
   )
 
