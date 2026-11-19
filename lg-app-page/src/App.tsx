@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { registrarRedirecionamentoLogin } from './services/api'
 import Orcamentos from './pages/Orcamentos'
 import Empresas from './pages/Empresas'
+import EmpresaDetalhe from './pages/EmpresaDetalhe'
 import Mecanicos from './pages/Mecanicos'
 import LoginPage from './pages/loginPage'
 
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/" element={<Protegida><Navigate to="/orcamentos" replace /></Protegida>} />
           <Route path="/orcamentos" element={<Protegida><Orcamentos /></Protegida>} />
           <Route path="/empresas" element={<Protegida><Empresas /></Protegida>} />
+          <Route path="/empresas/:id" element={<Protegida><EmpresaDetalhe /></Protegida>} />
           <Route path="/mecanicos" element={<Protegida><Mecanicos /></Protegida>} />
           <Route path="*" element={<Protegida><Navigate to="/orcamentos" replace /></Protegida>} />
         </Routes>

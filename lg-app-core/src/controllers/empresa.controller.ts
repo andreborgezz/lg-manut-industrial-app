@@ -7,7 +7,10 @@ export const listar = async (req: Request, res: Response): Promise<void> => {
 }
 
 export const buscar = async (req: Request, res: Response): Promise<void> => {
-  const item = await service.buscarPorId(idParam(req))
+  const id = idParam(req)
+  const item = req.query.detalhe === '1'
+    ? await service.buscarDetalhe(id)
+    : await service.buscarPorId(id)
   if (!item) {
     res.status(404).json({ message: 'Empresa não encontrada' })
     return

@@ -5,7 +5,7 @@ import './MecanicoModal.css'
 
 type Props = {
   onFechar: () => void
-  onSalvo: () => void
+  onSalvo: (mecanico: Mecanico) => void
   editando?: Mecanico
 }
 
@@ -48,12 +48,10 @@ export function MecanicoModal({ onFechar, onSalvo, editando }: Props) {
     try {
       const tel = telefone.trim() || null
       const desc = descricao.trim() || null
-      if (editando) {
-        await atualizarMecanico(editando.id, { nome: nome.trim(), telefone: tel, descricao: desc, ativo })
-      } else {
-        await criarMecanico({ nome: nome.trim(), telefone: tel, descricao: desc })
-      }
-      onSalvo()
+      const salvo = editando
+        ? await atualizarMecanico(editando.id, { nome: nome.trim(), telefone: tel, descricao: desc, ativo })
+        : await criarMecanico({ nome: nome.trim(), telefone: tel, descricao: desc })
+      onSalvo(salvo)
     } catch (e) {
       setErro(e instanceof Error ? e.message : 'erro ao salvar')
       setSalvando(false)

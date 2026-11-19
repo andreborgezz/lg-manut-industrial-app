@@ -155,6 +155,23 @@ function mensagemErro(dados: unknown, status: number): string {
 
 export const listarEmpresas = () => chamar<Empresa[]>('/empresas')
 
+export type EmpresaDetalhe = {
+  empresa: Empresa
+  contatos: EmpresaContato[]
+  orcamentos: {
+    id: number
+    numero: number
+    titulo: string | null
+    status: Status
+    valor: string | null
+    entradaEm: string | null
+  }[]
+  totalAcumulado: string
+}
+
+export const buscarEmpresaDetalhe = (id: number) =>
+  chamar<EmpresaDetalhe>(`/empresas/${id}?detalhe=1`)
+
 export const criarEmpresa = (body: {
   nome: string
   email?: string | null
@@ -217,6 +234,9 @@ export const criarMecanico = (body: { nome: string; telefone?: string | null; de
 
 export const atualizarMecanico = (id: number, patch: { nome?: string; telefone?: string | null; descricao?: string | null; ativo?: boolean }) =>
   chamar<Mecanico>(`/mecanicos/${id}`, { method: 'PATCH', body: JSON.stringify(patch) })
+
+export const excluirMecanico = (id: number) =>
+  chamar<{ ok: boolean }>(`/mecanicos/${id}`, { method: 'DELETE' })
 
 export const criarOrcamento = (body: NovoOrcamentoBody) =>
   chamar<Orcamento>('/orcamentos', { method: 'POST', body: JSON.stringify(body) })

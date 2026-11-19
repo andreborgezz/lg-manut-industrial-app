@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Layout } from '../components/Layout/Layout'
 import { MecanicosTable } from '../components/MecanicosTable/MecanicosTable'
 import { MecanicoModal } from '../components/MecanicoModal/MecanicoModal'
+import { ToastProvider, useToast } from '../components/Toast/Toast'
 import type { Mecanico } from '../services/api'
 
 type EstadoModal = { editando?: Mecanico } | null
 
-export default function Mecanicos() {
+function PaginaMecanicos() {
+  const toast = useToast()
   const [modal, setModal] = useState<EstadoModal>(null)
   const [refresh, setRefresh] = useState(0)
 
@@ -29,12 +31,25 @@ export default function Mecanicos() {
         <MecanicoModal
           editando={modal.editando}
           onFechar={() => setModal(null)}
-          onSalvo={() => {
+          onSalvo={(salvo) => {
+            const eraEdicao = Boolean(modal.editando)
             setModal(null)
             setRefresh((r) => r + 1)
+            toast.mostrar({
+              tipo: 'sucesso',
+              mensagem: `Mecânico "${salvo.nome}" ${eraEdicao ? 'atualizado' : 'cadastrado'}.`,
+            })
           }}
         />
       )}
     </Layout>
+  )
+}
+
+export default function Mecanicos() {
+  return (
+    <ToastProvider>
+      <PaginaMecanicos />
+    </ToastProvider>
   )
 }

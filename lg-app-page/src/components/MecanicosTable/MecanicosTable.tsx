@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Loader2, Pencil, Search, UserCheck, UserX } from 'lucide-react'
-import { atualizarMecanico, listarMecanicos, type Mecanico } from '../../services/api'
+import { Loader2, Pencil, Search, Trash2, UserCheck, UserX } from 'lucide-react'
+import { atualizarMecanico, excluirMecanico, listarMecanicos, type Mecanico } from '../../services/api'
 import { CelulaEditavel } from '../CelulaEditavel/CelulaEditavel'
+import { useToast } from '../Toast/Toast'
 import { normalizarTexto } from '../../utils/texto'
 import '../Tabela/Tabela.css'
 
@@ -11,6 +12,7 @@ type Props = {
 }
 
 export function MecanicosTable({ refresh = 0, onEditar }: Props) {
+  const toast = useToast()
   const [mecanicos, setMecanicos] = useState<Mecanico[]>([])
   const [carregandoDados, setCarregandoDados] = useState(true)
   const [busca, setBusca] = useState('')
@@ -18,6 +20,8 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
   const [erro, setErro] = useState('')
   const [aviso, setAviso] = useState('')
   const [trocandoId, setTrocandoId] = useState<number | null>(null)
+  const [mecanicoParaExcluir, setMecanicoParaExcluir] = useState<Mecanico | null>(null)
+  const [excluindo, setExcluindo] = useState(false)
 
   useEffect(() => {
     let cancelado = false
@@ -97,10 +101,32 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
           : ls.filter((l) => l.id !== novo.id)
       )
       setAviso('')
+      toast.mostrar({
+        tipo: 'sucesso',
+        mensagem: `Mecânico "${novo.nome}" ${novo.ativo ? 'reativado' : 'desativado'}.`,
+      })
     } catch (e) {
       setAviso(`${m.nome}: ${e instanceof Error ? e.message : 'erro ao alterar status'}`)
     } finally {
       setTrocandoId(null)
+    }
+  }
+
+  async function confirmarExclusao() {
+    if (!mecanicoParaExcluir) return
+    const alvo = mecanicoParaExcluir
+    setExcluindo(true)
+    try {
+      await excluirMecanico(alvo.id)
+      setMecanicos((ls) => ls.filter((l) => l.id !== alvo.id))
+      setMecanicoParaExcluir(null)
+      setAviso('')
+      toast.mostrar({ tipo: 'sucesso', mensagem: `Mecânico "${alvo.nome}" excluído.` })
+    } catch (e) {
+      setAviso(`${alvo.nome}: ${e instanceof Error ? e.message : 'erro ao excluir'}`)
+      setMecanicoParaExcluir(null)
+    } finally {
+      setExcluindo(false)
     }
   }
 
@@ -207,6 +233,16 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
                           <UserCheck size={15} />
                         )}
                       </button>
+                      <button
+                        type="button"
+                        className="emp-acao-btn emp-acao-excluir"
+                        title="Excluir mecânico"
+                        aria-label={`Excluir mecânico ${m.nome}`}
+                        disabled={trocandoId !== null}
+                        onClick={() => setMecanicoParaExcluir(m)}
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -234,6 +270,38 @@ export function MecanicosTable({ refresh = 0, onEditar }: Props) {
           <span>{linhas.length} {linhas.length === 1 ? 'mecânico listado' : 'mecânicos listados'}</span>
         </div>
       </div>
+
+      {mecanicoParaExcluir && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !excluindo) setMecanicoParaExcluir(null)
+          }}
+        >
+          <div className="emp-modal-excluir" role="dialog" aria-modal="true" aria-labelledby="mec-excluir-titulo">
+            <h3 id="mec-excluir-titulo">Excluir mecânico "{mecanicoParaExcluir.nome}"?</h3>
+            <p>Orçamentos vinculados permanecerão salvos sem mecânico atribuído.</p>
+            <div className="emp-modal-excluir-acoes">
+              <button
+                type="button"
+                className="btn-secundario"
+                onClick={() => setMecanicoParaExcluir(null)}
+                disabled={excluindo}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="emp-btn-confirmar-excluir"
+                onClick={confirmarExclusao}
+                disabled={excluindo}
+              >
+                {excluindo ? 'Excluindo...' : 'Excluir mecânico'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }

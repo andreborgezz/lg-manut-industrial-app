@@ -51,3 +51,19 @@ export const atualizarParcial = async (id: number, body: unknown): Promise<Mecan
   )
   return rows[0]
 }
+
+export const remover = async (id: number): Promise<boolean> => {
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
+    await client.query('update orcamentos set mecanico_id = null where mecanico_id = $1', [id])
+    const { rowCount } = await client.query('delete from mecanicos where id = $1', [id])
+    await client.query('COMMIT')
+    return (rowCount ?? 0) > 0
+  } catch (err) {
+    await client.query('ROLLBACK')
+    throw err
+  } finally {
+    client.release()
+  }
+}

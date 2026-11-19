@@ -1,12 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Pencil, Search, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ExternalLink, Loader2, Pencil, Search, Trash2 } from "lucide-react";
 import { atualizarEmpresa, excluirEmpresa, listarEmpresas, type Empresa } from "../../services/api";
 import { CelulaEditavel } from "../CelulaEditavel/CelulaEditavel";
 import { useToast } from "../Toast/Toast";
 import { normalizarTexto } from "../../utils/texto";
 import "./EmpresasTable.css";
 
-type Acao = 'editar';
+type Acao = 'editar' | 'detalhe';
 
 type Coluna = { titulo: string; classeColuna?: string; render: (e: Empresa) => React.ReactNode };
 
@@ -89,6 +90,16 @@ function montarColunas(
             <button
               type="button"
               className="emp-acao-btn"
+              title="Ver ficha da empresa"
+              aria-label={`Ver ficha da empresa ${e.nome}`}
+              disabled={qualquerCarregando}
+              onClick={() => abrir(e, 'detalhe')}
+            >
+              {girando('detalhe') ? <Loader2 size={15} className="orc-spin" /> : <ExternalLink size={15} />}
+            </button>
+            <button
+              type="button"
+              className="emp-acao-btn"
               title="Editar empresa no modal"
               aria-label={`Editar empresa ${e.nome}`}
               disabled={qualquerCarregando}
@@ -120,6 +131,7 @@ export function EmpresasTable({
   refresh?: number;
   onEditar?: (e: Empresa) => void;
 }) {
+  const navigate = useNavigate()
   const toast = useToast()
   const [todasEmpresas, setTodasEmpresas] = useState<Empresa[]>([])
   const [carregandoDados, setCarregandoDados] = useState(true)
@@ -166,6 +178,10 @@ export function EmpresasTable({
   const [carregando, setCarregando] = useState<{ id: number; acao: Acao } | null>(null)
   
   async function abrir(e: Empresa, acao: Acao) {
+    if (acao === 'detalhe') {
+      navigate(`/empresas/${e.id}`)
+      return
+    }
     setCarregando({ id: e.id, acao })
     try {
       if (acao === 'editar') onEditar?.(e)

@@ -28,3 +28,12 @@ export const atualizar = async (req: Request, res: Response): Promise<void> => {
   }
   res.json(item)
 }
+
+export const remover = async (req: Request, res: Response): Promise<void> => {
+  const ok = await service.remover(idParam(req))
+  if (!ok) {
+    res.status(404).json({ message: 'Mecânico não encontrado' })
+    return
+  }
+  res.json({ ok: true })
+}
